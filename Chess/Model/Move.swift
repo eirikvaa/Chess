@@ -24,4 +24,10 @@ struct Move {
         source = String(move.dropLast(2))
         destination = String(move.dropFirst(2))
     }
+    
+    func partition(moveComponent: String) -> (String, Int) {
+        let file = String(moveComponent.dropLast())
+        let row = Int(String(moveComponent.dropFirst()))!
+        return (file, row)
+    }
 }

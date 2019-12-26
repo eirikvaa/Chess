@@ -9,114 +9,206 @@
 import Foundation
 
 enum Direction {
-    case north(single: Bool)
-    case northEast(single: Bool)
-    case east(single: Bool)
-    case southEast(single: Bool)
-    case south(single: Bool)
-    case southWest(single: Bool)
-    case west(single: Bool)
-    case northWest(single: Bool)
+    case north
+    case northEast
+    case east
+    case southEast
+    case south
+    case southWest
+    case west
+    case northWest
+}
+
+extension Direction: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .north: return "N"
+        case .northEast: return "NE"
+        case .east: return "E"
+        case .southEast: return "SE"
+        case .south: return "S"
+        case .southWest: return "SW"
+        case .west: return "W"
+        case .northWest: return "NW"
+        }
+    }
 }
 
 struct MovePattern {
-    let patterns: [Direction]
+    let directions: [Direction]
+}
+
+extension MovePattern: CustomStringConvertible {
+    var description: String {
+        guard directions.count > 1 else {
+            return "\(directions[0])"
+        }
+        
+        var _description = "["
+        
+        for pattern in directions {
+            _description += "\(pattern.description)\t→\t"
+        }
+        
+        _description += "]"
+        
+        return _description
+    }
+}
+
+enum PieceType {
+    case king
+    case queen
+    case bishop
+    case knight
+    case rook
+    case pawn
 }
 
 protocol Piece {
     var name: String { get }
+    var type: PieceType { get }
     var player: Player? { get set }
     var graphicalRepresentation: String { get }
     var movePatterns: [MovePattern] { get }
+    var moved: Bool { get set }
+    
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern
 }
 
 struct King: Piece {
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        .init(directions: [])
+    }
+    
     var name = "King"
+    var type = PieceType.king
     var player: Player?
     var graphicalRepresentation: String {
         player?.side == .white ? "♔" : "♚"
     }
     var movePatterns: [MovePattern] = [
-        .init(patterns: [.north(single: true)]),
-        .init(patterns: [.east(single: true)]),
-        .init(patterns: [.south(single: true)]),
-        .init(patterns: [.west(single: true)])
+        .init(directions: [.north]),
+        .init(directions: [.east]),
+        .init(directions: [.south]),
+        .init(directions: [.west])
     ]
+    var moved = false
 }
 
 struct Queen: Piece {
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        .init(directions: [])
+    }
+    
     var name = "Queen"
+    var type = PieceType.queen
     var player: Player?
     var graphicalRepresentation: String {
         player?.side == .white ? "♕" : "♛"
     }
     var movePatterns: [MovePattern] = [
-        .init(patterns: [.north(single: false)]),
-        .init(patterns: [.northEast(single: false)]),
-        .init(patterns: [.east(single: false)]),
-        .init(patterns: [.southEast(single: false)]),
-        .init(patterns: [.south(single: false)]),
-        .init(patterns: [.southWest(single: false)]),
-        .init(patterns: [.west(single: false)]),
-        .init(patterns: [.northWest(single: false)])
+        .init(directions: [.north]),
+        .init(directions: [.northEast]),
+        .init(directions: [.east]),
+        .init(directions: [.southEast]),
+        .init(directions: [.south]),
+        .init(directions: [.southWest]),
+        .init(directions: [.west]),
+        .init(directions: [.northWest])
     ]
+    var moved = false
 }
 
 struct Bishop: Piece {
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        .init(directions: [])
+    }
+    
     var name = "Runner"
+    var type = PieceType.bishop
     var player: Player?
     var graphicalRepresentation: String {
         player?.side == .white ? "♗" : "♝"
     }
     var movePatterns: [MovePattern] = [
-        .init(patterns: [.northEast(single: false)]),
-        .init(patterns: [.southEast(single: false)]),
-        .init(patterns: [.southWest(single: false)]),
-        .init(patterns: [.northWest(single: false)]),
+        .init(directions: [.northEast]),
+        .init(directions: [.southEast]),
+        .init(directions: [.southWest]),
+        .init(directions: [.northWest]),
     ]
+    var moved = false
 }
 
 struct Rook: Piece {
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        .init(directions: [])
+    }
+    
     var name = "Rook"
+    var type = PieceType.rook
     var player: Player?
     var graphicalRepresentation: String {
         player?.side == .white ? "♖" : "♜"
     }
     var movePatterns: [MovePattern] = [
-        .init(patterns: [.north(single: false)]),
-        .init(patterns: [.west(single: false)]),
-        .init(patterns: [.east(single: false)]),
-        .init(patterns: [.south(single: false)])
+        .init(directions: [.north]),
+        .init(directions: [.west]),
+        .init(directions: [.east]),
+        .init(directions: [.south])
     ]
+    var moved = false
 }
 
 struct Knight: Piece {
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        .init(directions: [])
+    }
+    
     var name = "Knight"
+    var type = PieceType.knight
     var player: Player?
     var graphicalRepresentation: String {
         player?.side == .white ? "♘" : "♞"
     }
     var movePatterns: [MovePattern] = [
-        .init(patterns: [.north(single: true), .north(single: true), .west(single: true)]),
-        .init(patterns: [.north(single: true), .north(single: true), .east(single: true)]),
-        .init(patterns: [.north(single: true), .west(single: true), .west(single: true)]),
-        .init(patterns: [.north(single: true), .east(single: true), .east(single: true)]),
-        .init(patterns: [.south(single: true), .west(single: true), .west(single: true)]),
-        .init(patterns: [.south(single: true), .east(single: true), .east(single: true)]),
-        .init(patterns: [.south(single: true), .south(single: true), .west(single: true)]),
-        .init(patterns: [.south(single: true), .south(single: true), .east(single: true)])
+        .init(directions: [.north, .north, .west]),
+        .init(directions: [.north, .north, .east]),
+        .init(directions: [.north, .west, .west]),
+        .init(directions: [.north, .east, .east]),
+        .init(directions: [.south, .west, .west]),
+        .init(directions: [.south, .east, .east]),
+        .init(directions: [.south, .south, .west]),
+        .init(directions: [.south, .south, .east])
     ]
+    var moved = false
 }
 
 struct Pawn: Piece {
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        switch (fileDelta, rowDelta, moved) {
+        case (0, 1...2, false),
+             (0, 1, true):
+            return .init(directions: [.north])
+        case (-1, 1, _):
+            return .init(directions: [side == .white ? .northWest : .northEast])
+        case (1, 1, _):
+            return .init(directions: [side == .white ? .northEast : .northWest])
+        default:
+            return  .init(directions: [])
+        }
+    }
+    
     var name = "Pawn"
+    var type = PieceType.pawn
     var player: Player?
     var graphicalRepresentation: String {
         player?.side == .white ? "♙" : "♟"
     }
     var movePatterns: [MovePattern] = [
-        .init(patterns: [.north(single: true)]),
-        .init(patterns: [.northEast(single: true)]),
-        .init(patterns: [.northWest(single: true)])
+        .init(directions: [.north]),
+        .init(directions: [.northEast]),
+        .init(directions: [.northWest])
     ]
+    var moved = false
 }

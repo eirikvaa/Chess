@@ -27,14 +27,36 @@ struct Board {
     }
     
     subscript(index: Int) -> Piece? {
-        return pieces[index]
+        get {
+            pieces[index]
+        }
+        set {
+            pieces[index] = newValue
+        }
+    }
+    
+    subscript(fileRowString: String, fileDelta: Int, rowDelta: Int, side: Side, direction: Direction) -> Piece? {
+        let verticalMultiplier = direction == .north ? 1 : -1
+        let horizontalMultiplier = direction == .east ? 1 : -1
+        var index = boardIndex(fileRowString: fileRowString)
+        index += fileDelta * side.sideMultiplier * verticalMultiplier
+        index += rowDelta * 8 * side.sideMultiplier * horizontalMultiplier
+        return self[index]
     }
     
     subscript(fileRowString: String) -> Piece? {
+        get {
+            self[boardIndex(fileRowString: fileRowString)]
+        }
+        set {
+            self[boardIndex(fileRowString: fileRowString)] = newValue
+        }
+    }
+    
+    func boardIndex(fileRowString: String) -> Int {
         let file = String(fileRowString.dropLast())
         let row = Int(String(fileRowString.dropFirst()))!
-        let index = 63 - row * 8 + fileToIndex(file) + 1
-        return self[index]
+        return 63 - row * 8 + fileToIndex(file) + 1
     }
 }
 
@@ -62,6 +84,13 @@ private extension Board {
     func fileToIndex(_ file: String) -> Int {
         let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
         return files.firstIndex(of: file.lowercased()) ?? 0
+    }
+    
+    func distanceBetweenFiles(sourceFile: String, destinationFile: String) -> Int {
+        let sourceFileIndex = fileToIndex(sourceFile)
+        let destinationFileIndex = fileToIndex(destinationFile)
+        
+        return destinationFileIndex - sourceFileIndex
     }
     
     func isValidPlacement(row: Int, file: String) -> Bool {

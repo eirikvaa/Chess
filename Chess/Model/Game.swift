@@ -13,6 +13,7 @@ enum GameErrors: Error {
     case noPieceInSourcePosition
     case ownPieceInDestinationPosition
     case invalidPiece
+    case invalidMove(message: String)
 }
 
 struct Game {
@@ -44,14 +45,18 @@ extension Game {
                 break
             }
             
-            let sourcePiece = board[move.source]
+            var sourcePiece = board[move.source]
             let destinationPiece = board[move.destination]
             
             do {
-                try currentPlayer.makeMove(
-                    move.text,
+                try validateMove(
+                    move: move,
                     sourcePiece: sourcePiece,
-                    destinationPiece: destinationPiece)
+                    destinationPiece: destinationPiece,
+                    currentPlayer: &currentPlayer)
+                sourcePiece?.moved = true
+                board[move.destination] = sourcePiece
+                board[move.source] = nil
             } catch GameErrors.noPieceInSourcePosition {
                 print("There is no piece in the source position you entered.")
                 continue
@@ -61,8 +66,11 @@ extension Game {
             } catch GameErrors.ownPieceInDestinationPosition {
                 print("You cannot move a piece to a position taken up by your own pieces.")
                 continue
+            } catch GameErrors.invalidMove(let message) {
+                print(message)
+                continue
             } catch {
-                print("Something went wrong, try again.")
+                print("Something went wrong")
                 continue
             }
             
@@ -73,8 +81,79 @@ extension Game {
         }
     }
     
+    func distanceBetweenFiles(sourceFile: String, destinationFile: String) -> Int {
+        func fileToIndex(_ file: String) -> Int {
+            let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
+            return files.firstIndex(of: file.lowercased()) ?? 0
+        }
+        
+        let sourceFileIndex = fileToIndex(sourceFile)
+        let destinationFileIndex = fileToIndex(destinationFile)
+        
+        return destinationFileIndex - sourceFileIndex
+    }
+    
+    func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
+        // Multiply with -1 if we are black as north will be opposite way for them
+        let rowDeltaMultiplier = currentPlayer.side == .black ? -1 : 1
+        
+        let (sourceFile, sourceRow) = move.partition(moveComponent: move.source)
+        let (destinationFile, destinationRow) = move.partition(moveComponent: move.destination)
+        
+        let fileDelta = distanceBetweenFiles(sourceFile: sourceFile, destinationFile: destinationFile)
+        let rowDelta = (destinationRow - sourceRow) * rowDeltaMultiplier
+        
+        let validPattern = sourcePiece.validPattern(
+            move: move,
+            fileDelta: fileDelta,
+            rowDelta: rowDelta,
+            side: currentPlayer.side)
+        
+        guard validPattern.directions.count > 0 else {
+            throw GameErrors.invalidMove(message: "No valid directions to destination position")
+        }
+        
+        for direction in validPattern.directions {
+            switch (direction, sourcePiece.type) {
+            case (.north, .pawn):
+                guard destinationPiece == nil else {
+                    throw GameErrors.invalidMove(message: "Destination position occupied")
+                }
+            case (.northEast, .pawn),
+                 (.northWest, .pawn):
+                guard destinationPiece != nil else {
+                    throw GameErrors.invalidMove(message: "Attack requires opponent piece in destination position")
+                }
+            default:
+                break
+            }
+        }
+        
+        return true
+    }
+    
     func printBoard() {
         print(board)
+    }
+    
+    mutating func validateMove(move: Move, sourcePiece: Piece?, destinationPiece: Piece?, currentPlayer: inout Player) throws {
+       guard let sourcePiece = sourcePiece else {
+           throw GameErrors.noPieceInSourcePosition
+       }
+       
+       guard sourcePiece.player?.side == currentPlayer.side else {
+           throw GameErrors.invalidPiece
+       }
+       
+       if destinationPiece?.player?.side == currentPlayer.side {
+           throw GameErrors.ownPieceInDestinationPosition
+       }
+       
+       guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: currentPlayer) else {
+           throw GameErrors.invalidMove(message: "Invalid move pattern!")
+       }
+       
+        currentPlayer.addMove(move)
     }
     
     mutating func resetBoard() {

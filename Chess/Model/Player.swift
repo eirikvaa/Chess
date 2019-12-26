@@ -8,38 +8,28 @@
 
 import Foundation
 
-struct Player {
-    enum Side {
-        case white
-        case black
-    }
+enum Side {
+    case white
+    case black
     
+    var sideMultiplier: Int {
+        return self == .black ? -1 : 1
+    }
+}
+
+struct Player {
     let side: Side
-    private var moves: [String] = []
+    private var moves: [Move] = []
     
     init(side: Side) {
         self.side = side
     }
     
-    mutating func makeMove(_ move: String, sourcePiece: Piece?, destinationPiece: Piece?) throws {
-        guard let sourcePiece = sourcePiece else {
-            throw GameErrors.noPieceInSourcePosition
-        }
-        
-        guard sourcePiece.player?.side == self.side else {
-            throw GameErrors.invalidPiece
-        }
-        
-        if destinationPiece?.player?.side == self.side {
-            throw GameErrors.ownPieceInDestinationPosition
-        }
-        
-        // TODO: Make sure move is valid
-        
-        moves.append(move)
-    }
-    
     var name: String {
         return side == .white ? "White player" : "Black player"
+    }
+    
+    mutating func addMove(_ move: Move) {
+        moves.append(move)
     }
 }
