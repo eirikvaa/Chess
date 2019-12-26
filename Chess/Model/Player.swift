@@ -15,4 +15,31 @@ struct Player {
     }
     
     let side: Side
+    private var moves: [String] = []
+    
+    init(side: Side) {
+        self.side = side
+    }
+    
+    mutating func makeMove(_ move: String, sourcePiece: Piece?, destinationPiece: Piece?) throws {
+        guard let sourcePiece = sourcePiece else {
+            throw GameErrors.noPieceInSourcePosition
+        }
+        
+        guard sourcePiece.player?.side == self.side else {
+            throw GameErrors.invalidPiece
+        }
+        
+        if destinationPiece?.player?.side == self.side {
+            throw GameErrors.ownPieceInDestinationPosition
+        }
+        
+        // TODO: Make sure move is valid
+        
+        moves.append(move)
+    }
+    
+    var name: String {
+        return side == .white ? "White player" : "Black player"
+    }
 }

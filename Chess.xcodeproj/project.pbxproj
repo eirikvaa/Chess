@@ -14,6 +14,7 @@
 		E5C1FD7D23B50A4100A33411 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
 		E5C1FD7F23B50D4400A33411 /* BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7E23B50D4400A33411 /* BoardTests.swift */; };
 		E5EE5DB023B5368F0066C281 /* PieceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DAF23B5368F0066C281 /* PieceTests.swift */; };
+		E5EE5DB223B53FE10066C281 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +40,7 @@
 		E5C1FD7C23B50A4100A33411 /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		E5C1FD7E23B50D4400A33411 /* BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTests.swift; sourceTree = "<group>"; };
 		E5EE5DAF23B5368F0066C281 /* PieceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceTests.swift; sourceTree = "<group>"; };
+		E5EE5DB123B53FE10066C281 /* Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				E5BE32BD23B5087A00EE526A /* Game.swift */,
 				E5BE32BF23B5088200EE526A /* Board.swift */,
 				E5C1FD7A23B509D300A33411 /* Player.swift */,
+				E5EE5DB123B53FE10066C281 /* Move.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				E5BE32B623B5082F00EE526A /* main.swift in Sources */,
 				E5C1FD7D23B50A4100A33411 /* Piece.swift in Sources */,
 				E5BE32BE23B5087A00EE526A /* Game.swift in Sources */,
+				E5EE5DB223B53FE10066C281 /* Move.swift in Sources */,
 				E5BE32C023B5088200EE526A /* Board.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

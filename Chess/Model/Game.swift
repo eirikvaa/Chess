@@ -8,6 +8,13 @@
 
 import Foundation
 
+enum GameErrors: Error {
+    case invalidMoveFormat
+    case noPieceInSourcePosition
+    case ownPieceInDestinationPosition
+    case invalidPiece
+}
+
 struct Game {
     private var board = Board()
     let whitePlayer = Player(side: .white)
@@ -15,6 +22,57 @@ struct Game {
 }
 
 extension Game {
+    mutating func startGame() {
+        resetBoard()
+        
+        var currentPlayer = whitePlayer
+        var round = 0
+        
+        while true {
+            printBoard()
+            
+            print("\(currentPlayer.name), please input a move:")
+            let input = readLine(strippingNewline: true)
+            
+            guard let move = try? Move(move: input ?? "") else {
+                print("Move not on correct format, try again.")
+                continue
+            }
+            
+            guard move.text != "quit" else {
+                print("You quit")
+                break
+            }
+            
+            let sourcePiece = board[move.source]
+            let destinationPiece = board[move.destination]
+            
+            do {
+                try currentPlayer.makeMove(
+                    move.text,
+                    sourcePiece: sourcePiece,
+                    destinationPiece: destinationPiece)
+            } catch GameErrors.noPieceInSourcePosition {
+                print("There is no piece in the source position you entered.")
+                continue
+            } catch GameErrors.invalidPiece {
+                print("You cannot use the piece of an opponent.")
+                continue
+            } catch GameErrors.ownPieceInDestinationPosition {
+                print("You cannot move a piece to a position taken up by your own pieces.")
+                continue
+            } catch {
+                print("Something went wrong, try again.")
+                continue
+            }
+            
+            print("\(currentPlayer.name) performed the following move: \(move.text)")
+            
+            round += 1
+            currentPlayer = round.isMultiple(of: 2) ? whitePlayer : blackPlayer
+        }
+    }
+    
     func printBoard() {
         print(board)
     }
@@ -37,14 +95,12 @@ extension Game {
             assignPieceToPlayer(piece: &blackRow2[i], player: blackPlayer)
         }
         
-        for (index, column) in board.validColumns.enumerated() {
-            board[0, column] = blackRow1[index]
-            board[7, column] = whiteRow1[index]
-        }
-        
-        for (index, column) in board.validColumns.enumerated() {
-            board[1, column] = blackRow2[index]
-            board[6, column] = whiteRow2[index]
+        for (index, file) in board.validFiles.enumerated() {
+            board[file, 0] = blackRow1[index]
+            board[file, 1] = blackRow2[index]
+            
+            board[file, 6] = whiteRow2[index]
+            board[file, 7] = whiteRow1[index]
         }
     }
 }
