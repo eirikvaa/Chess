@@ -13,6 +13,7 @@
 		E5C1FD7B23B509D300A33411 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7A23B509D300A33411 /* Player.swift */; };
 		E5C1FD7D23B50A4100A33411 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
 		E5C1FD7F23B50D4400A33411 /* BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7E23B50D4400A33411 /* BoardTests.swift */; };
+		E5EE5DB023B5368F0066C281 /* PieceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DAF23B5368F0066C281 /* PieceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +38,7 @@
 		E5C1FD7A23B509D300A33411 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		E5C1FD7C23B50A4100A33411 /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
 		E5C1FD7E23B50D4400A33411 /* BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTests.swift; sourceTree = "<group>"; };
+		E5EE5DAF23B5368F0066C281 /* PieceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				E5C1FD7E23B50D4400A33411 /* BoardTests.swift */,
+				E5EE5DAF23B5368F0066C281 /* PieceTests.swift */,
 				E5BE32D523B509A000EE526A /* Info.plist */,
 			);
 			path = ChessTests;
@@ -213,6 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5EE5DB023B5368F0066C281 /* PieceTests.swift in Sources */,
 				E5C1FD7F23B50D4400A33411 /* BoardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
