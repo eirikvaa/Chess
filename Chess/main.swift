@@ -8,6 +8,6 @@
 
 import Foundation
 
-var board = Board()
-board.resetBoard()
-print(board)
+var game = Game()
+game.resetBoard()
+game.printBoard()

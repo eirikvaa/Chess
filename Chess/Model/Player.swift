@@ -9,5 +9,10 @@
 import Foundation
 
 struct Player {
-    let name: String
+    enum Side {
+        case white
+        case black
+    }
+    
+    let side: Side
 }
