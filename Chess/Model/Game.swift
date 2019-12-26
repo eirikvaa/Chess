@@ -45,7 +45,6 @@ extension Game {
         for (index, column) in board.validColumns.enumerated() {
             board[1, column] = blackRow2[index]
             board[6, column] = whiteRow2[index]
-            
         }
     }
 }
