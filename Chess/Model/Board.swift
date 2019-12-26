@@ -29,16 +29,19 @@ struct Board {
 
 extension Board: CustomStringConvertible {
     var description: String {
-        var _description = " ––– ––– ––– ––– ––– ––– ––– ––– \n"
+        var _description = "    a   b   c   d   e   f   g   h\n"
+        _description += "   ––– ––– ––– ––– ––– ––– ––– ––– \n"
         
         for row in validRows {
-            _description += "|"
+            _description += "\(abs(row - 7) + 1) |"
             for column in validColumns {
                 let piece = self[row, column]
-                _description += " " + (piece?.graphicalRepresentation ?? " ") + "\t|"
+                _description += " " + (piece?.graphicalRepresentation ?? " ") + " |"
             }
-            _description += "\n ––– ––– ––– ––– ––– ––– ––– ––– \n"
+            _description += " \(abs(row - 7) + 1)\n   ––– ––– ––– ––– ––– ––– ––– ––– \n"
         }
+        
+        _description += "    a   b   c   d   e   f   g   h\n"
         
         return _description
     }
