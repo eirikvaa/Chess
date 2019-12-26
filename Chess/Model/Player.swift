@@ -1,5 +1,5 @@
 //
-//  main.swift
+//  Player.swift
 //  Chess
 //
 //  Created by Eirik Vale Aase on 26/12/2019.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-var board = Board()
-board.resetBoard()
-print(board)
+struct Player {
+    let name: String
+}

@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		E5BE32B623B5082F00EE526A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32B523B5082F00EE526A /* main.swift */; };
+		E5BE32BE23B5087A00EE526A /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
+		E5BE32C023B5088200EE526A /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
+		E5C1FD7B23B509D300A33411 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7A23B509D300A33411 /* Player.swift */; };
+		E5C1FD7D23B50A4100A33411 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
+		E5C1FD7F23B50D4400A33411 /* BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7E23B50D4400A33411 /* BoardTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +30,24 @@
 /* Begin PBXFileReference section */
 		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE32B523B5082F00EE526A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		E5BE32BD23B5087A00EE526A /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		E5BE32BF23B5088200EE526A /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		E5BE32D123B5099F00EE526A /* ChessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5BE32D523B509A000EE526A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E5C1FD7A23B509D300A33411 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		E5C1FD7C23B50A4100A33411 /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
+		E5C1FD7E23B50D4400A33411 /* BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E5BE32AF23B5082F00EE526A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5BE32CE23B5099F00EE526A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -42,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				E5BE32B423B5082F00EE526A /* Chess */,
+				E5BE32D223B5099F00EE526A /* ChessTests */,
 				E5BE32B323B5082F00EE526A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				E5BE32B223B5082F00EE526A /* Chess */,
+				E5BE32D123B5099F00EE526A /* ChessTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,9 +78,38 @@
 		E5BE32B423B5082F00EE526A /* Chess */ = {
 			isa = PBXGroup;
 			children = (
+				E5BE32BC23B5084D00EE526A /* Model */,
 				E5BE32B523B5082F00EE526A /* main.swift */,
 			);
 			path = Chess;
+			sourceTree = "<group>";
+		};
+		E5BE32BC23B5084D00EE526A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E5C1FD8023B50E1300A33411 /* Piece */,
+				E5BE32BD23B5087A00EE526A /* Game.swift */,
+				E5BE32BF23B5088200EE526A /* Board.swift */,
+				E5C1FD7A23B509D300A33411 /* Player.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E5BE32D223B5099F00EE526A /* ChessTests */ = {
+			isa = PBXGroup;
+			children = (
+				E5C1FD7E23B50D4400A33411 /* BoardTests.swift */,
+				E5BE32D523B509A000EE526A /* Info.plist */,
+			);
+			path = ChessTests;
+			sourceTree = "<group>";
+		};
+		E5C1FD8023B50E1300A33411 /* Piece */ = {
+			isa = PBXGroup;
+			children = (
+				E5C1FD7C23B50A4100A33411 /* Piece.swift */,
+			);
+			path = Piece;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +132,23 @@
 			productReference = E5BE32B223B5082F00EE526A /* Chess */;
 			productType = "com.apple.product-type.tool";
 		};
+		E5BE32D023B5099F00EE526A /* ChessTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5BE32D623B509A000EE526A /* Build configuration list for PBXNativeTarget "ChessTests" */;
+			buildPhases = (
+				E5BE32CD23B5099F00EE526A /* Sources */,
+				E5BE32CE23B5099F00EE526A /* Frameworks */,
+				E5BE32CF23B5099F00EE526A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChessTests;
+			productName = ChessTests;
+			productReference = E5BE32D123B5099F00EE526A /* ChessTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -93,6 +160,9 @@
 				ORGANIZATIONNAME = "Eirik Vale Aase";
 				TargetAttributes = {
 					E5BE32B123B5082F00EE526A = {
+						CreatedOnToolsVersion = 11.3;
+					};
+					E5BE32D023B5099F00EE526A = {
 						CreatedOnToolsVersion = 11.3;
 					};
 				};
@@ -111,16 +181,39 @@
 			projectRoot = "";
 			targets = (
 				E5BE32B123B5082F00EE526A /* Chess */,
+				E5BE32D023B5099F00EE526A /* ChessTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E5BE32CF23B5099F00EE526A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E5BE32AE23B5082F00EE526A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5C1FD7B23B509D300A33411 /* Player.swift in Sources */,
 				E5BE32B623B5082F00EE526A /* main.swift in Sources */,
+				E5C1FD7D23B50A4100A33411 /* Piece.swift in Sources */,
+				E5BE32BE23B5087A00EE526A /* Game.swift in Sources */,
+				E5BE32C023B5088200EE526A /* Board.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5BE32CD23B5099F00EE526A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5C1FD7F23B50D4400A33411 /* BoardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +355,42 @@
 			};
 			name = Release;
 		};
+		E5BE32D723B509A000EE526A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				INFOPLIST_FILE = ChessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = no.eirikvaleaase.ChessTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E5BE32D823B509A000EE526A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				INFOPLIST_FILE = ChessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = no.eirikvaleaase.ChessTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -279,6 +408,15 @@
 			buildConfigurations = (
 				E5BE32BA23B5082F00EE526A /* Debug */,
 				E5BE32BB23B5082F00EE526A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5BE32D623B509A000EE526A /* Build configuration list for PBXNativeTarget "ChessTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5BE32D723B509A000EE526A /* Debug */,
+				E5BE32D823B509A000EE526A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
