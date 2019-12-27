@@ -10,4 +10,5 @@ import Foundation
 
 var game = Game()
 game.resetBoard()
-game.startGame()
+
+

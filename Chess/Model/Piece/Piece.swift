@@ -166,7 +166,26 @@ struct Queen: Piece {
 
 struct Bishop: Piece {
     func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        .init(directions: [])
+        func makeSureDeltasAreEqual(successDirection: Direction) -> MovePattern {
+            guard abs(fileDelta) == abs(rowDelta) else {
+                return .init(directions: [])
+            }
+            
+            return .init(directions: [successDirection])
+        }
+        
+        switch (fileDelta, rowDelta) {
+        case (1..., 1...):
+            return makeSureDeltasAreEqual(successDirection: .northEast)
+        case ((-1)..., (-1)...):
+            return makeSureDeltasAreEqual(successDirection: .southWest)
+        case (1..., (-1)...):
+            return makeSureDeltasAreEqual(successDirection: .southEast)
+        case ((-1)..., 1...):
+            return makeSureDeltasAreEqual(successDirection: .northWest)
+        default:
+            return .init(directions: [])
+        }
     }
     
     var name = "Runner"

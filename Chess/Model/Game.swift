@@ -24,16 +24,31 @@ struct Game {
 }
 
 extension Game {
+    init(prePlayedMoves: [Move]) {
+        self.prePlayedMoves.append(contentsOf: prePlayedMoves)
+    }
+}
+
+extension Game {
     mutating func addPrePlayedMoves() {
-        //let kingToAttackPosition = ["e2e4", "d7d5", "e4e5", "d5d4", "e1e2", "a7a5", "e2e3", "a5a4"]
-        let queenAttackPos = ["d2d4", "e7e5", "d1d3", "e5e4"]
+        func kingToAttackPos() -> [String] {
+            return ["e2e4", "d7d5", "e4e5", "d5d4", "e1e2", "a7a5", "e2e3", "a5a4"]
+        }
         
-        let moves = queenAttackPos.compactMap { try? Move(move: $0) }
+        func queenToAttackPos() -> [String] {
+            return ["d2d4", "e7e5", "d1d3", "e5e4"]
+        }
+        
+        func bishopToAttackPos() -> [String] {
+            return ["e2e4", "a7a5", "f1c4", "a5a4", "c4f7"]
+        }
+        
+        let moves = bishopToAttackPos().compactMap { try? Move(move: $0) }
         
         prePlayedMoves.append(contentsOf: moves)
     }
     
-    mutating func startGame() {
+    mutating func startGame(exitAfterPrePlayedMoves: Bool = false) throws {
         resetBoard()
         
         var currentPlayer = whitePlayer
@@ -53,6 +68,10 @@ extension Game {
             }
             
             finishRound(round: &round, currentPlayer: &currentPlayer)
+        }
+        
+        if exitAfterPrePlayedMoves {
+            return
         }
         
         while true {
@@ -136,14 +155,14 @@ extension Game {
     
     func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
         // Multiply with -1 if we are black as north will be opposite way for them
-        let rowDeltaMultiplier = currentPlayer.side == .black ? -1 : 1
+        let sideMultiplier = currentPlayer.side.sideMultiplier
         
         let (sourceFile, sourceRow) = move.partition(moveComponent: move.source)
         let (destinationFile, destinationRow) = move.partition(moveComponent: move.destination)
         let sourceFileIndex = board.fileToIndex(sourceFile)
         
         let fileDelta = distanceBetweenFiles(sourceFile: sourceFile, destinationFile: destinationFile)
-        let rowDelta = (destinationRow - sourceRow) * rowDeltaMultiplier
+        let rowDelta = (destinationRow - sourceRow) * sideMultiplier
         
         let validPattern = sourcePiece.validPattern(
             move: move,
@@ -172,13 +191,14 @@ extension Game {
                  (.south, .rook):
                 if fileDelta == 0 {
                     for i in 1 ... rowDelta {
-                        if board["\(sourceFile)\(sourceRow + i * rowDeltaMultiplier)", currentPlayer.side] {
+                        let newRow = sourceRow + i * sideMultiplier
+                        if board["\(sourceFile)\(newRow)", currentPlayer.side] {
                             throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
                         }
                     }
                 } else if rowDelta == 0 {
                     for i in 1 ... fileDelta {
-                        let newFile = board.fileIndexToFile(sourceFileIndex + i * rowDeltaMultiplier)
+                        let newFile = board.fileIndexToFile(sourceFileIndex + i * sideMultiplier)
                         if board["\(newFile)\(sourceRow)", currentPlayer.side] {
                             throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
                         }
@@ -187,7 +207,20 @@ extension Game {
             case (_, .king),
                  (_, .queen):
                 if board[move.destination, currentPlayer.side] {
-                    throw GameErrors.invalidMove(message: "Trying to move to position occupoied by own piece.")
+                    throw GameErrors.invalidMove(message: "Trying to move to position occupied by own piece.")
+                }
+            case (.northEast, .bishop),
+                 (.northWest, .bishop),
+                 (.southWest, .bishop),
+                 (.southEast, .bishop):
+                for (i, j) in zip(1 ... abs(fileDelta), 1 ... abs(rowDelta)) {
+                    let newFile = board.fileIndexToFile(sourceFileIndex + i * sideMultiplier)
+                    let newRow = sourceRow + j * sideMultiplier
+                    let newFileRowString = "\(newFile)\(newRow)"
+                    
+                    if board[newFileRowString, currentPlayer.side] {
+                        throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                    }
                 }
             default:
                 break
