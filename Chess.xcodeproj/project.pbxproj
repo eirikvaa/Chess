@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E51CCF6F23B62FD200F57536 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
+		E51CCF7423B62FD700F57536 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
+		E51CCF7523B62FD700F57536 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
+		E51CCF7623B62FD700F57536 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7A23B509D300A33411 /* Player.swift */; };
+		E51CCF7723B62FD700F57536 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
 		E5BE32B623B5082F00EE526A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32B523B5082F00EE526A /* main.swift */; };
 		E5BE32BE23B5087A00EE526A /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
 		E5BE32C023B5088200EE526A /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
@@ -223,7 +228,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E51CCF6F23B62FD200F57536 /* Piece.swift in Sources */,
+				E51CCF7423B62FD700F57536 /* Game.swift in Sources */,
+				E51CCF7523B62FD700F57536 /* Board.swift in Sources */,
 				E5EE5DB023B5368F0066C281 /* PieceTests.swift in Sources */,
+				E51CCF7723B62FD700F57536 /* Move.swift in Sources */,
+				E51CCF7623B62FD700F57536 /* Player.swift in Sources */,
 				E5EE5DB623B62BCA0066C281 /* GameTests.swift in Sources */,
 				E5C1FD7F23B50D4400A33411 /* BoardTests.swift in Sources */,
 			);

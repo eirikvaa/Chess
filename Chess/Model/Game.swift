@@ -45,10 +45,10 @@ extension Game {
         
         let moves = bishopToAttackPos().compactMap { try? Move(move: $0) }
         
-        prePlayedMoves.append(contentsOf: moves)
+        prePlayedMoves.append(contentsOf: [])
     }
     
-    mutating func startGame(exitAfterPrePlayedMoves: Bool = false) throws {
+    mutating func startGame(continueAfterPrePlayedMoves: Bool = true) throws {
         resetBoard()
         
         var currentPlayer = whitePlayer
@@ -70,11 +70,11 @@ extension Game {
             finishRound(round: &round, currentPlayer: &currentPlayer)
         }
         
-        if exitAfterPrePlayedMoves {
+        guard continueAfterPrePlayedMoves else {
             return
         }
         
-        while true {
+        while true && !continueAfterPrePlayedMoves {
             printBoard()
             
             print("\(currentPlayer.name), please input a move:")
