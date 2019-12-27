@@ -31,3 +31,9 @@ struct Move {
         return (file, row)
     }
 }
+
+extension Move: ExpressibleByStringLiteral {
+    init(stringLiteral value: String) {
+        self = try! Move(move: value)!
+    }
+}

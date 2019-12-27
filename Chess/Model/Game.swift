@@ -30,31 +30,11 @@ extension Game {
 }
 
 extension Game {
-    mutating func addPrePlayedMoves() {
-        func kingToAttackPos() -> [String] {
-            return ["e2e4", "d7d5", "e4e5", "d5d4", "e1e2", "a7a5", "e2e3", "a5a4"]
-        }
-        
-        func queenToAttackPos() -> [String] {
-            return ["d2d4", "e7e5", "d1d3", "e5e4"]
-        }
-        
-        func bishopToAttackPos() -> [String] {
-            return ["e2e4", "a7a5", "f1c4", "a5a4", "c4f7"]
-        }
-        
-        let moves = bishopToAttackPos().compactMap { try? Move(move: $0) }
-        
-        prePlayedMoves.append(contentsOf: [])
-    }
-    
     mutating func startGame(continueAfterPrePlayedMoves: Bool = true) throws {
         resetBoard()
         
         var currentPlayer = whitePlayer
         var round = 0
-        
-        addPrePlayedMoves()
         
         for move in prePlayedMoves {
             printBoard()
@@ -64,7 +44,7 @@ extension Game {
             } catch {
                 // If something went wrong when adding the preplayed moves, we did something
                 // wrong and should just quit.
-                return
+                throw error
             }
             
             finishRound(round: &round, currentPlayer: &currentPlayer)
@@ -160,6 +140,7 @@ extension Game {
         let (sourceFile, sourceRow) = move.partition(moveComponent: move.source)
         let (destinationFile, destinationRow) = move.partition(moveComponent: move.destination)
         let sourceFileIndex = board.fileToIndex(sourceFile)
+        let destinationFileIndex = board.fileToIndex(destinationFile)
         
         let fileDelta = distanceBetweenFiles(sourceFile: sourceFile, destinationFile: destinationFile)
         let rowDelta = (destinationRow - sourceRow) * sideMultiplier
@@ -209,14 +190,32 @@ extension Game {
                 if board[move.destination, currentPlayer.side] {
                     throw GameErrors.invalidMove(message: "Trying to move to position occupied by own piece.")
                 }
-            case (.northEast, .bishop),
-                 (.northWest, .bishop),
-                 (.southWest, .bishop),
-                 (.southEast, .bishop):
-                for (i, j) in zip(1 ... abs(fileDelta), 1 ... abs(rowDelta)) {
-                    let newFile = board.fileIndexToFile(sourceFileIndex + i * sideMultiplier)
-                    let newRow = sourceRow + j * sideMultiplier
-                    let newFileRowString = "\(newFile)\(newRow)"
+            case (.northWest, .bishop),
+                 (.southWest, .bishop):
+                let source = sourceFileIndex + 1 * sideMultiplier
+                let dest = destinationFileIndex
+                let fileRange = min(source, dest) ... max(source, dest)
+                let rowRange = (sourceRow + 1 * sideMultiplier) ... (destinationRow)
+                for (i, j) in zip(fileRange, rowRange.reversed()) {
+                    let newFile = board.fileIndexToFile(i)
+                    //let newRow = sourceRow + j * sideMultiplier
+                    let newFileRowString = "\(newFile)\(j)"
+                    
+                    if board[newFileRowString, currentPlayer.side] {
+                        throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                    }
+                }
+                case (.northEast, .bishop),
+                     (.southEast, .bishop):
+                let source = sourceFileIndex + 1 * sideMultiplier
+                let dest = destinationFileIndex
+                let fileRange = min(source, dest) ... max(source, dest)
+                let rowRange = (sourceRow + 1 * sideMultiplier) ... (destinationRow)
+                for (i, j) in zip(fileRange, rowRange) {
+                    print(i, j)
+                    let newFile = board.fileIndexToFile(i)
+                    //let newRow = sourceRow + j * sideMultiplier
+                    let newFileRowString = "\(newFile)\(j)"
                     
                     if board[newFileRowString, currentPlayer.side] {
                         throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")

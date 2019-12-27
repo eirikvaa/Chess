@@ -177,11 +177,11 @@ struct Bishop: Piece {
         switch (fileDelta, rowDelta) {
         case (1..., 1...):
             return makeSureDeltasAreEqual(successDirection: .northEast)
-        case ((-1)..., (-1)...):
+        case (...(-1), ...(-1)):
             return makeSureDeltasAreEqual(successDirection: .southWest)
-        case (1..., (-1)...):
+        case (1..., ...(-1)):
             return makeSureDeltasAreEqual(successDirection: .southEast)
-        case ((-1)..., 1...):
+        case (...(-1), 1...):
             return makeSureDeltasAreEqual(successDirection: .northWest)
         default:
             return .init(directions: [])
