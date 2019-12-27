@@ -15,6 +15,13 @@ enum Side {
     var sideMultiplier: Int {
         return self == .black ? -1 : 1
     }
+    
+    var oppositeSide: Side {
+        switch self {
+        case .black: return .white
+        case .white: return .black
+        }
+    }
 }
 
 struct Player {

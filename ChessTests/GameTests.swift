@@ -56,6 +56,6 @@ extension GameTests {
     }
     
     func assertNoGameThrowing(game: inout Game, message: String) {
-        XCTAssertNoThrow(try game.startGame(continueAfterPrePlayedMoves: true), message)
+        XCTAssertNoThrow(try game.startGame(continueAfterPrePlayedMoves: false), message)
     }
 }

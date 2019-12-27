@@ -133,31 +133,23 @@ struct Queen: Piece {
     ]
     var moved = false
     func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        func makeSureDeltasAreEqual(successDirection: Direction) -> MovePattern {
-            guard abs(fileDelta) == abs(rowDelta) else {
-                return .init(directions: [])
-            }
-            
-            return .init(directions: [successDirection])
-        }
-        
-        switch (fileDelta, rowDelta) {
-        case (0, 1...):
+       switch (fileDelta, rowDelta, abs(fileDelta) == abs(rowDelta)) {
+        case (0, 1..., false):
             return .init(directions: [.north])
-        case (1..., 1...):
-            return makeSureDeltasAreEqual(successDirection: .northEast)
-        case (1..., 0):
+        case (1..., 1..., true):
+            return .init(directions: [.northEast])
+        case (1..., 0, false):
             return .init(directions: [.east])
-        case (1..., (-1)...):
-            return makeSureDeltasAreEqual(successDirection: .southEast)
-        case (0, (-1)...):
+        case (1..., (-1)..., true):
+            return .init(directions: [.southEast])
+        case (0, (-1)..., false):
             return .init(directions: [.south])
-        case ((-1)..., (-1)...):
-            return makeSureDeltasAreEqual(successDirection: .southWest)
-        case ((-1)..., 0):
+        case ((-1)..., (-1)..., true):
+            return .init(directions: [.southWest])
+        case ((-1)..., 0, false):
             return .init(directions: [.west])
-        case ((-1)..., 1...):
-            return makeSureDeltasAreEqual(successDirection: .northWest)
+        case ((-1)..., 1..., true):
+            return .init(directions: [.northWest])
         default:
             return .init(directions: [])
         }
@@ -166,23 +158,19 @@ struct Queen: Piece {
 
 struct Bishop: Piece {
     func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        func makeSureDeltasAreEqual(successDirection: Direction) -> MovePattern {
-            guard abs(fileDelta) == abs(rowDelta) else {
-                return .init(directions: [])
-            }
-            
-            return .init(directions: [successDirection])
+        guard abs(fileDelta) == abs(rowDelta) else {
+            return .init(directions: [])
         }
         
         switch (fileDelta, rowDelta) {
         case (1..., 1...):
-            return makeSureDeltasAreEqual(successDirection: .northEast)
+            return .init(directions: [.northEast])
         case (...(-1), ...(-1)):
-            return makeSureDeltasAreEqual(successDirection: .southWest)
+            return .init(directions: [.southWest])
         case (1..., ...(-1)):
-            return makeSureDeltasAreEqual(successDirection: .southEast)
+            return .init(directions: [.southEast])
         case (...(-1), 1...):
-            return makeSureDeltasAreEqual(successDirection: .northWest)
+            return .init(directions: [.northWest])
         default:
             return .init(directions: [])
         }
@@ -236,7 +224,26 @@ struct Rook: Piece {
 
 struct Knight: Piece {
     func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        .init(directions: [])
+        switch (fileDelta, rowDelta) {
+        case (-1, 2):
+            return .init(directions: [.north, .north, .west])
+        case (1, 2):
+            return .init(directions: [.north, .north, .east])
+        case (-2, 1):
+            return .init(directions: [.north, .west, .west])
+        case (2, 1):
+            return .init(directions: [.north, .east, .east])
+        case (-2, -1):
+            return .init(directions: [.south, .west, .west])
+        case (2, -1):
+            return .init(directions: [.south, .east, .east])
+        case (-1, -2):
+            return .init(directions: [.south, .south, .west])
+        case (1, -2):
+            return .init(directions: [.south, .south, .east])
+        default:
+            return .init(directions: [])
+        }
     }
     
     var name = "Knight"

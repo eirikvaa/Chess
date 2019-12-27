@@ -46,7 +46,7 @@ extension Game {
             return
         }
         
-        while true && !continueAfterPrePlayedMoves {
+        while true {
             printBoard()
             
             print("\(currentPlayer.name), please input a move:")
@@ -208,6 +208,13 @@ extension Game {
                     if board[newFileRowString, currentPlayer.side] {
                         throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                     }
+                }
+            case (_, .knight):
+                let validAttack = destinationPiece != nil && destinationPiece?.player?.side != currentPlayer.side
+                let validMove = destinationPiece == nil
+                
+                guard validAttack || validMove else {
+                    throw GameError.invalidMove(message: "Must either be a valid attack or valid move.")
                 }
             default:
                 break
