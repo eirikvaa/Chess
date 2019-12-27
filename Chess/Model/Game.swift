@@ -25,9 +25,10 @@ struct Game {
 
 extension Game {
     mutating func addPrePlayedMoves() {
-        let kingToAttackPosition = ["e2e4", "d7d5", "e4e5", "d5d4", "e1e2", "a7a5", "e2e3", "a5a4"]
+        //let kingToAttackPosition = ["e2e4", "d7d5", "e4e5", "d5d4", "e1e2", "a7a5", "e2e3", "a5a4"]
+        let queenAttackPos = ["d2d4", "e7e5", "d1d3", "e5e4"]
         
-        let moves = kingToAttackPosition.compactMap { try? Move(move: $0) }
+        let moves = queenAttackPos.compactMap { try? Move(move: $0) }
         
         prePlayedMoves.append(contentsOf: moves)
     }
@@ -183,7 +184,8 @@ extension Game {
                         }
                     }
                 }
-            case (_, .king):
+            case (_, .king),
+                 (_, .queen):
                 if board[move.destination, currentPlayer.side] {
                     throw GameErrors.invalidMove(message: "Trying to move to position occupoied by own piece.")
                 }

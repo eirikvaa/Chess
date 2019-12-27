@@ -115,10 +115,6 @@ struct King: Piece {
 }
 
 struct Queen: Piece {
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        .init(directions: [])
-    }
-    
     var name = "Queen"
     var type = PieceType.queen
     var player: Player?
@@ -136,6 +132,36 @@ struct Queen: Piece {
         .init(directions: [.northWest])
     ]
     var moved = false
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        func makeSureDeltasAreEqual(successDirection: Direction) -> MovePattern {
+            guard abs(fileDelta) == abs(rowDelta) else {
+                return .init(directions: [])
+            }
+            
+            return .init(directions: [successDirection])
+        }
+        
+        switch (fileDelta, rowDelta) {
+        case (0, 1...):
+            return .init(directions: [.north])
+        case (1..., 1...):
+            return makeSureDeltasAreEqual(successDirection: .northEast)
+        case (1..., 0):
+            return .init(directions: [.east])
+        case (1..., (-1)...):
+            return makeSureDeltasAreEqual(successDirection: .southEast)
+        case (0, (-1)...):
+            return .init(directions: [.south])
+        case ((-1)..., (-1)...):
+            return makeSureDeltasAreEqual(successDirection: .southWest)
+        case ((-1)..., 0):
+            return .init(directions: [.west])
+        case ((-1)..., 1...):
+            return makeSureDeltasAreEqual(successDirection: .northWest)
+        default:
+            return .init(directions: [])
+        }
+    }
 }
 
 struct Bishop: Piece {
