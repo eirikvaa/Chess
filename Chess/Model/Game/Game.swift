@@ -16,7 +16,7 @@ struct Game {
 }
 
 extension Game {
-    init(prePlayedMoves: Move...) {
+    init(prePlayedMoves: [Move]) {
         self.prePlayedMoves.append(contentsOf: prePlayedMoves)
     }
 }

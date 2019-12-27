@@ -8,6 +8,6 @@
 
 import Foundation
 
-var game = Game(prePlayedMoves: "e2e4", "e7e5", "g1f3", "b8c6", "f1b5")
+var game = Game(prePlayedMoves: ["e2e4", "e7e5", "g1f3", "b8c6", "f1b5"])
 game.resetBoard()
 try? game.startGame(continueAfterPrePlayedMoves: false)
