@@ -94,19 +94,7 @@ extension Game {
         do {
             try validateMove(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: &currentPlayer)
         } catch let gameError as GameErrors {
-            switch gameError {
-            case .invalidPiece:
-                print("You cannot use the piece of an opponent.")
-            case .ownPieceInDestinationPosition:
-                print("You cannot move a piece to a position taken up by your own pieces.")
-            case .invalidMove(let message):
-                print(message)
-            case .noPieceInSourcePosition:
-                print("There is no piece in the source position you entered.")
-            case .invalidMoveFormat:
-                print("Move was on an invalid format.")
-            }
-            
+            printErrorMessage(gameError: gameError)
             throw gameError
         } catch {
             print("Something went wrong")
@@ -116,6 +104,21 @@ extension Game {
         sourcePiece?.moved = true
         board[move.destination] = sourcePiece
         board[move.source] = nil
+    }
+    
+    func printErrorMessage(gameError: GameErrors) {
+        switch gameError {
+        case .invalidPiece:
+            print("You cannot use the piece of an opponent.")
+        case .ownPieceInDestinationPosition:
+            print("You cannot move a piece to a position taken up by your own pieces.")
+        case .invalidMove(let message):
+            print(message)
+        case .noPieceInSourcePosition:
+            print("There is no piece in the source position you entered.")
+        case .invalidMoveFormat:
+            print("Move was on an invalid format.")
+        }
     }
     
     func distanceBetweenFiles(sourceFile: String, destinationFile: String) -> Int {
