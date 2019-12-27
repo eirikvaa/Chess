@@ -142,7 +142,18 @@ struct Bishop: Piece {
 
 struct Rook: Piece {
     func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        .init(directions: [])
+        switch (fileDelta, rowDelta) {
+        case (1..., 0):
+            return .init(directions: side == .white ? [.east] : [.west])
+        case ((-1)..., 0):
+            return .init(directions: side == .white ? [.west] : [.east])
+        case (0, 1...):
+            return .init(directions: side == .white ? [.north] : [.south])
+        case (0, (-1)...):
+            return .init(directions: side == .white ? [.south] : [.north])
+        default:
+            return .init(directions: [])
+        }
     }
     
     var name = "Rook"

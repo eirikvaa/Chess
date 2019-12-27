@@ -53,9 +53,14 @@ struct Board {
         }
     }
     
+    subscript(fileRowString: String, side: Side) -> Bool {
+        return self[boardIndex(fileRowString: fileRowString)]?.player?.side == side
+    }
+    
     func boardIndex(fileRowString: String) -> Int {
         let file = String(fileRowString.dropLast())
         let row = Int(String(fileRowString.dropFirst()))!
+        assert(isValidPlacement(row: row, file: file), "Index out of range")
         return 63 - row * 8 + fileToIndex(file) + 1
     }
 }
@@ -78,14 +83,17 @@ extension Board: CustomStringConvertible {
         
         return _description
     }
+    
+    func fileToIndex(_ file: String) -> Int {
+        return validFiles.firstIndex(of: file.lowercased()) ?? 0
+    }
+    
+    func fileIndexToFile(_ index: Int) -> String {
+        validFiles[index]
+    }
 }
 
 private extension Board {
-    func fileToIndex(_ file: String) -> Int {
-        let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
-        return files.firstIndex(of: file.lowercased()) ?? 0
-    }
-    
     func distanceBetweenFiles(sourceFile: String, destinationFile: String) -> Int {
         let sourceFileIndex = fileToIndex(sourceFile)
         let destinationFileIndex = fileToIndex(destinationFile)

@@ -99,6 +99,7 @@ extension Game {
         
         let (sourceFile, sourceRow) = move.partition(moveComponent: move.source)
         let (destinationFile, destinationRow) = move.partition(moveComponent: move.destination)
+        let sourceFileIndex = board.fileToIndex(sourceFile)
         
         let fileDelta = distanceBetweenFiles(sourceFile: sourceFile, destinationFile: destinationFile)
         let rowDelta = (destinationRow - sourceRow) * rowDeltaMultiplier
@@ -123,6 +124,24 @@ extension Game {
                  (.northWest, .pawn):
                 guard destinationPiece != nil else {
                     throw GameErrors.invalidMove(message: "Attack requires opponent piece in destination position")
+                }
+            case (.north, .rook),
+                 (.east, .rook),
+                 (.west, .rook),
+                 (.south, .rook):
+                if fileDelta == 0 {
+                    for i in 1 ... rowDelta {
+                        if board["\(sourceFile)\(sourceRow + i * rowDeltaMultiplier)", currentPlayer.side] {
+                            throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                        }
+                    }
+                } else if rowDelta == 0 {
+                    for i in 1 ... fileDelta {
+                        let newFile = board.fileIndexToFile(sourceFileIndex + i * rowDeltaMultiplier)
+                        if board["\(newFile)\(sourceRow)", currentPlayer.side] {
+                            throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                        }
+                    }
                 }
             default:
                 break
