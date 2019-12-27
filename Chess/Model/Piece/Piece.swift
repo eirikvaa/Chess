@@ -73,7 +73,7 @@ protocol Piece {
     var movePatterns: [MovePattern] { get }
     var moved: Bool { get set }
     
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern
+    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern
 }
 
 struct King: Piece {
@@ -90,7 +90,7 @@ struct King: Piece {
         .init(directions: [.west])
     ]
     var moved = false
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
         switch (fileDelta, rowDelta) {
         case (0, 1):
             return .init(directions: [.north])
@@ -132,7 +132,7 @@ struct Queen: Piece {
         .init(directions: [.northWest])
     ]
     var moved = false
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
         func makeSureDeltasAreEqual(successDirection: Direction) -> MovePattern {
             guard abs(fileDelta) == abs(rowDelta) else {
                 return .init(directions: [])
@@ -165,7 +165,7 @@ struct Queen: Piece {
 }
 
 struct Bishop: Piece {
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
         func makeSureDeltasAreEqual(successDirection: Direction) -> MovePattern {
             guard abs(fileDelta) == abs(rowDelta) else {
                 return .init(directions: [])
@@ -204,7 +204,7 @@ struct Bishop: Piece {
 }
 
 struct Rook: Piece {
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
         switch (fileDelta, rowDelta) {
         case (1..., 0):
             return .init(directions: side == .white ? [.east] : [.west])
@@ -235,7 +235,7 @@ struct Rook: Piece {
 }
 
 struct Knight: Piece {
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
         .init(directions: [])
     }
     
@@ -259,7 +259,7 @@ struct Knight: Piece {
 }
 
 struct Pawn: Piece {
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
         switch (fileDelta, rowDelta, moved) {
         case (0, 1...2, false),
              (0, 1, true):

@@ -15,7 +15,7 @@ class GameTests: XCTestCase {
     func testSinglePawnNorthMoveAtStartShouldSucceed() {
         var game = createGame(moves: "e2e3")
         
-        XCTAssertNoThrow(try game.startGame(continueAfterPrePlayedMoves: false), "Should not throw")
+        assertNoGameThrowing(game: &game, message: "Should not throw")
     }
     
     func testDoublePawnNorthMoveAtStartShouldSucceed() {

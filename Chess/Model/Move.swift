@@ -18,7 +18,7 @@ struct Move {
     
     init?(move: String) throws {
         guard let _ = move.lowercased().range(of: #"[a-h][1-8][a-h][1-8]"#, options: .regularExpression) else {
-            throw GameErrors.invalidMoveFormat
+            throw GameError.invalidMoveFormat
         }
         
         source = String(move.dropLast(2))

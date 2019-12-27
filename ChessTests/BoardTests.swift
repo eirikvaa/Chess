@@ -12,12 +12,4 @@ import XCTest
 
 class BoardTests: XCTestCase {
 
-    func testBoardValidIndex() {
-        let row = 0
-        let file = 0
-        let board = Board()
-        
-        
-    }
-
 }

@@ -8,14 +8,6 @@
 
 import Foundation
 
-enum GameErrors: Error {
-    case invalidMoveFormat
-    case noPieceInSourcePosition
-    case ownPieceInDestinationPosition
-    case invalidPiece
-    case invalidMove(message: String)
-}
-
 struct Game {
     private var board = Board()
     let whitePlayer = Player(side: .white)
@@ -93,7 +85,7 @@ extension Game {
         
         do {
             try validateMove(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: &currentPlayer)
-        } catch let gameError as GameErrors {
+        } catch let gameError as GameError {
             printErrorMessage(gameError: gameError)
             throw gameError
         } catch {
@@ -106,7 +98,7 @@ extension Game {
         board[move.source] = nil
     }
     
-    func printErrorMessage(gameError: GameErrors) {
+    func printErrorMessage(gameError: GameError) {
         switch gameError {
         case .invalidPiece:
             print("You cannot use the piece of an opponent.")
@@ -146,25 +138,24 @@ extension Game {
         let rowDelta = (destinationRow - sourceRow) * sideMultiplier
         
         let validPattern = sourcePiece.validPattern(
-            move: move,
             fileDelta: fileDelta,
             rowDelta: rowDelta,
             side: currentPlayer.side)
         
         guard validPattern.directions.count > 0 else {
-            throw GameErrors.invalidMove(message: "No valid directions to destination position")
+            throw GameError.invalidMove(message: "No valid directions to destination position")
         }
         
         for direction in validPattern.directions {
             switch (direction, sourcePiece.type) {
             case (.north, .pawn):
                 guard destinationPiece == nil else {
-                    throw GameErrors.invalidMove(message: "Destination position occupied")
+                    throw GameError.invalidMove(message: "Destination position occupied")
                 }
             case (.northEast, .pawn),
                  (.northWest, .pawn):
                 guard destinationPiece != nil else {
-                    throw GameErrors.invalidMove(message: "Attack requires opponent piece in destination position")
+                    throw GameError.invalidMove(message: "Attack requires opponent piece in destination position")
                 }
             case (.north, .rook),
                  (.east, .rook),
@@ -174,21 +165,21 @@ extension Game {
                     for i in 1 ... rowDelta {
                         let newRow = sourceRow + i * sideMultiplier
                         if board["\(sourceFile)\(newRow)", currentPlayer.side] {
-                            throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                            throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                         }
                     }
                 } else if rowDelta == 0 {
                     for i in 1 ... fileDelta {
                         let newFile = board.fileIndexToFile(sourceFileIndex + i * sideMultiplier)
                         if board["\(newFile)\(sourceRow)", currentPlayer.side] {
-                            throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                            throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                         }
                     }
                 }
             case (_, .king),
                  (_, .queen):
                 if board[move.destination, currentPlayer.side] {
-                    throw GameErrors.invalidMove(message: "Trying to move to position occupied by own piece.")
+                    throw GameError.invalidMove(message: "Trying to move to position occupied by own piece.")
                 }
             case (.northWest, .bishop),
                  (.southWest, .bishop):
@@ -198,11 +189,10 @@ extension Game {
                 let rowRange = (sourceRow + 1 * sideMultiplier) ... (destinationRow)
                 for (i, j) in zip(fileRange, rowRange.reversed()) {
                     let newFile = board.fileIndexToFile(i)
-                    //let newRow = sourceRow + j * sideMultiplier
                     let newFileRowString = "\(newFile)\(j)"
                     
                     if board[newFileRowString, currentPlayer.side] {
-                        throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                        throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                     }
                 }
                 case (.northEast, .bishop),
@@ -212,13 +202,11 @@ extension Game {
                 let fileRange = min(source, dest) ... max(source, dest)
                 let rowRange = (sourceRow + 1 * sideMultiplier) ... (destinationRow)
                 for (i, j) in zip(fileRange, rowRange) {
-                    print(i, j)
                     let newFile = board.fileIndexToFile(i)
-                    //let newRow = sourceRow + j * sideMultiplier
                     let newFileRowString = "\(newFile)\(j)"
                     
                     if board[newFileRowString, currentPlayer.side] {
-                        throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
+                        throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                     }
                 }
             default:
@@ -235,19 +223,19 @@ extension Game {
     
     mutating func validateMove(move: Move, sourcePiece: Piece?, destinationPiece: Piece?, currentPlayer: inout Player) throws {
        guard let sourcePiece = sourcePiece else {
-           throw GameErrors.noPieceInSourcePosition
+           throw GameError.noPieceInSourcePosition
        }
        
        guard sourcePiece.player?.side == currentPlayer.side else {
-           throw GameErrors.invalidPiece
+           throw GameError.invalidPiece
        }
        
        if destinationPiece?.player?.side == currentPlayer.side {
-           throw GameErrors.ownPieceInDestinationPosition
+           throw GameError.ownPieceInDestinationPosition
        }
        
        guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: currentPlayer) else {
-           throw GameErrors.invalidMove(message: "Invalid move pattern!")
+           throw GameError.invalidMove(message: "Invalid move pattern!")
        }
        
         currentPlayer.addMove(move)
