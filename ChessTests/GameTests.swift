@@ -47,6 +47,12 @@ class GameTests: XCTestCase {
         
         assertNoGameThrowing(game: &game, message: "Should not throw")
     }
+    
+    func testRuyLopezOpeningShouldSucceed() {
+        var game = createGame(moves: "e2e4", "e7e5", "g1f3", "b8c6", "f1b5")
+        
+        assertNoGameThrowing(game: &game, message: "Should not throw")
+    }
 
 }
 

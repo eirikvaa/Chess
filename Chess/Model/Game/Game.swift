@@ -43,6 +43,7 @@ extension Game {
         }
         
         guard continueAfterPrePlayedMoves else {
+            printBoard()
             return
         }
         
