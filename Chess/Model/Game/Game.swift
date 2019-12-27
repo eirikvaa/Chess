@@ -238,10 +238,6 @@ extension Game {
            throw GameError.invalidPiece
        }
        
-       if destinationPiece?.player?.side == currentPlayer.side {
-           throw GameError.ownPieceInDestinationPosition
-       }
-       
        guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: currentPlayer) else {
            throw GameError.invalidMove(message: "Invalid move pattern!")
        }
