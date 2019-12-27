@@ -77,10 +77,6 @@ protocol Piece {
 }
 
 struct King: Piece {
-    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        .init(directions: [])
-    }
-    
     var name = "King"
     var type = PieceType.king
     var player: Player?
@@ -94,6 +90,28 @@ struct King: Piece {
         .init(directions: [.west])
     ]
     var moved = false
+    func validPattern(move: Move, fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
+        switch (fileDelta, rowDelta) {
+        case (0, 1):
+            return .init(directions: [.north])
+        case (1, 1):
+            return .init(directions: [.northEast])
+        case (1, 0):
+            return .init(directions: [.east])
+        case (1, -1):
+            return .init(directions: [.southEast])
+        case (0, -1):
+            return .init(directions: [.south])
+        case (-1, -1):
+            return .init(directions: [.southWest])
+        case (-1, 0):
+            return .init(directions: [.west])
+        case (-1, 1):
+            return .init(directions: [.northWest])
+        default:
+            return .init(directions: [])
+        }
+    }
 }
 
 struct Queen: Piece {

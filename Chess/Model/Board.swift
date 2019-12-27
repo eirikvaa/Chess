@@ -60,7 +60,7 @@ struct Board {
     func boardIndex(fileRowString: String) -> Int {
         let file = String(fileRowString.dropLast())
         let row = Int(String(fileRowString.dropFirst()))!
-        assert(isValidPlacement(row: row, file: file), "Index out of range")
+        assert(isValidPlacement(row: row - 1, file: file), "Index out of range")
         return 63 - row * 8 + fileToIndex(file) + 1
     }
 }

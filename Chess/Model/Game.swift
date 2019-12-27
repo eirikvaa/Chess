@@ -20,14 +20,39 @@ struct Game {
     private var board = Board()
     let whitePlayer = Player(side: .white)
     let blackPlayer = Player(side: .black)
+    private var prePlayedMoves = [Move]()
 }
 
 extension Game {
+    mutating func addPrePlayedMoves() {
+        let kingToAttackPosition = ["e2e4", "d7d5", "e4e5", "d5d4", "e1e2", "a7a5", "e2e3", "a5a4"]
+        
+        let moves = kingToAttackPosition.compactMap { try? Move(move: $0) }
+        
+        prePlayedMoves.append(contentsOf: moves)
+    }
+    
     mutating func startGame() {
         resetBoard()
         
         var currentPlayer = whitePlayer
         var round = 0
+        
+        addPrePlayedMoves()
+        
+        for move in prePlayedMoves {
+            printBoard()
+            
+            do {
+                try performMoveHandleError(move: move, currentPlayer: &currentPlayer)
+            } catch {
+                // If something went wrong when adding the preplayed moves, we did something
+                // wrong and should just quit.
+                return
+            }
+            
+            finishRound(round: &round, currentPlayer: &currentPlayer)
+        }
         
         while true {
             printBoard()
@@ -45,40 +70,52 @@ extension Game {
                 break
             }
             
-            var sourcePiece = board[move.source]
-            let destinationPiece = board[move.destination]
-            
             do {
-                try validateMove(
-                    move: move,
-                    sourcePiece: sourcePiece,
-                    destinationPiece: destinationPiece,
-                    currentPlayer: &currentPlayer)
-                sourcePiece?.moved = true
-                board[move.destination] = sourcePiece
-                board[move.source] = nil
-            } catch GameErrors.noPieceInSourcePosition {
-                print("There is no piece in the source position you entered.")
-                continue
-            } catch GameErrors.invalidPiece {
-                print("You cannot use the piece of an opponent.")
-                continue
-            } catch GameErrors.ownPieceInDestinationPosition {
-                print("You cannot move a piece to a position taken up by your own pieces.")
-                continue
-            } catch GameErrors.invalidMove(let message) {
-                print(message)
-                continue
+                try performMoveHandleError(move: move, currentPlayer: &currentPlayer)
             } catch {
-                print("Something went wrong")
+                // If something went wrong during playing, we did something wrong, but don't
+                // want to play from the start, so just try again.
                 continue
             }
             
-            print("\(currentPlayer.name) performed the following move: \(move.text)")
-            
-            round += 1
-            currentPlayer = round.isMultiple(of: 2) ? whitePlayer : blackPlayer
+            finishRound(round: &round, currentPlayer: &currentPlayer)
         }
+    }
+    
+    mutating func finishRound(round: inout Int, currentPlayer: inout Player) {
+        round += 1
+        currentPlayer = round.isMultiple(of: 2) ? whitePlayer : blackPlayer
+    }
+    
+    mutating func performMoveHandleError(move: Move, currentPlayer: inout Player) throws {
+        var sourcePiece = board[move.source]
+        let destinationPiece = board[move.destination]
+        
+        do {
+            try validateMove(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: &currentPlayer)
+        } catch let gameError as GameErrors {
+            switch gameError {
+            case .invalidPiece:
+                print("You cannot use the piece of an opponent.")
+            case .ownPieceInDestinationPosition:
+                print("You cannot move a piece to a position taken up by your own pieces.")
+            case .invalidMove(let message):
+                print(message)
+            case .noPieceInSourcePosition:
+                print("There is no piece in the source position you entered.")
+            case .invalidMoveFormat:
+                print("Move was on an invalid format.")
+            }
+            
+            throw gameError
+        } catch {
+            print("Something went wrong")
+            throw error
+        }
+        
+        sourcePiece?.moved = true
+        board[move.destination] = sourcePiece
+        board[move.source] = nil
     }
     
     func distanceBetweenFiles(sourceFile: String, destinationFile: String) -> Int {
@@ -142,6 +179,10 @@ extension Game {
                             throw GameErrors.invalidMove(message: "Trying to move to or over own piece.")
                         }
                     }
+                }
+            case (_, .king):
+                if board[move.destination, currentPlayer.side] {
+                    throw GameErrors.invalidMove(message: "Trying to move to position occupoied by own piece.")
                 }
             default:
                 break
