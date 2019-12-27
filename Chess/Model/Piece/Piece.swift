@@ -66,7 +66,6 @@ enum PieceType {
 }
 
 protocol Piece {
-    var name: String { get }
     var type: PieceType { get }
     var player: Player? { get set }
     var graphicalRepresentation: String { get }
@@ -77,7 +76,6 @@ protocol Piece {
 }
 
 struct King: Piece {
-    var name = "King"
     var type = PieceType.king
     var player: Player?
     var graphicalRepresentation: String {
@@ -115,7 +113,6 @@ struct King: Piece {
 }
 
 struct Queen: Piece {
-    var name = "Queen"
     var type = PieceType.queen
     var player: Player?
     var graphicalRepresentation: String {
@@ -176,7 +173,6 @@ struct Bishop: Piece {
         }
     }
     
-    var name = "Runner"
     var type = PieceType.bishop
     var player: Player?
     var graphicalRepresentation: String {
@@ -207,7 +203,6 @@ struct Rook: Piece {
         }
     }
     
-    var name = "Rook"
     var type = PieceType.rook
     var player: Player?
     var graphicalRepresentation: String {
@@ -246,7 +241,6 @@ struct Knight: Piece {
         }
     }
     
-    var name = "Knight"
     var type = PieceType.knight
     var player: Player?
     var graphicalRepresentation: String {
@@ -280,7 +274,6 @@ struct Pawn: Piece {
         }
     }
     
-    var name = "Pawn"
     var type = PieceType.pawn
     var player: Player?
     var graphicalRepresentation: String {
