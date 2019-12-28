@@ -112,7 +112,7 @@ extension Game {
     }
     
     func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
-        var sourceCoordinate = move.sourceCoordinate
+        let sourceCoordinate = move.sourceCoordinate
         let destinationCoordinate = move.destinationCoordinate
         let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
 
@@ -134,48 +134,19 @@ extension Game {
                 guard destinationPiece != nil else {
                     throw GameError.invalidMove(message: "Attack requires opponent piece in destination position")
                 }
-            case (.north, .rook),
-                 (.east, .rook),
-                 (.west, .rook),
-                 (.south, .rook):
-                let side = currentPlayer.side
-                let numberOfMoves = moveDelta.maximumMagnitude
-                
-                var currentCoordinate = sourceCoordinate
-                for _ in 0 ..< numberOfMoves {
-                    currentCoordinate = currentCoordinate.move(by: direction, side: side)
-                    
-                    if currentCoordinate == destinationCoordinate {
-                        break
-                    }
-                    
-                    if board[currentCoordinate] != nil  {
-                        throw GameError.invalidMove(message: "Cannot move over opposite piece")
-                    }
-                }
-                
-                if board[destinationCoordinate, currentPlayer.side] {
-                    throw GameError.invalidMove(message: "Cannot move to position occupied by self")
-                }
-            case (_, .king),
-                 (_, .queen):
-                if board[move.destinationCoordinate, currentPlayer.side] {
-                    throw GameError.invalidMove(message: "Trying to move to position occupied by own piece.")
-                }
-            case (.northWest, .bishop),
-                 (.southWest, .bishop),
-                 (.northEast, .bishop),
-                 (.southEast, .bishop):
-                let numberOfMoves = moveDelta.magnitude(of: \.x)
-                for _ in 0 ..< numberOfMoves {
-                    let newCoordinate = sourceCoordinate.move(by: direction, side: currentPlayer.side)
-                    
-                    if board[newCoordinate, currentPlayer.side] {
-                        throw GameError.invalidMove(message: "Trying to move to or over own piece.")
-                    }
-                }
+            case (_, .rook),
+                 (_, .queen),
+                 (_, .king),
+                 (_, .bishop):
+                try board.moveMultipleSteps(
+                    source: sourceCoordinate,
+                    destination: destinationCoordinate,
+                    direction: direction,
+                    moves: moveDelta.maximumMagnitude,
+                    side: currentPlayer.side,
+                    canCrossOver: false)
             case (_, .knight):
-                let validAttack = destinationPiece != nil && destinationPiece?.player?.side != currentPlayer.side
+                let validAttack = board.canAttack(at: destinationCoordinate, side: currentPlayer.side)
                 let validMove = destinationPiece == nil
                 
                 guard validAttack || validMove else {
