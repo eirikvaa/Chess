@@ -261,14 +261,21 @@ struct Knight: Piece {
 
 struct Pawn: Piece {
     func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        switch (fileDelta, rowDelta, moved) {
-        case (0, 1...2, false),
-             (0, 1, true):
+        switch (fileDelta, rowDelta, moved, side) {
+        case (0, 1...2, false, .white),
+             (0, 1, true, .white):
             return .init(directions: [.north])
-        case (-1, 1, _):
-            return .init(directions: [side == .white ? .northWest : .northEast])
-        case (1, 1, _):
-            return .init(directions: [side == .white ? .northEast : .northWest])
+        case (-1, 1, _, .white):
+            return .init(directions: [.northWest])
+        case (1, 1, _, .white):
+            return .init(directions: [.northEast])
+        case (0, (-2)...(-1), false, .black),
+             (0, -1, true, .black):
+            return .init(directions: [.south])
+        case (1, -1, _, .black):
+            return .init(directions: [.southWest])
+        case (-1, -1, _, .black):
+            return .init(directions: [.southEast])
         default:
             return  .init(directions: [])
         }
@@ -282,7 +289,10 @@ struct Pawn: Piece {
     var movePatterns: [MovePattern] = [
         .init(directions: [.north]),
         .init(directions: [.northEast]),
-        .init(directions: [.northWest])
+        .init(directions: [.northWest]),
+        .init(directions: [.south]),
+        .init(directions: [.southWest]),
+        .init(directions: [.southEast])
     ]
     var moved = false
 }

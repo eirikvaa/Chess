@@ -8,60 +8,128 @@
 
 import Foundation
 
+@propertyWrapper
+struct Clamping<Value: Comparable> {
+    var value: Value
+    let range: ClosedRange<Value>
+    
+    init(wrappedValue value: Value, _ range: ClosedRange<Value>) {
+        self.value = value
+        self.range = range
+    }
+    
+    var wrappedValue: Value {
+        get {
+            value
+        }
+        set {
+            value = min(max(value, range.lowerBound), range.upperBound)
+        }
+    }
+}
+
+typealias File = String
+typealias Row = Int
+
+struct BoardCell {
+    let coordinate: BoardCoordinate
+    var piece: Piece?
+}
+
+struct BoardCoordinate {
+    @Clamping("a" ... "h")
+    var file: File = "a"
+    
+    @Clamping(1 ... 8)
+    var row: Row = 1
+    
+    var index: Int {
+        return (row - 1) * 8 + fileIndex
+    }
+    
+    var fileIndex: Int {
+        ["a", "b", "c", "d", "e", "f", "g", "h"].firstIndex(of: file) ?? 0
+    }
+    
+    func fileIndexToFile(_ index: Int) -> File {
+        ["a", "b", "c", "d", "e", "f", "g", "h"][index]
+    }
+}
+
+extension BoardCoordinate: Equatable {
+    static func == (lhs: BoardCoordinate, rhs: BoardCoordinate) -> Bool {
+        lhs.file == rhs.file && lhs.row == rhs.row
+    }
+}
+
+extension BoardCoordinate: ExpressibleByStringLiteral {
+    init(stringLiteral value: String) {
+        let file = String(value.dropLast())
+        let row = Int(String(value.dropFirst()))!
+        self = .init(file: file, row: row)
+    }
+}
+
+extension BoardCoordinate {
+    mutating func move(by direction: Direction, side: Side) -> BoardCoordinate {
+        var fileIndexDelta = 0
+        var rowDelta = 0
+        
+        switch direction {
+        case .north: rowDelta += 1
+        case .northEast: rowDelta += 1; fileIndexDelta += 1
+        case .east: fileIndexDelta += 1
+        case .southEast: fileIndexDelta += 1; rowDelta -= 1
+        case .south: rowDelta -= 1
+        case .southWest: fileIndexDelta -= 1; rowDelta -= 1
+        case .west: fileIndexDelta -= 1
+        case .northWest: rowDelta += 1; fileIndexDelta -= 1
+        }
+        
+        fileIndexDelta *= side.sideMultiplier
+        rowDelta *= side.sideMultiplier
+        
+        return .init(file: fileIndexToFile(fileIndex + fileIndexDelta), row: row + rowDelta)
+    }
+}
+
+extension BoardCell: CustomStringConvertible {
+    var description: String {
+        return piece?.graphicalRepresentation ?? " "
+    }
+}
+
 struct Board {
-    let validRows = 0 ..< 8
     let validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
-    private var pieces: [Piece?] = Array(repeating: nil, count: 64)
     
-    subscript(file: String, row: Int) -> Piece? {
+    private let validRows = 1 ... 8
+    private var cells: [[BoardCell]] = []
+    
+    init() {
+        for row in validRows {
+            var rowPositions: [BoardCell] = []
+            
+            for file in validFiles {
+                rowPositions.append(.init(coordinate: .init(file: file, row: row), piece: nil))
+            }
+            
+            cells.append(rowPositions)
+        }
+    }
+    
+    subscript(coordinate: BoardCoordinate) -> Piece? {
         get {
-            assert(isValidPlacement(row: row, file: file), "Index out of range")
-            let file = fileToIndex(file)
-            return pieces[row * 8 + file]
+            assert(isValidPlacement(row: coordinate.row, file: coordinate.file), "Index out of range")
+            return cells[coordinate.row - 1][coordinate.fileIndex].piece
         }
         set {
-            assert(isValidPlacement(row: row, file: file), "Index out of range")
-            let file = fileToIndex(file)
-            pieces[row * 8 + file] = newValue
+            assert(isValidPlacement(row: coordinate.row, file: coordinate.file), "Index out of range")
+            cells[coordinate.row - 1][coordinate.fileIndex].piece = newValue
         }
     }
     
-    subscript(index: Int) -> Piece? {
-        get {
-            pieces[index]
-        }
-        set {
-            pieces[index] = newValue
-        }
-    }
-    
-    subscript(fileRowString: String, fileDelta: Int, rowDelta: Int, side: Side, direction: Direction) -> Piece? {
-        let verticalMultiplier = direction == .north ? 1 : -1
-        let horizontalMultiplier = direction == .east ? 1 : -1
-        var index = boardIndex(fileRowString: fileRowString)
-        index += fileDelta * side.sideMultiplier * verticalMultiplier
-        index += rowDelta * 8 * side.sideMultiplier * horizontalMultiplier
-        return self[index]
-    }
-    
-    subscript(fileRowString: String) -> Piece? {
-        get {
-            self[boardIndex(fileRowString: fileRowString)]
-        }
-        set {
-            self[boardIndex(fileRowString: fileRowString)] = newValue
-        }
-    }
-    
-    subscript(fileRowString: String, side: Side) -> Bool {
-        return self[boardIndex(fileRowString: fileRowString)]?.player?.side == side
-    }
-    
-    func boardIndex(fileRowString: String) -> Int {
-        let file = String(fileRowString.dropLast())
-        let row = Int(String(fileRowString.dropFirst()))!
-        assert(isValidPlacement(row: row - 1, file: file), "Index out of range")
-        return 63 - row * 8 + fileToIndex(file) + 1
+    subscript(coordinate: BoardCoordinate, side: Side) -> Bool {
+        return self[coordinate]?.player?.side == side
     }
 }
 
@@ -70,13 +138,15 @@ extension Board: CustomStringConvertible {
         var _description = "    a   b   c   d   e   f   g   h\n"
         _description += "   ––– ––– ––– ––– ––– ––– ––– ––– \n"
         
-        for row in validRows {
-            _description += "\(abs(row - 7) + 1) |"
-            for file in validFiles {
-                let piece = self[file, row]
-                _description += " " + (piece?.graphicalRepresentation ?? " ") + " |"
+        for (index, row) in cells.reversed().enumerated() {
+            _description += "\(8 - index) |"
+            
+            for cell in row {
+                let cellContent = cell.piece?.graphicalRepresentation ?? " "
+                _description += " " + cellContent + " |"
             }
-            _description += " \(abs(row - 7) + 1)\n   ––– ––– ––– ––– ––– ––– ––– ––– \n"
+            
+            _description += " \(8 - index)\n   ––– ––– ––– ––– ––– ––– ––– ––– \n"
         }
         
         _description += "    a   b   c   d   e   f   g   h\n"
@@ -94,13 +164,6 @@ extension Board: CustomStringConvertible {
 }
 
 private extension Board {
-    func distanceBetweenFiles(sourceFile: String, destinationFile: String) -> Int {
-        let sourceFileIndex = fileToIndex(sourceFile)
-        let destinationFileIndex = fileToIndex(destinationFile)
-        
-        return destinationFileIndex - sourceFileIndex
-    }
-    
     func isValidPlacement(row: Int, file: String) -> Bool {
         isValidNumericalIndex(index: row) && isValidFile(file)
     }

@@ -81,8 +81,8 @@ extension Game {
     }
     
     mutating func performMoveHandleError(move: Move, currentPlayer: inout Player) throws {
-        var sourcePiece = board[move.source]
-        let destinationPiece = board[move.destination]
+        var sourcePiece = board[move.sourceCoordinate]
+        let destinationPiece = board[move.destinationCoordinate]
         
         do {
             try validateMove(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: &currentPlayer)
@@ -95,8 +95,8 @@ extension Game {
         }
         
         sourcePiece?.moved = true
-        board[move.destination] = sourcePiece
-        board[move.source] = nil
+        board[move.destinationCoordinate] = sourcePiece
+        board[move.sourceCoordinate] = nil
     }
     
     func printErrorMessage(gameError: GameError) {
@@ -127,16 +127,11 @@ extension Game {
     }
     
     func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
-        // Multiply with -1 if we are black as north will be opposite way for them
-        let sideMultiplier = currentPlayer.side.sideMultiplier
-        
-        let (sourceFile, sourceRow) = move.partition(moveComponent: move.source)
-        let (destinationFile, destinationRow) = move.partition(moveComponent: move.destination)
-        let sourceFileIndex = board.fileToIndex(sourceFile)
-        let destinationFileIndex = board.fileToIndex(destinationFile)
-        
-        let fileDelta = distanceBetweenFiles(sourceFile: sourceFile, destinationFile: destinationFile)
-        let rowDelta = (destinationRow - sourceRow) * sideMultiplier
+        var sourceCoordinate = move.sourceCoordinate
+        let destinationCoordinate = move.destinationCoordinate
+
+        let fileDelta = destinationCoordinate.fileIndex - sourceCoordinate.fileIndex
+        let rowDelta = destinationCoordinate.row - sourceCoordinate.row
         
         let validPattern = sourcePiece.validPattern(
             fileDelta: fileDelta,
@@ -149,7 +144,8 @@ extension Game {
         
         for direction in validPattern.directions {
             switch (direction, sourcePiece.type) {
-            case (.north, .pawn):
+            case (.north, .pawn),
+                 (.south, .pawn):
                 guard destinationPiece == nil else {
                     throw GameError.invalidMove(message: "Destination position occupied")
                 }
@@ -162,51 +158,37 @@ extension Game {
                  (.east, .rook),
                  (.west, .rook),
                  (.south, .rook):
+                let side = currentPlayer.side
+                
                 if fileDelta == 0 {
-                    for i in 1 ... rowDelta {
-                        let newRow = sourceRow + i * sideMultiplier
-                        if board["\(sourceFile)\(newRow)", currentPlayer.side] {
+                    for _ in 1 ... rowDelta {
+                        let newCoordinate = sourceCoordinate.move(by: direction, side: side)
+                        if board[newCoordinate, currentPlayer.side] {
                             throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                         }
                     }
                 } else if rowDelta == 0 {
-                    for i in 1 ... fileDelta {
-                        let newFile = board.fileIndexToFile(sourceFileIndex + i * sideMultiplier)
-                        if board["\(newFile)\(sourceRow)", currentPlayer.side] {
+                    for _ in 1 ... fileDelta {
+                        let newCoordinate = sourceCoordinate.move(by: direction, side: side)
+                        if board[newCoordinate, currentPlayer.side] {
                             throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                         }
                     }
                 }
             case (_, .king),
                  (_, .queen):
-                if board[move.destination, currentPlayer.side] {
+                if board[move.destinationCoordinate, currentPlayer.side] {
                     throw GameError.invalidMove(message: "Trying to move to position occupied by own piece.")
                 }
             case (.northWest, .bishop),
-                 (.southWest, .bishop):
-                let source = sourceFileIndex + 1 * sideMultiplier
-                let dest = destinationFileIndex
-                let fileRange = min(source, dest) ... max(source, dest)
-                let rowRange = (sourceRow + 1 * sideMultiplier) ... (destinationRow)
-                for (i, j) in zip(fileRange, rowRange.reversed()) {
-                    let newFile = board.fileIndexToFile(i)
-                    let newFileRowString = "\(newFile)\(j)"
+                 (.southWest, .bishop),
+                 (.northEast, .bishop),
+                 (.southEast, .bishop):
+                let numberOfMoves = abs(fileDelta)
+                for _ in 0 ..< numberOfMoves {
+                    let newCoordinate = sourceCoordinate.move(by: direction, side: currentPlayer.side)
                     
-                    if board[newFileRowString, currentPlayer.side] {
-                        throw GameError.invalidMove(message: "Trying to move to or over own piece.")
-                    }
-                }
-                case (.northEast, .bishop),
-                     (.southEast, .bishop):
-                let source = sourceFileIndex + 1 * sideMultiplier
-                let dest = destinationFileIndex
-                let fileRange = min(source, dest) ... max(source, dest)
-                let rowRange = (sourceRow + 1 * sideMultiplier) ... (destinationRow)
-                for (i, j) in zip(fileRange, rowRange) {
-                    let newFile = board.fileIndexToFile(i)
-                    let newFileRowString = "\(newFile)\(j)"
-                    
-                    if board[newFileRowString, currentPlayer.side] {
+                    if board[newCoordinate, currentPlayer.side] {
                         throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                     }
                 }
@@ -264,11 +246,11 @@ extension Game {
         }
         
         for (index, file) in board.validFiles.enumerated() {
-            board[file, 0] = blackRow1[index]
-            board[file, 1] = blackRow2[index]
+            board[BoardCoordinate(file: file, row: 8)] = blackRow1[index]
+            board[BoardCoordinate(file: file, row: 7)] = blackRow2[index]
             
-            board[file, 6] = whiteRow2[index]
-            board[file, 7] = whiteRow1[index]
+            board[BoardCoordinate(file: file, row: 2)] = whiteRow2[index]
+            board[BoardCoordinate(file: file, row: 1)] = whiteRow1[index]
         }
     }
 }
