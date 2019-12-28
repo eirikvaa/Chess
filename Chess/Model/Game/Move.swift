@@ -13,7 +13,9 @@ struct Move {
     let destinationCoordinate: BoardCoordinate
     
     init?(move: String) throws {
-        guard let _ = move.lowercased().range(of: #"[a-h][1-8][a-h][1-8]"#, options: .regularExpression) else {
+        guard let _ = move.lowercased().range(
+            of: #"[a-h][1-8][a-h][1-8]"#,
+            options: .regularExpression) else {
             throw GameError.invalidMoveFormat
         }
         
