@@ -8,14 +8,40 @@
 
 import XCTest
 
+@testable import Chess
+
 class PieceTests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // MARK: Pawn
+    
+    func testWhitePawnMoveNorthShouldSucceed() {
+        assertMovement(type: .pawn, delta: (0,1), side: .white, expectedPattern: [.north])
+    }
+    
+    func testWhitePawnMoveTwoNorthShouldSucceed() {
+        assertMovement(type: .pawn, delta: (0,2), side: .white, expectedPattern: [.north])
+    }
+    
+    func testBlackPawnMoveNorthShouldSucceed() {
+        assertMovement(type: .pawn, delta: (0,-1), side: .black, expectedPattern: [.south])
+    }
+    
+    func testBlackPawnMoveTwoNorthShouldSucceed() {
+        assertMovement(type: .pawn, delta: (0,-2), side: .black, expectedPattern: [.south])
+    }
+    
+    // MARK: Rook
+    
+    func testBlackRookCanMoveSoutShouldSucceed() {
+        assertMovement(type: .rook, delta: (0, -2), side: .white, expectedPattern: [.south])
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+}
 
+extension PieceTests {
+    func assertMovement(type: PieceType, delta: (file: Int, row: Int), side: Side, expectedPattern: MovePattern) {
+        let piece = PieceFabric.create(type)
+        let actualPattern = piece.validPattern(fileDelta: delta.file, rowDelta: delta.row, side: side)
+        XCTAssertEqual(actualPattern, expectedPattern)
+    }
 }

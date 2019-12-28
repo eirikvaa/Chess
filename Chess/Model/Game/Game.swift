@@ -147,20 +147,12 @@ extension Game {
                  (.west, .rook),
                  (.south, .rook):
                 let side = currentPlayer.side
+                let numberOfMoves = fileDelta == 0 ? abs(rowDelta) : abs(fileDelta)
                 
-                if fileDelta == 0 {
-                    for _ in 1 ... rowDelta {
-                        let newCoordinate = sourceCoordinate.move(by: direction, side: side)
-                        if board[newCoordinate, currentPlayer.side] {
-                            throw GameError.invalidMove(message: "Trying to move to or over own piece.")
-                        }
-                    }
-                } else if rowDelta == 0 {
-                    for _ in 1 ... fileDelta {
-                        let newCoordinate = sourceCoordinate.move(by: direction, side: side)
-                        if board[newCoordinate, currentPlayer.side] {
-                            throw GameError.invalidMove(message: "Trying to move to or over own piece.")
-                        }
+                for _ in 1 ... numberOfMoves {
+                    let newCoordinate = sourceCoordinate.move(by: direction, side: side)
+                    if board[newCoordinate, currentPlayer.side] {
+                        throw GameError.invalidMove(message: "Trying to move to or over own piece.")
                     }
                 }
             case (_, .king),
