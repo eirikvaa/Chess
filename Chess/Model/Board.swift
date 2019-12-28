@@ -31,6 +31,14 @@ struct Clamping<Value: Comparable> {
 typealias File = String
 typealias Row = Int
 
+extension File {
+    static var validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
+}
+
+extension Row {
+    static var validRows = 1 ... 8
+}
+
 struct BoardCell {
     let coordinate: BoardCoordinate
     var piece: Piece?
@@ -40,15 +48,15 @@ struct BoardCoordinate {
     @Clamping("a" ... "h")
     var file: File = "a"
     
-    @Clamping(1 ... 8)
+    @Clamping(Row.validRows)
     var row: Row = 1
     
     var fileIndex: Int {
-        ["a", "b", "c", "d", "e", "f", "g", "h"].firstIndex(of: file) ?? 0
+        File.validFiles.firstIndex(of: file) ?? 0
     }
     
     func fileIndexToFile(_ index: Int) -> File {
-        ["a", "b", "c", "d", "e", "f", "g", "h"][index]
+        File.validFiles[index]
     }
 }
 
@@ -96,8 +104,6 @@ extension BoardCell: CustomStringConvertible {
 }
 
 struct Board {
-    let validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
-    
     private let validRows = 1 ... 8
     private var cells: [[BoardCell]] = []
     
@@ -105,7 +111,7 @@ struct Board {
         for row in validRows {
             var rowPositions: [BoardCell] = []
             
-            for file in validFiles {
+            for file in File.validFiles {
                 rowPositions.append(.init(coordinate: .init(file: file, row: row), piece: nil))
             }
             
@@ -161,6 +167,6 @@ private extension Board {
     }
     
     func isValidFile(_ file: String) -> Bool {
-        validFiles.contains(file.lowercased())
+        File.validFiles.contains(file.lowercased())
     }
 }

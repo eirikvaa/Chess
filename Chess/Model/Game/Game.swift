@@ -75,11 +75,6 @@ extension Game {
         }
     }
     
-    mutating func finishRound(round: inout Int, currentPlayer: inout Player) {
-        round += 1
-        currentPlayer = round.isMultiple(of: 2) ? whitePlayer : blackPlayer
-    }
-    
     mutating func performMoveHandleError(move: Move, currentPlayer: inout Player) throws {
         var sourcePiece = board[move.sourceCoordinate]
         let destinationPiece = board[move.destinationCoordinate]
@@ -99,19 +94,20 @@ extension Game {
         board[move.sourceCoordinate] = nil
     }
     
-    func printErrorMessage(gameError: GameError) {
-        switch gameError {
-        case .invalidPiece:
-            print("You cannot use the piece of an opponent.")
-        case .ownPieceInDestinationPosition:
-            print("You cannot move a piece to a position taken up by your own pieces.")
-        case .invalidMove(let message):
-            print(message)
-        case .noPieceInSourcePosition:
-            print("There is no piece in the source position you entered.")
-        case .invalidMoveFormat:
-            print("Move was on an invalid format.")
-        }
+    mutating func validateMove(move: Move, sourcePiece: Piece?, destinationPiece: Piece?, currentPlayer: inout Player) throws {
+       guard let sourcePiece = sourcePiece else {
+           throw GameError.noPieceInSourcePosition
+       }
+       
+       guard sourcePiece.player?.side == currentPlayer.side else {
+           throw GameError.invalidPiece
+       }
+       
+       guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: currentPlayer) else {
+           throw GameError.invalidMove(message: "Invalid move pattern!")
+       }
+       
+        currentPlayer.addMove(move)
     }
     
     func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
@@ -197,24 +193,28 @@ extension Game {
         return true
     }
     
-    func printBoard() {
-        print(board)
+    mutating func finishRound(round: inout Int, currentPlayer: inout Player) {
+        round += 1
+        currentPlayer = round.isMultiple(of: 2) ? whitePlayer : blackPlayer
     }
     
-    mutating func validateMove(move: Move, sourcePiece: Piece?, destinationPiece: Piece?, currentPlayer: inout Player) throws {
-       guard let sourcePiece = sourcePiece else {
-           throw GameError.noPieceInSourcePosition
-       }
-       
-       guard sourcePiece.player?.side == currentPlayer.side else {
-           throw GameError.invalidPiece
-       }
-       
-       guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: currentPlayer) else {
-           throw GameError.invalidMove(message: "Invalid move pattern!")
-       }
-       
-        currentPlayer.addMove(move)
+    func printErrorMessage(gameError: GameError) {
+        switch gameError {
+        case .invalidPiece:
+            print("You cannot use the piece of an opponent.")
+        case .ownPieceInDestinationPosition:
+            print("You cannot move a piece to a position taken up by your own pieces.")
+        case .invalidMove(let message):
+            print(message)
+        case .noPieceInSourcePosition:
+            print("There is no piece in the source position you entered.")
+        case .invalidMoveFormat:
+            print("Move was on an invalid format.")
+        }
+    }
+    
+    func printBoard() {
+        print(board)
     }
     
     mutating func resetBoard() {
@@ -235,7 +235,7 @@ extension Game {
             assignPieceToPlayer(piece: &blackRow2[i], player: blackPlayer)
         }
         
-        for (index, file) in board.validFiles.enumerated() {
+        for (index, file) in File.validFiles.enumerated() {
             board[BoardCoordinate(file: file, row: 8)] = blackRow1[index]
             board[BoardCoordinate(file: file, row: 7)] = blackRow2[index]
             
