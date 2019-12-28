@@ -14,11 +14,11 @@ class GameTests: XCTestCase {
     
     // MARK: Div
     
-    func testUsePieceOfOpponentShouldThrow() {
+    func testWhiteTriesToUseBlackPieces() {
         assertThrowingMoves("a7a5", message: "Cannot use pieces of an opponent")
     }
     
-    func testUsePieceOfOpponent2ShouldThrow() {
+    func testBlackTriesToUseWhitePieces() {
         assertThrowingMoves("a2a3", "a3a4", message: "Cannot use pieces of an opponent")
     }
     
