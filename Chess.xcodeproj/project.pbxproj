@@ -47,6 +47,7 @@
 		E51CCF7723B62FD700F57536 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
 		E51CCF7A23B649D600F57536 /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51CCF7923B649D600F57536 /* GameError.swift */; };
 		E51CCF7B23B651C400F57536 /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51CCF7923B649D600F57536 /* GameError.swift */; };
+		E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E551399C23B818E200FD1D01 /* MoveTests.swift */; };
 		E5BE32B623B5082F00EE526A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32B523B5082F00EE526A /* main.swift */; };
 		E5BE32BE23B5087A00EE526A /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
 		E5BE32C023B5088200EE526A /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
@@ -89,6 +90,7 @@
 		E50F659723B7C2A50042B527 /* Pawn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pawn.swift; sourceTree = "<group>"; };
 		E50F659A23B7C39A0042B527 /* Delta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delta.swift; sourceTree = "<group>"; };
 		E51CCF7923B649D600F57536 /* GameError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameError.swift; sourceTree = "<group>"; };
+		E551399C23B818E200FD1D01 /* MoveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTests.swift; sourceTree = "<group>"; };
 		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE32B523B5082F00EE526A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E5BE32BD23B5087A00EE526A /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				E5C1FD7E23B50D4400A33411 /* BoardTests.swift */,
 				E5EE5DAF23B5368F0066C281 /* PieceTests.swift */,
 				E5BE32D523B509A000EE526A /* Info.plist */,
+				E551399C23B818E200FD1D01 /* MoveTests.swift */,
 			);
 			path = ChessTests;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 				E50F658A23B7C28E0042B527 /* King.swift in Sources */,
 				E5EE5DB623B62BCA0066C281 /* GameTests.swift in Sources */,
 				E50F657823B7C1010042B527 /* BoardCoordinate.swift in Sources */,
+				E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */,
 				E50F657523B7C0EA0042B527 /* BoardCell.swift in Sources */,
 				E5C1FD7F23B50D4400A33411 /* BoardTests.swift in Sources */,
 				E50F659923B7C2A50042B527 /* Pawn.swift in Sources */,
