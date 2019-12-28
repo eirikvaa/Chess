@@ -9,11 +9,10 @@
 import Foundation
 
 struct Board {
-    private let validRows = 1 ... 8
     private var cells: [[BoardCell]] = []
     
     init() {
-        for row in validRows {
+        for row in Row.validRows {
             var rowPositions: [BoardCell] = []
             
             for file in File.validFiles {
@@ -68,7 +67,7 @@ private extension Board {
     }
     
     func isValidNumericalIndex(index: Int) -> Bool {
-        validRows ~= index
+        Row.validRows ~= index
     }
     
     func isValidFile(_ file: String) -> Bool {

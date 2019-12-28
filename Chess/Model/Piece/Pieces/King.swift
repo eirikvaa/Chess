@@ -19,8 +19,8 @@ struct King: Piece {
         [.west]
     ]
     var moved = false
-    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        switch (fileDelta, rowDelta) {
+    func validPattern(delta: Delta, side: Side) -> MovePattern {
+        switch (delta.x, delta.y) {
         case (0, 1):
             return [.north]
         case (1, 1):

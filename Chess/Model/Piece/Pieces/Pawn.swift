@@ -7,8 +7,8 @@
 //
 
 struct Pawn: Piece {
-    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        switch (fileDelta, rowDelta, moved, side) {
+    func validPattern(delta: Delta, side: Side) -> MovePattern {
+        switch (delta.x, delta.y, moved, side) {
         case (0, 1...2, false, .white),
              (0, 1, true, .white):
             return [.north]

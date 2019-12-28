@@ -23,8 +23,8 @@ struct Queen: Piece {
         [.northWest]
     ]
     var moved = false
-    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-       switch (fileDelta, rowDelta, abs(fileDelta) == abs(rowDelta)) {
+    func validPattern(delta: Delta, side: Side) -> MovePattern {
+        switch (delta.x, delta.y, abs(delta.x) == abs(delta.y)) {
         case (0, 1..., false):
             return [.north]
         case (1..., 1..., true):

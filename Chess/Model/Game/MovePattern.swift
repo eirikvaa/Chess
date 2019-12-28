@@ -21,25 +21,3 @@ extension MovePattern: Equatable {
         lhs.directions == rhs.directions
     }
 }
-
-extension MovePattern: CustomStringConvertible {
-    var description: String {
-        guard directions.count > 0 else {
-            return "[]"
-        }
-        
-        guard directions.count > 1 else {
-            return "\(directions[0])"
-        }
-        
-        var _description = "["
-        
-        for pattern in directions {
-            _description += "\(pattern.description)\t→\t"
-        }
-        
-        _description += "]"
-        
-        return _description
-    }
-}

@@ -7,12 +7,12 @@
 //
 
 struct Bishop: Piece {
-    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        guard abs(fileDelta) == abs(rowDelta) else {
+    func validPattern(delta: Delta, side: Side) -> MovePattern {
+        guard abs(delta.x) == abs(delta.y) else {
             return .init(directions: [])
         }
         
-        switch (fileDelta, rowDelta) {
+        switch (delta.x, delta.y) {
         case (1..., 1...):
             return [.northEast]
         case (...(-1), ...(-1)):

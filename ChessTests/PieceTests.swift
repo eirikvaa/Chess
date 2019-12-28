@@ -41,7 +41,7 @@ class PieceTests: XCTestCase {
 extension PieceTests {
     func assertMovement(type: PieceType, delta: (file: Int, row: Int), side: Side, expectedPattern: MovePattern) {
         let piece = PieceFabric.create(type)
-        let actualPattern = piece.validPattern(fileDelta: delta.file, rowDelta: delta.row, side: side)
+        let actualPattern = piece.validPattern(delta: .init(x: delta.file, y: delta.row), side: side)
         XCTAssertEqual(actualPattern, expectedPattern)
     }
 }

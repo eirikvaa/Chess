@@ -7,8 +7,8 @@
 //
 
 struct Knight: Piece {
-    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        switch (fileDelta, rowDelta) {
+    func validPattern(delta: Delta, side: Side) -> MovePattern {
+        switch (delta.x, delta.y) {
         case (-1, 2):
             return [.north, .north, .west]
         case (1, 2):

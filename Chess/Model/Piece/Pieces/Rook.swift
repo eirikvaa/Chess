@@ -7,8 +7,8 @@
 //
 
 struct Rook: Piece {
-    func validPattern(fileDelta: Int, rowDelta: Int, side: Side) -> MovePattern {
-        switch (fileDelta, rowDelta) {
+    func validPattern(delta: Delta, side: Side) -> MovePattern {
+        switch (delta.x, delta.y) {
         case (1..., 0):
             return side == .white ? [.east] : [.west]
         case (...(-1), 0):

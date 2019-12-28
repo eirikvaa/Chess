@@ -20,6 +20,12 @@ struct BoardCoordinate {
     func fileIndexToFile(_ index: Int) -> File {
         File.validFiles[index]
     }
+    
+    func difference(from coordinate: BoardCoordinate) -> Delta {
+        let deltaX = file.difference(from: coordinate.file)
+        let deltaY = coordinate.row - row
+        return .init(x: deltaX, y: deltaY)
+    }
 }
 
 extension BoardCoordinate: Equatable {

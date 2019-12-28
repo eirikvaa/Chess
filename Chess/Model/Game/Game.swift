@@ -113,14 +113,13 @@ extension Game {
     func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
         var sourceCoordinate = move.sourceCoordinate
         let destinationCoordinate = move.destinationCoordinate
+        
+        let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
 
         let fileDelta = destinationCoordinate.fileIndex - sourceCoordinate.fileIndex
         let rowDelta = destinationCoordinate.row - sourceCoordinate.row
         
-        let validPattern = sourcePiece.validPattern(
-            fileDelta: fileDelta,
-            rowDelta: rowDelta,
-            side: currentPlayer.side)
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentPlayer.side)
         
         guard validPattern.directions.count > 0 else {
             throw GameError.invalidMove(message: "No valid directions to destination position")
