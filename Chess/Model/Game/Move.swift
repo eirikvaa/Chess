@@ -23,10 +23,10 @@ struct Move {
         
         sourceCoordinate = BoardCoordinate(
             file: characters[0],
-            row: Int(characters[1])!)
+            rank: Int(characters[1])!)
         destinationCoordinate = BoardCoordinate(
             file: characters[2],
-            row: Int(characters[3])!)
+            rank: Int(characters[3])!)
     }
 }
 

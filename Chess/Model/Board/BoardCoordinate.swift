@@ -10,8 +10,8 @@ struct BoardCoordinate {
     @Clamping("a" ... "h")
     var file: File = "a"
     
-    @Clamping(Row.validRows)
-    var row: Row = 1
+    @Clamping(Rank.validRanks)
+    var rank: Rank = 1
     
     var fileIndex: Int {
         File.validFiles.firstIndex(of: file) ?? 0
@@ -23,27 +23,27 @@ struct BoardCoordinate {
     
     func difference(from coordinate: BoardCoordinate) -> Delta {
         let deltaX = file.difference(from: coordinate.file)
-        let deltaY = coordinate.row - row
+        let deltaY = coordinate.rank - rank
         return .init(x: deltaX, y: deltaY)
     }
     
     func move(by delta: Delta) -> BoardCoordinate {
         let newFile = fileIndexToFile(file.fileIndex + delta.x)
-        return .init(file: newFile, row: row + delta.y)
+        return .init(file: newFile, rank: rank + delta.y)
     }
 }
 
 extension BoardCoordinate: Equatable {
     static func == (lhs: BoardCoordinate, rhs: BoardCoordinate) -> Bool {
-        lhs.file == rhs.file && lhs.row == rhs.row
+        lhs.file == rhs.file && lhs.rank == rhs.rank
     }
 }
 
 extension BoardCoordinate: ExpressibleByStringLiteral {
     init(stringLiteral value: String) {
         let file = String(value.dropLast())
-        let row = Int(String(value.dropFirst()))!
-        self = .init(file: file, row: row)
+        let rank = Int(String(value.dropFirst()))!
+        self = .init(file: file, rank: rank)
     }
 }
 

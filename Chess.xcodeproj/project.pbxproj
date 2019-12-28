@@ -20,8 +20,8 @@
 		E50F657823B7C1010042B527 /* BoardCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657623B7C1010042B527 /* BoardCoordinate.swift */; };
 		E50F657A23B7C1340042B527 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657923B7C1340042B527 /* File.swift */; };
 		E50F657B23B7C1340042B527 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657923B7C1340042B527 /* File.swift */; };
-		E50F657D23B7C14C0042B527 /* Row.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657C23B7C14C0042B527 /* Row.swift */; };
-		E50F657E23B7C14C0042B527 /* Row.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657C23B7C14C0042B527 /* Row.swift */; };
+		E50F657D23B7C14C0042B527 /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657C23B7C14C0042B527 /* Rank.swift */; };
+		E50F657E23B7C14C0042B527 /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657C23B7C14C0042B527 /* Rank.swift */; };
 		E50F658223B7C2450042B527 /* Clamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658123B7C2450042B527 /* Clamping.swift */; };
 		E50F658323B7C2450042B527 /* Clamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658123B7C2450042B527 /* Clamping.swift */; };
 		E50F658523B7C2770042B527 /* PieceFabric.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658423B7C2770042B527 /* PieceFabric.swift */; };
@@ -78,7 +78,7 @@
 		E50F657323B7C0EA0042B527 /* BoardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCell.swift; sourceTree = "<group>"; };
 		E50F657623B7C1010042B527 /* BoardCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCoordinate.swift; sourceTree = "<group>"; };
 		E50F657923B7C1340042B527 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		E50F657C23B7C14C0042B527 /* Row.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Row.swift; sourceTree = "<group>"; };
+		E50F657C23B7C14C0042B527 /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
 		E50F658123B7C2450042B527 /* Clamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clamping.swift; sourceTree = "<group>"; };
 		E50F658423B7C2770042B527 /* PieceFabric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceFabric.swift; sourceTree = "<group>"; };
 		E50F658823B7C28E0042B527 /* King.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = King.swift; sourceTree = "<group>"; };
@@ -128,7 +128,7 @@
 				E50F657323B7C0EA0042B527 /* BoardCell.swift */,
 				E50F657623B7C1010042B527 /* BoardCoordinate.swift */,
 				E50F657923B7C1340042B527 /* File.swift */,
-				E50F657C23B7C14C0042B527 /* Row.swift */,
+				E50F657C23B7C14C0042B527 /* Rank.swift */,
 			);
 			path = Board;
 			sourceTree = "<group>";
@@ -345,7 +345,7 @@
 				E50F658C23B7C2920042B527 /* Queen.swift in Sources */,
 				E50F657A23B7C1340042B527 /* File.swift in Sources */,
 				E5EE5DB223B53FE10066C281 /* Move.swift in Sources */,
-				E50F657D23B7C14C0042B527 /* Row.swift in Sources */,
+				E50F657D23B7C14C0042B527 /* Rank.swift in Sources */,
 				E50F659823B7C2A50042B527 /* Pawn.swift in Sources */,
 				E5BE32C023B5088200EE526A /* Board.swift in Sources */,
 				E50F658223B7C2450042B527 /* Clamping.swift in Sources */,
@@ -359,7 +359,7 @@
 				E50F656823B751520042B527 /* PlayerTests.swift in Sources */,
 				E50F656E23B7C0700042B527 /* MovePattern.swift in Sources */,
 				E50F658323B7C2450042B527 /* Clamping.swift in Sources */,
-				E50F657E23B7C14C0042B527 /* Row.swift in Sources */,
+				E50F657E23B7C14C0042B527 /* Rank.swift in Sources */,
 				E51CCF7B23B651C400F57536 /* GameError.swift in Sources */,
 				E51CCF6F23B62FD200F57536 /* Piece.swift in Sources */,
 				E50F657123B7C0AA0042B527 /* PieceType.swift in Sources */,

@@ -12,25 +12,25 @@ struct Board {
     private var cells: [[BoardCell]] = []
     
     init() {
-        for row in Row.validRows {
-            var rowPositions: [BoardCell] = []
+        for rank in Rank.validRanks {
+            var rankCells: [BoardCell] = []
             
             for file in File.validFiles {
-                rowPositions.append(.init(coordinate: .init(file: file, row: row), piece: nil))
+                rankCells.append(.init(coordinate: .init(file: file, rank: rank), piece: nil))
             }
             
-            cells.append(rowPositions)
+            cells.append(rankCells)
         }
     }
     
     subscript(coordinate: BoardCoordinate) -> Piece? {
         get {
-            assert(isValidPlacement(row: coordinate.row, file: coordinate.file), "Index out of range")
-            return cells[coordinate.row - 1][coordinate.fileIndex].piece
+            assert(isValidPlacement(rank: coordinate.rank, file: coordinate.file), "Index out of range")
+            return cells[coordinate.rank - 1][coordinate.fileIndex].piece
         }
         set {
-            assert(isValidPlacement(row: coordinate.row, file: coordinate.file), "Index out of range")
-            cells[coordinate.row - 1][coordinate.fileIndex].piece = newValue
+            assert(isValidPlacement(rank: coordinate.rank, file: coordinate.file), "Index out of range")
+            cells[coordinate.rank - 1][coordinate.fileIndex].piece = newValue
         }
     }
     
@@ -86,10 +86,10 @@ extension Board: CustomStringConvertible {
         var _description = "    a   b   c   d   e   f   g   h\n"
         _description += "   ––– ––– ––– ––– ––– ––– ––– ––– \n"
         
-        for (index, row) in cells.reversed().enumerated() {
+        for (index, rank) in cells.reversed().enumerated() {
             _description += "\(8 - index) |"
             
-            for cell in row {
+            for cell in rank {
                 let cellContent = cell.piece?.graphicalRepresentation ?? " "
                 _description += " " + cellContent + " |"
             }
@@ -104,12 +104,12 @@ extension Board: CustomStringConvertible {
 }
 
 private extension Board {
-    func isValidPlacement(row: Int, file: String) -> Bool {
-        isValidNumericalIndex(index: row) && isValidFile(file)
+    func isValidPlacement(rank: Int, file: String) -> Bool {
+        isValidNumericalIndex(index: rank) && isValidFile(file)
     }
     
     func isValidNumericalIndex(index: Int) -> Bool {
-        Row.validRows ~= index
+        Rank.validRanks ~= index
     }
     
     func isValidFile(_ file: String) -> Bool {

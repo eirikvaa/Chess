@@ -189,25 +189,25 @@ extension Game {
             piece.player = player
         }
         
-        var whiteRow1: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        var whiteRow2: [Piece] = Array(repeating: Pawn(), count: 8)
+        var whiteRank1: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
+        var whiteRank2: [Piece] = Array(repeating: Pawn(), count: 8)
         
-        var blackRow1: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        var blackRow2: [Piece] = Array(repeating: Pawn(), count: 8)
+        var blackRank1: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
+        var blackRank2: [Piece] = Array(repeating: Pawn(), count: 8)
         
-        for i in 0 ..< whiteRow1.count {
-            assignPieceToPlayer(piece: &whiteRow1[i], player: whitePlayer)
-            assignPieceToPlayer(piece: &whiteRow2[i], player: whitePlayer)
-            assignPieceToPlayer(piece: &blackRow1[i], player: blackPlayer)
-            assignPieceToPlayer(piece: &blackRow2[i], player: blackPlayer)
+        for i in 0 ..< whiteRank1.count {
+            assignPieceToPlayer(piece: &whiteRank1[i], player: whitePlayer)
+            assignPieceToPlayer(piece: &whiteRank2[i], player: whitePlayer)
+            assignPieceToPlayer(piece: &blackRank1[i], player: blackPlayer)
+            assignPieceToPlayer(piece: &blackRank2[i], player: blackPlayer)
         }
         
         for (index, file) in File.validFiles.enumerated() {
-            board[BoardCoordinate(file: file, row: 8)] = blackRow1[index]
-            board[BoardCoordinate(file: file, row: 7)] = blackRow2[index]
+            board[BoardCoordinate(file: file, rank: 8)] = blackRank1[index]
+            board[BoardCoordinate(file: file, rank: 7)] = blackRank2[index]
             
-            board[BoardCoordinate(file: file, row: 2)] = whiteRow2[index]
-            board[BoardCoordinate(file: file, row: 1)] = whiteRow1[index]
+            board[BoardCoordinate(file: file, rank: 2)] = whiteRank2[index]
+            board[BoardCoordinate(file: file, rank: 1)] = whiteRank1[index]
         }
     }
 }
