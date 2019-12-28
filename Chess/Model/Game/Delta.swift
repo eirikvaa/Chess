@@ -32,4 +32,8 @@ struct Delta {
             return .init(x: x - 1, y: y + 1)
         }
     }
+    
+    var equalMagnitude: Bool {
+        return abs(x) == abs(y)
+    }
 }

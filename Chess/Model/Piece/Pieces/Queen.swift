@@ -24,7 +24,7 @@ struct Queen: Piece {
     ]
     var moved = false
     func validPattern(delta: Delta, side: Side) -> MovePattern {
-        switch (delta.x, delta.y, abs(delta.x) == abs(delta.y)) {
+        switch (delta.x, delta.y, delta.equalMagnitude) {
         case (0, 1..., false):
             return [.north]
         case (1..., 1..., true):

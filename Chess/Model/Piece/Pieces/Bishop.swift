@@ -8,7 +8,7 @@
 
 struct Bishop: Piece {
     func validPattern(delta: Delta, side: Side) -> MovePattern {
-        guard abs(delta.x) == abs(delta.y) else {
+        guard delta.equalMagnitude else {
             return .init(directions: [])
         }
         
