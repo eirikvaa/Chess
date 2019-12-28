@@ -37,6 +37,12 @@ struct Board {
     subscript(coordinate: BoardCoordinate, side: Side) -> Bool {
         return self[coordinate]?.player?.side == side
     }
+    
+    mutating func performMove(_ move: Move, on piece: inout Piece) {
+        piece.moved = true
+        self[move.destinationCoordinate] = piece
+        self[move.sourceCoordinate] = nil
+    }
 }
 
 extension Board: CustomStringConvertible {

@@ -76,7 +76,10 @@ extension Game {
     }
     
     mutating func performMoveHandleError(move: Move, currentPlayer: inout Player) throws {
-        var sourcePiece = board[move.sourceCoordinate]
+        guard var sourcePiece = board[move.sourceCoordinate] else {
+            throw GameError.noPieceInSourcePosition
+        }
+        
         let destinationPiece = board[move.destinationCoordinate]
         
         do {
@@ -89,9 +92,7 @@ extension Game {
             throw error
         }
         
-        sourcePiece?.moved = true
-        board[move.destinationCoordinate] = sourcePiece
-        board[move.sourceCoordinate] = nil
+        board.performMove(move, on: &sourcePiece)
     }
     
     mutating func validateMove(move: Move, sourcePiece: Piece?, destinationPiece: Piece?, currentPlayer: inout Player) throws {
@@ -113,12 +114,8 @@ extension Game {
     func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
         var sourceCoordinate = move.sourceCoordinate
         let destinationCoordinate = move.destinationCoordinate
-        
         let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
 
-        let fileDelta = destinationCoordinate.fileIndex - sourceCoordinate.fileIndex
-        let rowDelta = destinationCoordinate.row - sourceCoordinate.row
-        
         let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentPlayer.side)
         
         guard validPattern.directions.count > 0 else {
@@ -142,10 +139,10 @@ extension Game {
                  (.west, .rook),
                  (.south, .rook):
                 let side = currentPlayer.side
-                let numberOfMoves = fileDelta == 0 ? abs(rowDelta) : abs(fileDelta)
+                let numberOfMoves = moveDelta.maximumMagnitude
                 
                 var currentCoordinate = sourceCoordinate
-                for _ in 1 ... numberOfMoves {
+                for _ in 0 ..< numberOfMoves {
                     currentCoordinate = currentCoordinate.move(by: direction, side: side)
                     
                     if currentCoordinate == destinationCoordinate {
@@ -169,7 +166,7 @@ extension Game {
                  (.southWest, .bishop),
                  (.northEast, .bishop),
                  (.southEast, .bishop):
-                let numberOfMoves = abs(fileDelta)
+                let numberOfMoves = moveDelta.magnitude(of: \.x)
                 for _ in 0 ..< numberOfMoves {
                     let newCoordinate = sourceCoordinate.move(by: direction, side: currentPlayer.side)
                     

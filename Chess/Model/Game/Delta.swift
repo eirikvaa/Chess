@@ -34,6 +34,16 @@ struct Delta {
     }
     
     var equalMagnitude: Bool {
-        return abs(x) == abs(y)
+        abs(x) == abs(y)
+    }
+    
+    /// Finds the maximum magnitude of either direction.
+    /// Helpful when finding the number of steps when the rook moves.
+    var maximumMagnitude: Int {
+        abs(max(x, y))
+    }
+    
+    func magnitude(of keyPath: KeyPath<Delta, Int>) -> Int {
+        return abs(self[keyPath: keyPath])
     }
 }
