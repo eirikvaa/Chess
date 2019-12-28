@@ -149,11 +149,21 @@ extension Game {
                 let side = currentPlayer.side
                 let numberOfMoves = fileDelta == 0 ? abs(rowDelta) : abs(fileDelta)
                 
+                var currentCoordinate = sourceCoordinate
                 for _ in 1 ... numberOfMoves {
-                    let newCoordinate = sourceCoordinate.move(by: direction, side: side)
-                    if board[newCoordinate, currentPlayer.side] {
-                        throw GameError.invalidMove(message: "Trying to move to or over own piece.")
+                    currentCoordinate = currentCoordinate.move(by: direction, side: side)
+                    
+                    if currentCoordinate == destinationCoordinate {
+                        break
                     }
+                    
+                    if board[currentCoordinate] != nil  {
+                        throw GameError.invalidMove(message: "Cannot move over opposite piece")
+                    }
+                }
+                
+                if board[destinationCoordinate, currentPlayer.side] {
+                    throw GameError.invalidMove(message: "Cannot move to position occupied by self")
                 }
             case (_, .king),
                  (_, .queen):

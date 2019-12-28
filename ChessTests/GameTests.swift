@@ -78,6 +78,10 @@ class GameTests: XCTestCase {
         assertNonThrowingMoves("b1c3", "a7a5", "a1b1", message: "Rook should be able to move east")
     }
     
+    func testRookCannotMoveOverOpponentPiece() {
+        assertThrowingMoves("a2a4", "b7b5", "a1a3", "a7a5", "a3b3", "h7h5", "b3b6", message: "Rook cannot move over opponent piece even though destination position is empty")
+    }
+    
     // MARK: Bishop
     
     func testBishopToAttackPosition1ShouldSucceed() {
