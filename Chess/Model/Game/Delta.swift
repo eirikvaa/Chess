@@ -46,4 +46,8 @@ struct Delta {
     func magnitude(of keyPath: KeyPath<Delta, Int>) -> Int {
         return abs(self[keyPath: keyPath])
     }
+    
+    static func * (lhs: Delta, rhs: Int) -> Delta {
+        .init(x: lhs.x * rhs, y: lhs.y * rhs)
+    }
 }

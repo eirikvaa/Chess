@@ -26,6 +26,11 @@ struct BoardCoordinate {
         let deltaY = coordinate.row - row
         return .init(x: deltaX, y: deltaY)
     }
+    
+    func move(by delta: Delta) -> BoardCoordinate {
+        let newFile = fileIndexToFile(file.fileIndex + delta.x)
+        return .init(file: newFile, row: row + delta.y)
+    }
 }
 
 extension BoardCoordinate: Equatable {
@@ -44,14 +49,7 @@ extension BoardCoordinate: ExpressibleByStringLiteral {
 
 extension BoardCoordinate {
     mutating func move(by direction: Direction, side: Side) -> BoardCoordinate {
-        let delta = Delta(x: 0, y: 0).advance(by: direction)
-        
-        var fileIndexDelta = delta.x
-        var rowDelta = delta.y
-        
-        fileIndexDelta *= side.sideMultiplier
-        rowDelta *= side.sideMultiplier
-        
-        return .init(file: fileIndexToFile(fileIndex + fileIndexDelta), row: row + rowDelta)
+        let delta = Delta(x: 0, y: 0).advance(by: direction) * side.sideMultiplier
+        return self.move(by: delta)
     }
 }
