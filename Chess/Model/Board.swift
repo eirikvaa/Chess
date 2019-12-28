@@ -43,10 +43,6 @@ struct BoardCoordinate {
     @Clamping(1 ... 8)
     var row: Row = 1
     
-    var index: Int {
-        return (row - 1) * 8 + fileIndex
-    }
-    
     var fileIndex: Int {
         ["a", "b", "c", "d", "e", "f", "g", "h"].firstIndex(of: file) ?? 0
     }
@@ -152,14 +148,6 @@ extension Board: CustomStringConvertible {
         _description += "    a   b   c   d   e   f   g   h\n"
         
         return _description
-    }
-    
-    func fileToIndex(_ file: String) -> Int {
-        return validFiles.firstIndex(of: file.lowercased()) ?? 0
-    }
-    
-    func fileIndexToFile(_ index: Int) -> String {
-        validFiles[index]
     }
 }
 

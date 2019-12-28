@@ -53,14 +53,14 @@ extension Game {
             print("\(currentPlayer.name), please input a move:")
             let input = readLine(strippingNewline: true)
             
+            guard input != "quit" else {
+                print("Quitting ...")
+                break
+            }
+            
             guard let move = try? Move(move: input ?? "") else {
                 print("Move not on correct format, try again.")
                 continue
-            }
-            
-            guard move.text != "quit" else {
-                print("You quit")
-                break
             }
             
             do {
@@ -112,18 +112,6 @@ extension Game {
         case .invalidMoveFormat:
             print("Move was on an invalid format.")
         }
-    }
-    
-    func distanceBetweenFiles(sourceFile: String, destinationFile: String) -> Int {
-        func fileToIndex(_ file: String) -> Int {
-            let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
-            return files.firstIndex(of: file.lowercased()) ?? 0
-        }
-        
-        let sourceFileIndex = fileToIndex(sourceFile)
-        let destinationFileIndex = fileToIndex(destinationFile)
-        
-        return destinationFileIndex - sourceFileIndex
     }
     
     func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
