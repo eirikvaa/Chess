@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E50F656823B751520042B527 /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656723B751520042B527 /* PlayerTests.swift */; };
 		E51CCF6F23B62FD200F57536 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
 		E51CCF7423B62FD700F57536 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
 		E51CCF7523B62FD700F57536 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E50F656723B751520042B527 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
 		E51CCF7923B649D600F57536 /* GameError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameError.swift; sourceTree = "<group>"; };
 		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE32B523B5082F00EE526A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				E5EE5DB523B62BCA0066C281 /* GameTests.swift */,
+				E50F656723B751520042B527 /* PlayerTests.swift */,
 				E5C1FD7E23B50D4400A33411 /* BoardTests.swift */,
 				E5EE5DAF23B5368F0066C281 /* PieceTests.swift */,
 				E5BE32D523B509A000EE526A /* Info.plist */,
@@ -241,6 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E50F656823B751520042B527 /* PlayerTests.swift in Sources */,
 				E51CCF7B23B651C400F57536 /* GameError.swift in Sources */,
 				E51CCF6F23B62FD200F57536 /* Piece.swift in Sources */,
 				E51CCF7423B62FD700F57536 /* Game.swift in Sources */,

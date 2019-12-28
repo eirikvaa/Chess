@@ -22,6 +22,10 @@ class GameTests: XCTestCase {
         assertThrowingMoves("a2a3", "a3a4", message: "Cannot use pieces of an opponent")
     }
     
+    func testSpecifyingEmptyPositionAsSourceShouldThrow() {
+        assertThrowingMoves("a3a4", message: "Must access a position with a piece.")
+    }
+    
     // MARK: Pawn
 
     func testSinglePawnNorthMoveAtStartShouldSucceed() {
