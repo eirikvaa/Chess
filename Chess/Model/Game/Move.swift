@@ -28,20 +28,6 @@ protocol MoveProtocol {
     init?(move: String, board: Board?, side: Side) throws
 }
 
-struct Regex {
-    let regex: String
-}
-
-extension String {
-    static func ~=(lhs: Regex, rhs: String) -> Bool {
-        rhs.range(of: lhs.regex, options: .regularExpression) != nil
-    }
-    
-    var r: Regex {
-        return .init(regex: #"\(self)"#)
-    }
-}
-
 struct MoveComponents {
     private let value: String
     var pieceType: PieceType = .pawn
@@ -71,12 +57,7 @@ struct MoveComponents {
         let coordinates = String(value[match!])
         destination = .init(stringLiteral: String(coordinates.suffix(2)))
         
-        var split: String
-        if isAttacking {
-            split = String(value.dropLast(3))
-        } else {
-            split = String(value.dropLast(2))
-        }
+        var split = String(value.dropLast(isAttacking ? 3 : 2))
         
         if let first = split.first, ["K", "Q", "B", "N", "R"].contains(first) {
             split = String(split.dropFirst())
