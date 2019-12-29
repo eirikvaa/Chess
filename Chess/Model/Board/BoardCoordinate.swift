@@ -47,6 +47,8 @@ extension BoardCoordinate: ExpressibleByStringLiteral {
     }
 }
 
+extension BoardCoordinate: ExpressibleByStringInterpolation {}
+
 extension BoardCoordinate {
     mutating func move(by direction: Direction, side: Side) -> BoardCoordinate {
         let delta = Delta(x: 0, y: 0).advance(by: direction) * side.sideMultiplier

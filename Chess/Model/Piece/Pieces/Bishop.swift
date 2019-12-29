@@ -22,17 +22,13 @@ struct Bishop: Piece {
         
         switch (delta.x, delta.y) {
         case (1..., 1...):
-            let direction = Direction.northEast.sideRelativeDirection(side)
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
+            return .init(directions: .init(repeating: .northEast, count: delta.magnitude(of: \.x)))
         case (...(-1), ...(-1)):
-            let direction = Direction.southWest.sideRelativeDirection(side)
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
+            return .init(directions: .init(repeating: .southWest, count: delta.magnitude(of: \.x)))
         case (1..., ...(-1)):
-            let direction = Direction.southEast.sideRelativeDirection(side)
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
+            return .init(directions: .init(repeating: .southEast, count: delta.magnitude(of: \.x)))
         case (...(-1), 1...):
-            let direction = Direction.northWest.sideRelativeDirection(side)
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
+            return .init(directions: .init(repeating: .northWest, count: delta.magnitude(of: \.x)))
         default:
             return []
         }

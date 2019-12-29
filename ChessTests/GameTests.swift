@@ -149,6 +149,18 @@ class GameTests: XCTestCase {
     func testBlackQueenCanMoveSeveralStepsSouthEast() {
         assertNonThrowingMoves("e4", "e5", "Ke2", "Qf6", moveType: .algebraic, message: "Should not throw")
     }
+    
+    // MARK: Real-life chess games
+    
+    func testCapablancaVsSavielly1924() {
+        assertNonThrowingMoves(
+            "d4", "e6",
+            "Nf3", "f5",
+            "c4", "Nf6",
+            "Bg5", "Be7",
+            "Nc3",
+            message: "Should not throw")
+    }
 
 }
 
