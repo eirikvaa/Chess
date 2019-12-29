@@ -28,22 +28,78 @@ protocol MoveProtocol {
     init?(move: String, board: Board?, side: Side) throws
 }
 
+struct Regex {
+    let regex: String
+}
+
+extension String {
+    static func ~=(lhs: Regex, rhs: String) -> Bool {
+        rhs.range(of: lhs.regex, options: .regularExpression) != nil
+    }
+    
+    var r: Regex {
+        return .init(regex: #"\(self)"#)
+    }
+}
+
 struct MoveComponents {
     private let value: String
     var pieceType: PieceType = .pawn
     var isAttacking = false
+    var check = false
     var destination: BoardCoordinate = .init(stringLiteral: "a1")
+    var sourceFile: File?
+    var sourceRank: Rank?
     var pieceName: Character?
+    
+    var sourceDestination: BoardCoordinate? {
+        guard let sourceFile = sourceFile, let sourceRank = sourceRank else {
+            return nil
+        }
+        
+        return .init(file: sourceFile, rank: sourceRank)
+    }
     
     init(value: String) {
         self.value = value
         
         isAttacking = value.contains("x")
-        destination = .init(stringLiteral: String(value.suffix(2)))
+        check = value.contains("+")
         
-        if let match = value.range(of: "[K|Q|B|N|R]", options: .regularExpression) {
-            pieceName = String(value[match]).first
-            pieceType = PieceFabric.create(pieceName).type
+        let match = value.range(of: #"[a-h]?[1-8]?x?[a-h][1-8]"#, options: .regularExpression)
+        
+        let coordinates = String(value[match!])
+        destination = .init(stringLiteral: String(coordinates.suffix(2)))
+        
+        var split: String
+        if isAttacking {
+            split = String(value.dropLast(3))
+        } else {
+            split = String(value.dropLast(2))
+        }
+        
+        if let first = split.first, ["K", "Q", "B", "N", "R"].contains(first) {
+            split = String(split.dropFirst())
+        }
+        
+        if let match = split.range(of: #"[a-h]?[1-8]?"#, options: .regularExpression) {
+            let sub = split[match]
+            
+            switch sub.count {
+            case 2:
+                sourceFile = String(sub.dropLast())
+                sourceRank = Int(String(sub.dropFirst()))!
+            case 1:
+                sourceFile = String(sub)
+            default:
+                break
+            }
+        }
+        
+        if let match = value.range(of: #"[K|Q|N|B|R]"#, options: .regularExpression) {
+            let character = String(value[match]).first
+            pieceName = character
+            pieceType = PieceFabric.create(character).type
         } else {
             pieceType = .pawn
         }

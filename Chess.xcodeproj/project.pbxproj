@@ -57,6 +57,7 @@
 		E5EE5DB023B5368F0066C281 /* PieceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DAF23B5368F0066C281 /* PieceTests.swift */; };
 		E5EE5DB223B53FE10066C281 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
 		E5EE5DB623B62BCA0066C281 /* GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB523B62BCA0066C281 /* GameTests.swift */; };
+		E5F83AB223B8D930001366FE /* MoveComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F83AB123B8D930001366FE /* MoveComponentTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -103,6 +104,7 @@
 		E5EE5DAF23B5368F0066C281 /* PieceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceTests.swift; sourceTree = "<group>"; };
 		E5EE5DB123B53FE10066C281 /* Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		E5EE5DB523B62BCA0066C281 /* GameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTests.swift; sourceTree = "<group>"; };
+		E5F83AB123B8D930001366FE /* MoveComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveComponentTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +226,7 @@
 				E5C1FD7E23B50D4400A33411 /* BoardTests.swift */,
 				E5EE5DAF23B5368F0066C281 /* PieceTests.swift */,
 				E551399C23B818E200FD1D01 /* MoveTests.swift */,
+				E5F83AB123B8D930001366FE /* MoveComponentTests.swift */,
 				E5BE32D523B509A000EE526A /* Info.plist */,
 			);
 			path = ChessTests;
@@ -371,6 +374,7 @@
 				E50F659323B7C29C0042B527 /* Knight.swift in Sources */,
 				E51CCF7423B62FD700F57536 /* Game.swift in Sources */,
 				E50F658D23B7C2920042B527 /* Queen.swift in Sources */,
+				E5F83AB223B8D930001366FE /* MoveComponentTests.swift in Sources */,
 				E51CCF7523B62FD700F57536 /* Board.swift in Sources */,
 				E5EE5DB023B5368F0066C281 /* PieceTests.swift in Sources */,
 				E50F656B23B7C0530042B527 /* Direction.swift in Sources */,
