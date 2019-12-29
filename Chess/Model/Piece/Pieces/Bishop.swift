@@ -15,7 +15,7 @@ struct Bishop: Piece {
         movePattern.directions.count
     }
     
-    func validPattern(delta: Delta, side: Side) -> MovePattern {
+    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
         guard delta.equalMagnitude else {
             return .init(directions: [])
         }

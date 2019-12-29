@@ -15,5 +15,5 @@ protocol Piece {
     var moved: Bool { get set }
     func numberOfMoves(for movePattern: MovePattern) -> Int
     
-    func validPattern(delta: Delta, side: Side) -> MovePattern
+    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern
 }

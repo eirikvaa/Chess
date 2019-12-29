@@ -15,7 +15,7 @@ struct Rook: Piece {
         movePattern.directions.count
     }
     
-    func validPattern(delta: Delta, side: Side) -> MovePattern {
+    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (1..., 0):
             let direction = Direction.east.sideRelativeDirection(side)

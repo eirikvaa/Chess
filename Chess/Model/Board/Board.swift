@@ -80,15 +80,15 @@ struct Board {
         return .init(stringLiteral: "")
     }
     
-    func getSourceDestination(pieceName: Character?, destination: BoardCoordinate, side: Side) throws -> BoardCoordinate {
+    func getSourceDestination(pieceName: Character?, destination: BoardCoordinate, side: Side, isAttacking: Bool) throws -> BoardCoordinate {
         let _piece = PieceFabric.create(pieceName)
-        
         let pieces = getPieces(of: _piece.type, side: side)
         
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)
             let delta = sourceCoordinate.difference(from: destination)
-            let validPattern = piece.validPattern(delta: delta, side: side)
+            
+            let validPattern = piece.validPattern(delta: delta, side: side, isAttacking: isAttacking)
             
             guard validPattern.directions.count > 0 else {
                 continue

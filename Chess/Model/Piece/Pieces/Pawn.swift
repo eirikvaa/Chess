@@ -15,25 +15,25 @@ struct Pawn: Piece {
         moved ? 2 : movePattern.directions.count
     }
     
-    func validPattern(delta: Delta, side: Side) -> MovePattern {
-        switch (delta.x, delta.y, moved, side) {
-        case (0, 1, false, .white),
-             (0, 1, true, .white):
+    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
+        switch (delta.x, delta.y, moved, side, isAttacking) {
+        case (0, 1, false, .white, false),
+             (0, 1, true, .white, false):
             return [.north]
-        case (0, 2, false, .white):
+        case (0, 2, false, .white, false):
             return [.north, .north]
-        case (-1, 1, _, .white):
+        case (-1, 1, _, .white, true):
             return [.northWest]
-        case (1, 1, _, .white):
+        case (1, 1, _, .white, true):
             return [.northEast]
-        case (0, -1, false, .black),
-             (0, -1, true, .black):
+        case (0, -1, false, .black, false),
+             (0, -1, true, .black, false):
             return [.south]
-        case (0, -2, false, .black):
+        case (0, -2, false, .black, false):
             return [.south, .south]
-        case (1, -1, _, .black):
+        case (1, -1, _, .black, true):
             return [.southWest]
-        case (-1, -1, _, .black):
+        case (-1, -1, _, .black, true):
             return [.southEast]
         default:
             return []

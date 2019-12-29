@@ -11,10 +11,10 @@ import Foundation
 struct Game {
     private var board = Board()
     private var prePlayedMoves = [String]()
-    private var moveType: MoveType = .customExtended
+    private var moveType: MoveType = .algebraic
     var currentSide = Side.white
     
-    init(moveType: MoveType = .customExtended, prePlayedMoves: [String] = []) {
+    init(moveType: MoveType = .algebraic, prePlayedMoves: [String] = []) {
         self.moveType = moveType
         self.prePlayedMoves.append(contentsOf: prePlayedMoves)
     }
@@ -115,8 +115,8 @@ extension Game {
         let sourceCoordinate = move.sourceCoordinate
         let destinationCoordinate = move.destinationCoordinate
         let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
-
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide)
+        let isAttacking = sourcePiece.side != destinationPiece?.side && destinationPiece != nil
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isAttacking: isAttacking)
         
         guard validPattern.directions.count > 0 else {
             throw GameError.invalidMove(message: "No valid directions to destination position")

@@ -15,7 +15,7 @@ struct Knight: Piece {
         movePattern.directions.count
     }
     
-    func validPattern(delta: Delta, side: Side) -> MovePattern {
+    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (-1, 2):
             return [.north, .north, .west]

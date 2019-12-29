@@ -31,7 +31,7 @@ struct Queen: Piece {
         [.northWest]
     ]
     var moved = false
-    func validPattern(delta: Delta, side: Side) -> MovePattern {
+    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
         switch (delta.x, delta.y, delta.equalMagnitude) {
         case (0, 1..., false):
             return .init(directions: .init(repeating: .north, count: delta.magnitude(of: \.y)))

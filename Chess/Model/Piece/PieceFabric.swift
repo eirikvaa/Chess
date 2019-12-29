@@ -28,6 +28,7 @@ struct PieceFabric {
         case "Q": return create(.queen)
         case "N": return create(.knight)
         case "R": return create(.rook)
+        case "B": return create(.bishop)
         default: return create(.pawn)
         }
     }
