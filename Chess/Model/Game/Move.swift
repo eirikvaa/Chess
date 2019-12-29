@@ -112,10 +112,6 @@ struct AlgebraicMove: MoveProtocol {
     let destinationCoordinate: BoardCoordinate
     
     init?(move: String, board: Board?, side: Side) throws {
-        guard let _ = move.lowercased().range(of: #"[K|Q|N|B|R]?[x]?[a-h][1-8]"#, options: .regularExpression) else {
-            throw GameError.invalidMoveFormat
-        }
-        
         let components = MoveComponents(value: move)
         
         destinationCoordinate = components.destination
