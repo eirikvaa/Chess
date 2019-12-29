@@ -7,11 +7,13 @@
 //
 
 protocol Piece {
+    var id: String { get }
     var type: PieceType { get }
-    var player: Player? { get set }
+    var side: Side { get set }
     var graphicalRepresentation: String { get }
     var movePatterns: [MovePattern] { get }
     var moved: Bool { get set }
+    func numberOfMoves(for movePattern: MovePattern) -> Int
     
     func validPattern(delta: Delta, side: Side) -> MovePattern
 }

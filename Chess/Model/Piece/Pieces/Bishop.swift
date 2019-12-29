@@ -6,7 +6,15 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+import Foundation
+
 struct Bishop: Piece {
+    var id = UUID().uuidString
+    
+    func numberOfMoves(for movePattern: MovePattern) -> Int {
+        movePattern.directions.count
+    }
+    
     func validPattern(delta: Delta, side: Side) -> MovePattern {
         guard delta.equalMagnitude else {
             return .init(directions: [])
@@ -14,22 +22,26 @@ struct Bishop: Piece {
         
         switch (delta.x, delta.y) {
         case (1..., 1...):
-            return [.northEast]
+            let direction = Direction.northEast.sideRelativeDirection(side)
+            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
         case (...(-1), ...(-1)):
-            return [.southWest]
+            let direction = Direction.southWest.sideRelativeDirection(side)
+            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
         case (1..., ...(-1)):
-            return [.southEast]
+            let direction = Direction.southEast.sideRelativeDirection(side)
+            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
         case (...(-1), 1...):
-            return [.northWest]
+            let direction = Direction.northWest.sideRelativeDirection(side)
+            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
         default:
             return []
         }
     }
     
     var type = PieceType.bishop
-    var player: Player?
+    var side: Side = .white
     var graphicalRepresentation: String {
-        player?.side == .white ? "♗" : "♝"
+        side == .white ? "♗" : "♝"
     }
     var movePatterns: [MovePattern] = [
         [.northEast],

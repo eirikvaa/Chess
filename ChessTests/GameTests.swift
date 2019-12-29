@@ -139,18 +139,32 @@ class GameTests: XCTestCase {
     func testRuyLopezOpeningShouldSucceed() {
         assertNonThrowingMoves("e2e4", "e7e5", "g1f3", "b8c6", "f1b5", message: "Should not throw")
     }
+    
+    // MARK: Algebraic notation
+    
+    func testAlgebraicNotationPawnE2ToE4() {
+        assertNonThrowingMoves("e4", moveType: .algebraic, message: "Should not throw")
+    }
+    
+    func testAlgebraicNotationKnightB1ToC3() {
+        assertNonThrowingMoves("Nc3", moveType: .algebraic, message: "Should not throw")
+    }
+    
+    func testBlackQueenCanMoveSeveralStepsSouthEast() {
+        assertNonThrowingMoves("e4", "e5", "Ke2", "Qf6", moveType: .algebraic, message: "Should not throw")
+    }
 
 }
 
 extension GameTests {
-    func assertThrowingMoves(_ moves: Move..., message: String) {
-        var game = Game(prePlayedMoves: moves)
+    func assertThrowingMoves(_ moves: String..., moveType: MoveType = .customExtended, message: String, side: Side = .white) {
+        var game = Game(moveType: moveType, prePlayedMoves: moves)
         
         XCTAssertThrowsError(try game.startGame(continueAfterPrePlayedMoves: false), message)
     }
     
-    func assertNonThrowingMoves(_ moves: Move..., message: String) {
-        var game = Game(prePlayedMoves: moves)
+    func assertNonThrowingMoves(_ moves: String..., moveType: MoveType = .customExtended, message: String, side: Side = .white) {
+        var game = Game(moveType: moveType, prePlayedMoves: moves)
         
         XCTAssertNoThrow(try game.startGame(continueAfterPrePlayedMoves: false), message)
     }

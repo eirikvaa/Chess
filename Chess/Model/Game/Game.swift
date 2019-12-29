@@ -10,36 +10,38 @@ import Foundation
 
 struct Game {
     private var board = Board()
-    let whitePlayer = Player(side: .white)
-    let blackPlayer = Player(side: .black)
-    private var prePlayedMoves = [Move]()
-}
-
-extension Game {
-    init(prePlayedMoves: [Move]) {
+    private var prePlayedMoves = [String]()
+    private var moveType: MoveType = .customExtended
+    var currentSide = Side.white
+    
+    init(moveType: MoveType = .customExtended, prePlayedMoves: [String] = []) {
+        self.moveType = moveType
         self.prePlayedMoves.append(contentsOf: prePlayedMoves)
     }
 }
 
 extension Game {
     mutating func startGame(continueAfterPrePlayedMoves: Bool = true) throws {
-        resetBoard()
+        board.resetBoard()
         
-        var currentPlayer = whitePlayer
         var round = 0
         
         for move in prePlayedMoves {
+            guard let convertedMove = try MoveFabric.create(moveType: moveType, move: move, board: board, side: currentSide) else {
+                throw GameError.invalidMoveFormat
+            }
+            
             printBoard()
             
             do {
-                try performMoveHandleError(move: move, currentPlayer: &currentPlayer)
+                try performMoveHandleError(move: convertedMove)
             } catch {
                 // If something went wrong when adding the preplayed moves, we did something
                 // wrong and should just quit.
                 throw error
             }
             
-            finishRound(round: &round, currentPlayer: &currentPlayer)
+            finishRound(round: &round, side: currentSide)
         }
         
         guard continueAfterPrePlayedMoves else {
@@ -50,32 +52,32 @@ extension Game {
         while true {
             printBoard()
             
-            print("\(currentPlayer.name), please input a move:")
-            let input = readLine(strippingNewline: true)
+            print("\(currentSide.name), please input a move:")
+            let input = readLine(strippingNewline: true) ?? ""
             
             guard input != "quit" else {
                 print("Quitting ...")
                 break
             }
             
-            guard let move = try? Move(move: input ?? "") else {
+            guard let move = try? MoveFabric.create(moveType: moveType, move: input, board: board, side: currentSide) else {
                 print("Move not on correct format, try again.")
                 continue
             }
             
             do {
-                try performMoveHandleError(move: move, currentPlayer: &currentPlayer)
+                try performMoveHandleError(move: move)
             } catch {
                 // If something went wrong during playing, we did something wrong, but don't
                 // want to play from the start, so just try again.
                 continue
             }
             
-            finishRound(round: &round, currentPlayer: &currentPlayer)
+            finishRound(round: &round, side: currentSide)
         }
     }
     
-    mutating func performMoveHandleError(move: Move, currentPlayer: inout Player) throws {
+    mutating func performMoveHandleError(move: MoveProtocol) throws {
         guard var sourcePiece = board[move.sourceCoordinate] else {
             throw GameError.noPieceInSourcePosition
         }
@@ -83,7 +85,7 @@ extension Game {
         let destinationPiece = board[move.destinationCoordinate]
         
         do {
-            try validateMove(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: &currentPlayer)
+            try validateMove(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece)
         } catch let gameError as GameError {
             printErrorMessage(gameError: gameError)
             throw gameError
@@ -95,28 +97,26 @@ extension Game {
         board.performMove(move, on: &sourcePiece)
     }
     
-    mutating func validateMove(move: Move, sourcePiece: Piece?, destinationPiece: Piece?, currentPlayer: inout Player) throws {
+    mutating func validateMove(move: MoveProtocol, sourcePiece: Piece?, destinationPiece: Piece?) throws {
        guard let sourcePiece = sourcePiece else {
            throw GameError.noPieceInSourcePosition
        }
        
-       guard sourcePiece.player?.side == currentPlayer.side else {
+       guard sourcePiece.side == currentSide else {
            throw GameError.invalidPiece
        }
        
-       guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece, currentPlayer: currentPlayer) else {
+        guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece) else {
            throw GameError.invalidMove(message: "Invalid move pattern!")
        }
-       
-        currentPlayer.addMove(move)
     }
     
-    func validateMovePattern(move: Move, sourcePiece: Piece, destinationPiece: Piece?, currentPlayer: Player) throws -> Bool {
+    func validateMovePattern(move: MoveProtocol, sourcePiece: Piece, destinationPiece: Piece?) throws -> Bool {
         let sourceCoordinate = move.sourceCoordinate
         let destinationCoordinate = move.destinationCoordinate
         let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
 
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentPlayer.side)
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide)
         
         guard validPattern.directions.count > 0 else {
             throw GameError.invalidMove(message: "No valid directions to destination position")
@@ -143,10 +143,10 @@ extension Game {
                     destination: destinationCoordinate,
                     direction: direction,
                     moves: moveDelta.maximumMagnitude,
-                    side: currentPlayer.side,
+                    side: currentSide,
                     canCrossOver: false)
             case (_, .knight):
-                let validAttack = board.canAttack(at: destinationCoordinate, side: currentPlayer.side)
+                let validAttack = board.canAttack(at: destinationCoordinate, side: currentSide)
                 let validMove = destinationPiece == nil
                 
                 guard validAttack || validMove else {
@@ -160,9 +160,9 @@ extension Game {
         return true
     }
     
-    mutating func finishRound(round: inout Int, currentPlayer: inout Player) {
+    mutating func finishRound(round: inout Int, side: Side) {
         round += 1
-        currentPlayer = round.isMultiple(of: 2) ? whitePlayer : blackPlayer
+        currentSide.changeSide()
     }
     
     func printErrorMessage(gameError: GameError) {
@@ -182,32 +182,5 @@ extension Game {
     
     func printBoard() {
         print(board)
-    }
-    
-    mutating func resetBoard() {
-        func assignPieceToPlayer(piece: inout Piece, player: Player) {
-            piece.player = player
-        }
-        
-        var whiteBackRank: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        var whiteSecondRank: [Piece] = Array(repeating: Pawn(), count: 8)
-        
-        var blackBackRank: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        var blackSecondRank: [Piece] = Array(repeating: Pawn(), count: 8)
-        
-        for i in 0 ..< whiteBackRank.count {
-            assignPieceToPlayer(piece: &whiteBackRank[i], player: whitePlayer)
-            assignPieceToPlayer(piece: &whiteSecondRank[i], player: whitePlayer)
-            assignPieceToPlayer(piece: &blackBackRank[i], player: blackPlayer)
-            assignPieceToPlayer(piece: &blackSecondRank[i], player: blackPlayer)
-        }
-        
-        for (index, file) in File.validFiles.enumerated() {
-            board[BoardCoordinate(file: file, rank: 8)] = blackBackRank[index]
-            board[BoardCoordinate(file: file, rank: 7)] = blackSecondRank[index]
-            
-            board[BoardCoordinate(file: file, rank: 2)] = whiteSecondRank[index]
-            board[BoardCoordinate(file: file, rank: 1)] = whiteBackRank[index]
-        }
     }
 }

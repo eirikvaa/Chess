@@ -8,6 +8,5 @@
 
 import Foundation
 
-var game = Game()
-game.resetBoard()
+var game = Game(moveType: .algebraic)
 try? game.startGame()

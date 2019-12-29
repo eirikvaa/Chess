@@ -17,4 +17,18 @@ struct PieceFabric {
         case .pawn: return Pawn()
         }
     }
+    
+    static func create(_ character: Character?) -> Piece {
+        guard let character = character else {
+            return create(.pawn)
+        }
+        
+        switch String(character) {
+        case "K": return create(.king)
+        case "Q": return create(.queen)
+        case "N": return create(.knight)
+        case "R": return create(.rook)
+        default: return create(.pawn)
+        }
+    }
 }

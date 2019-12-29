@@ -6,11 +6,19 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+import Foundation
+
 struct King: Piece {
+    var id = UUID().uuidString
+    
+    func numberOfMoves(for movePattern: MovePattern) -> Int {
+        1
+    }
+    
     var type = PieceType.king
-    var player: Player?
+    var side: Side = .white
     var graphicalRepresentation: String {
-        player?.side == .white ? "♔" : "♚"
+        side == .white ? "♔" : "♚"
     }
     var movePatterns: [MovePattern] = [
         [.north],

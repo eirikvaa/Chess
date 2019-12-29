@@ -223,8 +223,8 @@
 				E50F656723B751520042B527 /* PlayerTests.swift */,
 				E5C1FD7E23B50D4400A33411 /* BoardTests.swift */,
 				E5EE5DAF23B5368F0066C281 /* PieceTests.swift */,
-				E5BE32D523B509A000EE526A /* Info.plist */,
 				E551399C23B818E200FD1D01 /* MoveTests.swift */,
+				E5BE32D523B509A000EE526A /* Info.plist */,
 			);
 			path = ChessTests;
 			sourceTree = "<group>";

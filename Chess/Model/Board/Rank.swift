@@ -6,6 +6,7 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+/// Ranks are rows numbered from 1 to 8 from the perspective of each side.
 typealias Rank = Int
 
 extension Rank {

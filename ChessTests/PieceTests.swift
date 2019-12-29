@@ -19,7 +19,7 @@ class PieceTests: XCTestCase {
     }
     
     func testWhitePawnMoveTwoNorthShouldSucceed() {
-        assertMovement(type: .pawn, delta: (0,2), side: .white, expectedPattern: [.north])
+        assertMovement(type: .pawn, delta: (0,2), side: .white, expectedPattern: [.north, .north])
     }
     
     func testBlackPawnMoveNorthShouldSucceed() {
@@ -27,13 +27,17 @@ class PieceTests: XCTestCase {
     }
     
     func testBlackPawnMoveTwoNorthShouldSucceed() {
-        assertMovement(type: .pawn, delta: (0,-2), side: .black, expectedPattern: [.south])
+        assertMovement(type: .pawn, delta: (0,-2), side: .black, expectedPattern: [.south, .south])
+    }
+    
+    func testPawnNumberOfMovesSingleNorth() {
+        assertNumberOfMoves(type: .pawn, movePattern: [.north], expectedValue: 1)
     }
     
     // MARK: Rook
     
     func testBlackRookCanMoveSoutShouldSucceed() {
-        assertMovement(type: .rook, delta: (0, -2), side: .white, expectedPattern: [.south])
+        assertMovement(type: .rook, delta: (0, -2), side: .white, expectedPattern: [.south, .south])
     }
 
 }
@@ -43,5 +47,11 @@ extension PieceTests {
         let piece = PieceFabric.create(type)
         let actualPattern = piece.validPattern(delta: .init(x: delta.file, y: delta.rank), side: side)
         XCTAssertEqual(actualPattern, expectedPattern)
+    }
+    
+    func assertNumberOfMoves(type: PieceType, movePattern: MovePattern, expectedValue: Int) {
+        let piece = PieceFabric.create(type)
+        let numberOfMoves = piece.numberOfMoves(for: movePattern)
+        XCTAssertEqual(numberOfMoves, expectedValue)
     }
 }

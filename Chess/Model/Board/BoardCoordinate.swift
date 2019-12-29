@@ -42,7 +42,7 @@ extension BoardCoordinate: Equatable {
 extension BoardCoordinate: ExpressibleByStringLiteral {
     init(stringLiteral value: String) {
         let file = String(value.dropLast())
-        let rank = Int(String(value.dropFirst()))!
+        let rank = value.last?.wholeNumberValue ?? 1
         self = .init(file: file, rank: rank)
     }
 }
@@ -51,5 +51,11 @@ extension BoardCoordinate {
     mutating func move(by direction: Direction, side: Side) -> BoardCoordinate {
         let delta = Delta(x: 0, y: 0).advance(by: direction) * side.sideMultiplier
         return self.move(by: delta)
+    }
+}
+
+extension BoardCoordinate: CustomStringConvertible {
+    var description: String {
+        "\(file)\(rank)"
     }
 }

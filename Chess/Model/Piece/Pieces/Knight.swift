@@ -6,7 +6,15 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+import Foundation
+
 struct Knight: Piece {
+    var id = UUID().uuidString
+    
+    func numberOfMoves(for movePattern: MovePattern) -> Int {
+        movePattern.directions.count
+    }
+    
     func validPattern(delta: Delta, side: Side) -> MovePattern {
         switch (delta.x, delta.y) {
         case (-1, 2):
@@ -31,9 +39,9 @@ struct Knight: Piece {
     }
     
     var type = PieceType.knight
-    var player: Player?
+    var side: Side = .white
     var graphicalRepresentation: String {
-        player?.side == .white ? "♘" : "♞"
+        side == .white ? "♘" : "♞"
     }
     var movePatterns: [MovePattern] = [
         [.north, .north, .west],

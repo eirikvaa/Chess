@@ -16,27 +16,21 @@ enum Side {
         return self == .black ? -1 : 1
     }
     
+    mutating func changeSide() {
+        self = oppositeSide
+    }
+    
     var oppositeSide: Side {
         switch self {
         case .black: return .white
         case .white: return .black
         }
     }
-}
-
-struct Player {
-    let side: Side
-    private var moves: [Move] = []
-    
-    init(side: Side) {
-        self.side = side
-    }
     
     var name: String {
-        return side == .white ? "White player" : "Black player"
-    }
-    
-    mutating func addMove(_ move: Move) {
-        moves.append(move)
+        switch self {
+        case .white: return "White player"
+        case .black: return "Black player"
+        }
     }
 }

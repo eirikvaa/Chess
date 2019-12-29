@@ -6,6 +6,7 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+/// Files are columns named from "a" to "h".
 typealias File = String
 
 extension File {
