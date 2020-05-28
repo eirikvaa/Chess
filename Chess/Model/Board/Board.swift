@@ -36,10 +36,6 @@ struct Board {
         }
     }
 
-    subscript(coordinate: BoardCoordinate, side: Side) -> Bool {
-        return self[coordinate]?.side == side
-    }
-
     mutating func performMove(_ move: MoveProtocol, on piece: inout Piece) {
         piece.moved = true
         self[move.destinationCoordinate] = piece
@@ -138,7 +134,7 @@ struct Board {
             }
         }
 
-        if self[destination, side] {
+        if self[destination]?.side == side {
             throw GameError.invalidMove(message: "Cannot move to position occupied by self")
         }
     }
