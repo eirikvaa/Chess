@@ -27,11 +27,11 @@ struct Board {
 
     subscript(coordinate: BoardCoordinate) -> Piece? {
         get {
-            assert(isValidPlacement(rank: coordinate.rank, file: coordinate.file), "Index out of range")
+            assert(BoardCoordinateValidator.validate(coordinate), "Invalid coordinate!")
             return cells[coordinate.rank - 1][coordinate.fileIndex].piece
         }
         set {
-            assert(isValidPlacement(rank: coordinate.rank, file: coordinate.file), "Index out of range")
+            assert(BoardCoordinateValidator.validate(coordinate), "Invalid coordinate!")
             cells[coordinate.rank - 1][coordinate.fileIndex].piece = newValue
         }
     }
@@ -190,19 +190,5 @@ extension Board: CustomStringConvertible {
         _description += "    a   b   c   d   e   f   g   h\n"
 
         return _description
-    }
-}
-
-private extension Board {
-    func isValidPlacement(rank: Int, file: String) -> Bool {
-        isValidNumericalIndex(index: rank) && isValidFile(file)
-    }
-
-    func isValidNumericalIndex(index: Int) -> Bool {
-        Rank.validRanks ~= index
-    }
-
-    func isValidFile(_ file: String) -> Bool {
-        File.validFiles.contains(file.lowercased())
     }
 }
