@@ -10,12 +10,12 @@ import Foundation
 
 struct Rook: Piece {
     var id = UUID().uuidString
-    
+
     func numberOfMoves(for movePattern: MovePattern) -> Int {
         movePattern.directions.count
     }
-    
-    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
+
+    func validPattern(delta: Delta, side: Side, isAttacking _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (1..., 0):
             let direction = Direction.east.sideRelativeDirection(side)
@@ -33,17 +33,18 @@ struct Rook: Piece {
             return []
         }
     }
-    
+
     var type = PieceType.rook
     var side: Side = .white
     var graphicalRepresentation: String {
         side == .white ? "♖" : "♜"
     }
+
     var movePatterns: [MovePattern] = [
         [.north],
         [.west],
         [.east],
-        [.south]
+        [.south],
     ]
     var moved = false
 }

@@ -10,16 +10,16 @@ import Foundation
 
 struct Bishop: Piece {
     var id = UUID().uuidString
-    
+
     func numberOfMoves(for movePattern: MovePattern) -> Int {
         movePattern.directions.count
     }
-    
-    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
+
+    func validPattern(delta: Delta, side _: Side, isAttacking _: Bool) -> MovePattern {
         guard delta.equalMagnitude else {
             return .init(directions: [])
         }
-        
+
         switch (delta.x, delta.y) {
         case (1..., 1...):
             return .init(directions: .init(repeating: .northEast, count: delta.magnitude(of: \.x)))
@@ -33,12 +33,13 @@ struct Bishop: Piece {
             return []
         }
     }
-    
+
     var type = PieceType.bishop
     var side: Side = .white
     var graphicalRepresentation: String {
         side == .white ? "♗" : "♝"
     }
+
     var movePatterns: [MovePattern] = [
         [.northEast],
         [.southEast],

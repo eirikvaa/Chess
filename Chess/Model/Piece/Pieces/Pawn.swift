@@ -10,11 +10,11 @@ import Foundation
 
 struct Pawn: Piece {
     var id = UUID().uuidString
-    
+
     func numberOfMoves(for movePattern: MovePattern) -> Int {
         moved ? 2 : movePattern.directions.count
     }
-    
+
     func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
         switch (delta.x, delta.y, moved, side, isAttacking) {
         case (0, 1, false, .white, false),
@@ -39,19 +39,20 @@ struct Pawn: Piece {
             return []
         }
     }
-    
+
     var type = PieceType.pawn
     var side: Side = .white
     var graphicalRepresentation: String {
         side == .white ? "♙" : "♟"
     }
+
     var movePatterns: [MovePattern] = [
         [.north],
         [.northEast],
         [.northWest],
         [.south],
         [.southWest],
-        [.southEast]
+        [.southEast],
     ]
     var moved = false
 }

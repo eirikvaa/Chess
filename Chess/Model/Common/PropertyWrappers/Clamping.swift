@@ -10,12 +10,12 @@
 struct Clamping<Value: Comparable> {
     var value: Value
     let range: ClosedRange<Value>
-    
+
     init(wrappedValue value: Value, _ range: ClosedRange<Value>) {
         self.value = value
         self.range = range
     }
-    
+
     var wrappedValue: Value {
         get {
             value

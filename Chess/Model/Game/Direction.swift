@@ -15,7 +15,7 @@ enum Direction {
     case southWest
     case west
     case northWest
-    
+
     var oppositeDirection: Direction {
         switch self {
         case .north: return .south
@@ -28,10 +28,10 @@ enum Direction {
         case .northWest: return .southEast
         }
     }
-    
+
     func relativeDelta(for side: Side) -> Delta {
         let delta: Delta
-        
+
         switch self {
         case .north:
             delta = .init(x: 0, y: 1)
@@ -50,16 +50,15 @@ enum Direction {
         case .east:
             delta = .init(x: 1, y: 0)
         }
-        
+
         return delta * side.sideMultiplier
     }
-    
+
     func sideRelativeDirection(_ side: Side) -> Direction {
         switch side {
         case .white: return self
         case .black: return self.oppositeDirection
         }
-        
     }
 }
 

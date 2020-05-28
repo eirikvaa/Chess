@@ -11,7 +11,7 @@ import Foundation
 struct Delta {
     let x: Int
     let y: Int
-    
+
     func advance(by direction: Direction) -> Delta {
         switch direction {
         case .north:
@@ -32,21 +32,21 @@ struct Delta {
             return .init(x: x - 1, y: y + 1)
         }
     }
-    
+
     var equalMagnitude: Bool {
         abs(x) == abs(y)
     }
-    
+
     /// Finds the maximum magnitude of either direction.
     /// Helpful when finding the number of steps when the rook moves.
     var maximumMagnitude: Int {
         abs(max(x, y))
     }
-    
+
     func magnitude(of keyPath: KeyPath<Delta, Int>) -> Int {
         return abs(self[keyPath: keyPath])
     }
-    
+
     static func * (lhs: Delta, rhs: Int) -> Delta {
         .init(x: lhs.x * rhs, y: lhs.y * rhs)
     }

@@ -10,24 +10,25 @@ import Foundation
 
 struct King: Piece {
     var id = UUID().uuidString
-    
-    func numberOfMoves(for movePattern: MovePattern) -> Int {
+
+    func numberOfMoves(for _: MovePattern) -> Int {
         1
     }
-    
+
     var type = PieceType.king
     var side: Side = .white
     var graphicalRepresentation: String {
         side == .white ? "♔" : "♚"
     }
+
     var movePatterns: [MovePattern] = [
         [.north],
         [.east],
         [.south],
-        [.west]
+        [.west],
     ]
     var moved = false
-    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
+    func validPattern(delta: Delta, side _: Side, isAttacking _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (0, 1):
             return [.north]

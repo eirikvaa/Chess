@@ -10,16 +10,17 @@ import Foundation
 
 struct Queen: Piece {
     var id = UUID().uuidString
-    
+
     func numberOfMoves(for movePattern: MovePattern) -> Int {
         movePattern.directions.count
     }
-    
+
     var type = PieceType.queen
     var side: Side = .white
     var graphicalRepresentation: String {
         side == .white ? "♕" : "♛"
     }
+
     var movePatterns: [MovePattern] = [
         [.north],
         [.northEast],
@@ -28,10 +29,10 @@ struct Queen: Piece {
         [.south],
         [.southWest],
         [.west],
-        [.northWest]
+        [.northWest],
     ]
     var moved = false
-    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
+    func validPattern(delta: Delta, side _: Side, isAttacking _: Bool) -> MovePattern {
         switch (delta.x, delta.y, delta.equalMagnitude) {
         case (0, 1..., false):
             return .init(directions: .init(repeating: .north, count: delta.magnitude(of: \.y)))

@@ -11,22 +11,22 @@ import Foundation
 enum Side {
     case white
     case black
-    
+
     var sideMultiplier: Int {
         return self == .black ? -1 : 1
     }
-    
+
     mutating func changeSide() {
         self = oppositeSide
     }
-    
+
     var oppositeSide: Side {
         switch self {
         case .black: return .white
         case .white: return .black
         }
     }
-    
+
     var name: String {
         switch self {
         case .white: return "White player"

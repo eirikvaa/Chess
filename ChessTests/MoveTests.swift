@@ -10,6 +10,4 @@ import XCTest
 
 @testable import Chess
 
-class MoveTests: XCTestCase {
-    
-}
+class MoveTests: XCTestCase {}

@@ -12,7 +12,7 @@ struct MovePattern {
 
 extension MovePattern: ExpressibleByArrayLiteral {
     init(arrayLiteral elements: Direction...) {
-        self.directions = elements
+        directions = elements
     }
 }
 

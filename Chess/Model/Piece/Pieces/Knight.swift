@@ -10,12 +10,12 @@ import Foundation
 
 struct Knight: Piece {
     var id = UUID().uuidString
-    
+
     func numberOfMoves(for movePattern: MovePattern) -> Int {
         movePattern.directions.count
     }
-    
-    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
+
+    func validPattern(delta: Delta, side _: Side, isAttacking _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (-1, 2):
             return [.north, .north, .west]
@@ -37,12 +37,13 @@ struct Knight: Piece {
             return []
         }
     }
-    
+
     var type = PieceType.knight
     var side: Side = .white
     var graphicalRepresentation: String {
         side == .white ? "♘" : "♞"
     }
+
     var movePatterns: [MovePattern] = [
         [.north, .north, .west],
         [.north, .north, .east],
@@ -51,7 +52,7 @@ struct Knight: Piece {
         [.south, .west, .west],
         [.south, .east, .east],
         [.south, .south, .west],
-        [.south, .south, .east]
+        [.south, .south, .east],
     ]
     var moved = false
 }

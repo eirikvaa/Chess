@@ -14,15 +14,15 @@ class BoardTests: XCTestCase {
     func testWhitePlayerMoveNorth() {
         assertMovement(s: "e2", d: "e3", direction: .north, side: .white)
     }
-    
+
     func testBlackPlayerMovesNorth() {
         assertMovement(s: "e7", d: "e6", direction: .north, side: .black)
     }
-    
+
     func testWhitePlayerMoveNorthWest() {
         assertMovement(s: "e2", d: "d3", direction: .northWest, side: .white)
     }
-    
+
     func testBlackPlayerMoveNorthWest() {
         assertMovement(s: "e7", d: "f6", direction: .northWest, side: .black)
     }
