@@ -166,13 +166,13 @@ class GameTests: XCTestCase {
 
 extension GameTests {
     func assertThrowingMoves(_ moves: String..., moveType: MoveType = .algebraic, message: String, side: Side = .white) {
-        var game = Game(moveType: moveType, prePlayedMoves: moves)
+        let game = Game(moveType: moveType, prePlayedMoves: moves)
         
         XCTAssertThrowsError(try game.startGame(continueAfterPrePlayedMoves: false), message)
     }
     
     func assertNonThrowingMoves(_ moves: String..., moveType: MoveType = .algebraic, message: String, side: Side = .white) {
-        var game = Game(moveType: moveType, prePlayedMoves: moves)
+        let game = Game(moveType: moveType, prePlayedMoves: moves)
         
         XCTAssertNoThrow(try game.startGame(continueAfterPrePlayedMoves: false), message)
     }

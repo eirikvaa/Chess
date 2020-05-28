@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Game {
+class Game {
     private var board = Board()
     private var prePlayedMoves = [String]()
     private var moveType: MoveType = .algebraic
@@ -21,7 +21,7 @@ struct Game {
 }
 
 extension Game {
-    mutating func startGame(continueAfterPrePlayedMoves: Bool = true) throws {
+    func startGame(continueAfterPrePlayedMoves: Bool = true) throws {
         board.resetBoard()
         
         var round = 0
@@ -77,7 +77,7 @@ extension Game {
         }
     }
     
-    mutating func performMoveHandleError(move: MoveProtocol) throws {
+    func performMoveHandleError(move: MoveProtocol) throws {
         guard var sourcePiece = board[move.sourceCoordinate] else {
             throw GameError.noPieceInSourcePosition
         }
@@ -97,7 +97,7 @@ extension Game {
         board.performMove(move, on: &sourcePiece)
     }
     
-    mutating func validateMove(move: MoveProtocol, sourcePiece: Piece?, destinationPiece: Piece?) throws {
+    func validateMove(move: MoveProtocol, sourcePiece: Piece?, destinationPiece: Piece?) throws {
        guard let sourcePiece = sourcePiece else {
            throw GameError.noPieceInSourcePosition
        }
@@ -160,7 +160,7 @@ extension Game {
         return true
     }
     
-    mutating func finishRound(round: inout Int, side: Side) {
+    func finishRound(round: inout Int, side: Side) {
         round += 1
         currentSide.changeSide()
     }
