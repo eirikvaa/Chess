@@ -288,7 +288,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = "Eirik Vale Aase";
 				TargetAttributes = {
 					E5BE32B123B5082F00EE526A = {
@@ -513,6 +513,7 @@
 		E5BE32BA23B5082F00EE526A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N37KDKBFXC;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -524,6 +525,7 @@
 		E5BE32BB23B5082F00EE526A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N37KDKBFXC;
 				ENABLE_HARDENED_RUNTIME = YES;
