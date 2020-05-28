@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Game {
+final class Game {
     private var board = Board()
     private var prePlayedMoves = [String]()
     private var moveType: MoveType = .algebraic
