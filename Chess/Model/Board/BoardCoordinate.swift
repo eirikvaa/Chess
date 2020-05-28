@@ -6,6 +6,12 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+/**
+ BoardCoordinates are used for expressing coordinates on a chess board.
+ A BoardCooardinate is made up of the *file* and the *rank*.
+ The file is a letter from A to H (inclusive) and the rank is a digit from 1 to 8 (inclusive).
+ Files can be considered the *columns* and ranks the *rows*.
+ */
 struct BoardCoordinate {
     @Clamping("a" ... "h")
     var file: File = "a"
