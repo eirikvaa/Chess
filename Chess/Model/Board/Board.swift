@@ -36,9 +36,11 @@ struct Board {
         }
     }
 
-    mutating func performMove(_ move: MoveProtocol, on piece: inout Piece) {
-        piece.moved = true
-        self[move.destinationCoordinate] = piece
+    mutating func performMove(_ move: MoveProtocol) {
+        var sourcePiece = self[move.sourceCoordinate]
+        
+        sourcePiece?.moved = true
+        self[move.destinationCoordinate] = sourcePiece
         self[move.sourceCoordinate] = nil
     }
 

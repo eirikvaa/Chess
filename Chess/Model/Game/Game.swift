@@ -78,7 +78,7 @@ extension Game {
     }
 
     func performMoveHandleError(move: MoveProtocol) throws {
-        guard var sourcePiece = board[move.sourceCoordinate] else {
+        guard let sourcePiece = board[move.sourceCoordinate] else {
             throw GameError.noPieceInSourcePosition
         }
 
@@ -94,7 +94,7 @@ extension Game {
             throw error
         }
 
-        board.performMove(move, on: &sourcePiece)
+        board.performMove(move)
     }
 
     func validateMove(move: MoveProtocol, sourcePiece: Piece?, destinationPiece: Piece?) throws {
