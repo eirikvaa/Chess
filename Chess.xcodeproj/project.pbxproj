@@ -41,7 +41,7 @@
 		E50F659B23B7C39A0042B527 /* Delta.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659A23B7C39A0042B527 /* Delta.swift */; };
 		E50F659C23B7C39A0042B527 /* Delta.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659A23B7C39A0042B527 /* Delta.swift */; };
 		E51CCF6F23B62FD200F57536 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
-		E51CCF7423B62FD700F57536 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
+		E51CCF7423B62FD700F57536 /* GameExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* GameExecutor.swift */; };
 		E51CCF7523B62FD700F57536 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
 		E51CCF7623B62FD700F57536 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7A23B509D300A33411 /* Player.swift */; };
 		E51CCF7723B62FD700F57536 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
@@ -51,7 +51,7 @@
 		E5625C562480729F00FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
 		E5625C572480738400FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
 		E5BE32B623B5082F00EE526A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32B523B5082F00EE526A /* main.swift */; };
-		E5BE32BE23B5087A00EE526A /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
+		E5BE32BE23B5087A00EE526A /* GameExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* GameExecutor.swift */; };
 		E5BE32C023B5088200EE526A /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
 		E5C1FD7B23B509D300A33411 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7A23B509D300A33411 /* Player.swift */; };
 		E5C1FD7D23B50A4100A33411 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
@@ -97,7 +97,7 @@
 		E5625C552480729F00FD30AF /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE32B523B5082F00EE526A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		E5BE32BD23B5087A00EE526A /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		E5BE32BD23B5087A00EE526A /* GameExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameExecutor.swift; sourceTree = "<group>"; };
 		E5BE32BF23B5088200EE526A /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		E5BE32D123B5099F00EE526A /* ChessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE32D523B509A000EE526A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				E5C1FD7A23B509D300A33411 /* Player.swift */,
-				E5BE32BD23B5087A00EE526A /* Game.swift */,
+				E5BE32BD23B5087A00EE526A /* GameExecutor.swift */,
 				E51CCF7923B649D600F57536 /* GameError.swift */,
 				E50F659A23B7C39A0042B527 /* Delta.swift */,
 				E50F656923B7C0530042B527 /* Direction.swift */,
@@ -352,7 +352,7 @@
 				E50F658F23B7C2970042B527 /* Bishop.swift in Sources */,
 				E50F658923B7C28E0042B527 /* King.swift in Sources */,
 				E50F659B23B7C39A0042B527 /* Delta.swift in Sources */,
-				E5BE32BE23B5087A00EE526A /* Game.swift in Sources */,
+				E5BE32BE23B5087A00EE526A /* GameExecutor.swift in Sources */,
 				E50F658C23B7C2920042B527 /* Queen.swift in Sources */,
 				E50F657A23B7C1340042B527 /* File.swift in Sources */,
 				E5EE5DB223B53FE10066C281 /* Move.swift in Sources */,
@@ -378,7 +378,7 @@
 				E50F657B23B7C1340042B527 /* File.swift in Sources */,
 				E50F659623B7C2A00042B527 /* Rook.swift in Sources */,
 				E50F659323B7C29C0042B527 /* Knight.swift in Sources */,
-				E51CCF7423B62FD700F57536 /* Game.swift in Sources */,
+				E51CCF7423B62FD700F57536 /* GameExecutor.swift in Sources */,
 				E50F658D23B7C2920042B527 /* Queen.swift in Sources */,
 				E5625C572480738400FD30AF /* Validators.swift in Sources */,
 				E5F83AB223B8D930001366FE /* MoveComponentTests.swift in Sources */,
