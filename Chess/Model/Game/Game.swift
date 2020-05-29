@@ -69,14 +69,13 @@ struct RealGameExecutor: GameExecutor {
 
             do {
                 try MoveValidator.validate(move, board: board, side: currentSide)
+                board.performMove(move)
             } catch let gameError as GameError {
                 gameError.printErrorMessage()
                 throw gameError
             } catch {
                 continue
             }
-            
-            board.performMove(move)
 
             round += 1
             currentSide = currentSide.oppositeSide
