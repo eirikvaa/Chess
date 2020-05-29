@@ -8,49 +8,61 @@
 
 import Foundation
 
-final class Game {
-    private var board = Board()
-    private var prePlayedMoves = [String]()
-    private var moveType: MoveType = .algebraic
-    var currentSide = Side.white
-
-    init(moveType: MoveType = .algebraic, prePlayedMoves: [String] = []) {
-        self.moveType = moveType
-        self.prePlayedMoves.append(contentsOf: prePlayedMoves)
+class Game {
+    static func play(_ gamePlayer: GamePlayer, moves: [MoveProtocol] = []) throws {
+        try gamePlayer.play()
     }
 }
 
-extension Game {
-    func startGame(continueAfterPrePlayedMoves: Bool = true) throws {
-        board.resetBoard()
+protocol GamePlayer {
+    func play() throws
+}
 
+struct TestGamePlayer: GamePlayer {
+    private let moves: [String]
+    
+    init(moves: [String]) {
+        self.moves = moves
+    }
+    
+    func play() throws {
+        let board = Board()
+        var side = Side.white
         var round = 0
-
-        for move in prePlayedMoves {
-            guard let convertedMove = try MoveFabric.create(moveType: moveType, move: move, board: board, side: currentSide) else {
+        
+        try moves.forEach {
+            guard let move = try MoveFabric.create(moveType: .algebraic, move: $0, board: board, side: side) else {
                 throw GameError.invalidMoveFormat
             }
-
-            printBoard()
-
+            
             do {
-                try performMoveHandleError(move: convertedMove)
+                try MoveValidator.validate(move, board: board, side: side)
+                board.performMove(move)
+            } catch let gameError as GameError {
+                gameError.printErrorMessage()
+                throw gameError
             } catch {
-                // If something went wrong when adding the preplayed moves, we did something
-                // wrong and should just quit.
                 throw error
             }
 
-            finishRound(round: &round, side: currentSide)
+            round += 1
+            side = side.oppositeSide
         }
+    }
+}
 
-        guard continueAfterPrePlayedMoves else {
-            printBoard()
-            return
-        }
+struct RealGamePlayer: GamePlayer {
+    func play() throws {
+        var currentSide = Side.white
+        let moveType: MoveType = .algebraic
+        
+        let board = Board()
+        board.resetBoard()
 
+        var round = 0
+        
         while true {
-            printBoard()
+            print(board)
 
             print("\(currentSide.name), please input a move:")
             let input = readLine(strippingNewline: true) ?? ""
@@ -66,110 +78,20 @@ extension Game {
             }
 
             do {
-                try performMoveHandleError(move: move)
+                try MoveValidator.validate(move, board: board, side: currentSide)
+            } catch let gameError as GameError {
+                gameError.printErrorMessage()
+                throw gameError
             } catch {
                 // If something went wrong during playing, we did something wrong, but don't
                 // want to play from the start, so just try again.
                 continue
             }
+            
+            board.performMove(move)
 
-            finishRound(round: &round, side: currentSide)
+            round += 1
+            currentSide = currentSide.oppositeSide
         }
-    }
-
-    func performMoveHandleError(move: MoveProtocol) throws {
-        do {
-            try validateMove(move: move)
-        } catch let gameError as GameError {
-            printErrorMessage(gameError: gameError)
-            throw gameError
-        } catch {
-            print("Something went wrong")
-            throw error
-        }
-
-        board.performMove(move)
-    }
-
-    func validateMove(move: MoveProtocol) throws {
-        let sourceCoordinate = move.sourceCoordinate
-        
-        guard let sourcePiece = board[sourceCoordinate] else {
-            throw GameError.noPieceInSourcePosition
-        }
-        
-        guard sourcePiece.side == currentSide else {
-            throw GameError.invalidPiece
-        }
-        
-        let destinationCoordinate = move.destinationCoordinate
-        let destinationPiece = board[destinationCoordinate]
-        let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
-        let isAttacking = sourcePiece.side != destinationPiece?.side && destinationPiece != nil
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isAttacking: isAttacking)
-
-        guard validPattern.directions.count > 0 else {
-            throw GameError.invalidMove(message: "No valid directions to destination position")
-        }
-
-        for direction in validPattern.directions {
-            switch (direction, sourcePiece.type) {
-            case (.north, .pawn),
-                 (.south, .pawn):
-                guard destinationPiece == nil else {
-                    throw GameError.invalidMove(message: "Destination position occupied")
-                }
-            case (.northEast, .pawn),
-                 (.northWest, .pawn):
-                guard destinationPiece != nil else {
-                    throw GameError.invalidMove(message: "Attack requires opponent piece in destination position")
-                }
-            case (_, .rook),
-                 (_, .queen),
-                 (_, .king),
-                 (_, .bishop):
-                try board.moveMultipleSteps(
-                    source: sourceCoordinate,
-                    destination: destinationCoordinate,
-                    direction: direction,
-                    moves: moveDelta.maximumMagnitude,
-                    side: currentSide,
-                    canCrossOver: false
-                )
-            case (_, .knight):
-                let validAttack = board.canAttack(at: destinationCoordinate, side: currentSide)
-                let validMove = destinationPiece == nil
-
-                guard validAttack || validMove else {
-                    throw GameError.invalidMove(message: "Must either be a valid attack or valid move.")
-                }
-            default:
-                break
-            }
-        }
-    }
-
-    func finishRound(round: inout Int, side _: Side) {
-        round += 1
-        currentSide.changeSide()
-    }
-
-    func printErrorMessage(gameError: GameError) {
-        switch gameError {
-        case .invalidPiece:
-            print("You cannot use the piece of an opponent.")
-        case .ownPieceInDestinationPosition:
-            print("You cannot move a piece to a position taken up by your own pieces.")
-        case let .invalidMove(message):
-            print(message)
-        case .noPieceInSourcePosition:
-            print("There is no piece in the source position you entered.")
-        case .invalidMoveFormat:
-            print("Move was on an invalid format.")
-        }
-    }
-
-    func printBoard() {
-        print(board)
     }
 }

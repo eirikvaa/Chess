@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Board {
+class Board {
     private var cells: [[BoardCell]] = []
 
     init() {
@@ -36,7 +36,7 @@ struct Board {
         }
     }
 
-    mutating func performMove(_ move: MoveProtocol) {
+    func performMove(_ move: MoveProtocol) {
         var sourcePiece = self[move.sourceCoordinate]
         
         sourcePiece?.moved = true
@@ -141,7 +141,7 @@ struct Board {
         }
     }
 
-    mutating func resetBoard() {
+    func resetBoard() {
         func assignPieceToSide(piece: inout Piece, side: Side) {
             piece.side = side
         }

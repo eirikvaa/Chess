@@ -36,3 +36,63 @@ struct FileValidator: Validator {
         "a" ... "h" ~= element
     }
 }
+
+struct MoveValidator {
+    static func validate(_ move: MoveProtocol, board: Board, side: Side) throws {
+        let sourceCoordinate = move.sourceCoordinate
+        
+        guard let sourcePiece = board[sourceCoordinate] else {
+            throw GameError.noPieceInSourcePosition
+        }
+        
+        guard sourcePiece.side == side else {
+            throw GameError.invalidPiece
+        }
+        
+        let destinationCoordinate = move.destinationCoordinate
+        let destinationPiece = board[destinationCoordinate]
+        let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
+        let isAttacking = sourcePiece.side != destinationPiece?.side && destinationPiece != nil
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: side, isAttacking: isAttacking)
+
+        guard validPattern.directions.count > 0 else {
+            throw GameError.invalidMove(message: "No valid directions to destination position")
+        }
+
+        for direction in validPattern.directions {
+            switch (direction, sourcePiece.type) {
+            case (.north, .pawn),
+                 (.south, .pawn):
+                guard destinationPiece == nil else {
+                    throw GameError.invalidMove(message: "Destination position occupied")
+                }
+            case (.northEast, .pawn),
+                 (.northWest, .pawn):
+                guard destinationPiece != nil else {
+                    throw GameError.invalidMove(message: "Attack requires opponent piece in destination position")
+                }
+            case (_, .rook),
+                 (_, .queen),
+                 (_, .king),
+                 (_, .bishop):
+                try board.moveMultipleSteps(
+                    source: sourceCoordinate,
+                    destination: destinationCoordinate,
+                    direction: direction,
+                    moves: moveDelta.maximumMagnitude,
+                    side: side,
+                    canCrossOver: false
+                )
+            case (_, .knight):
+                let validAttack = board.canAttack(at: destinationCoordinate, side: side)
+                let validMove = destinationPiece == nil
+
+                guard validAttack || validMove else {
+                    throw GameError.invalidMove(message: "Must either be a valid attack or valid move.")
+                }
+            default:
+                break
+            }
+        }
+    }
+}

@@ -8,5 +8,4 @@
 
 import Foundation
 
-var game = Game(moveType: .algebraic)
-try? game.startGame()
+

@@ -16,10 +16,6 @@ enum Side {
         self == .black ? -1 : 1
     }
 
-    mutating func changeSide() {
-        self = oppositeSide
-    }
-
     var oppositeSide: Side {
         switch self {
         case .black: return .white

@@ -24,6 +24,7 @@ protocol MoveProtocol {
     var piece: Piece? { get }
     var sourceCoordinate: BoardCoordinate { get }
     var destinationCoordinate: BoardCoordinate { get }
+    var type: MoveType { get }
 
     init?(move: String, board: Board?, side: Side) throws
 }
@@ -91,6 +92,7 @@ struct AlgebraicMove: MoveProtocol {
     var piece: Piece?
     let sourceCoordinate: BoardCoordinate
     let destinationCoordinate: BoardCoordinate
+    let type = MoveType.algebraic
 
     init?(move: String, board: Board?, side: Side) throws {
         let components = MoveComponents(value: move)
