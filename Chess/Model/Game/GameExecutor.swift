@@ -28,17 +28,10 @@ struct TestGameExecutor: GameExecutor {
             guard let move = try MoveFabric.create(moveType: .algebraic, move: $0, board: board, side: side) else {
                 throw GameError.invalidMoveFormat
             }
-
-            do {
-                try MoveValidator.validate(move, board: board, side: side)
-                board.performMove(move)
-            } catch let gameError as GameError {
-                gameError.printErrorMessage()
-                throw gameError
-            } catch {
-                throw error
-            }
-
+            
+            try MoveValidator.validate(move, board: board, side: side)
+            
+            board.performMove(move)
             round += 1
             side = side.oppositeSide
         }
@@ -67,15 +60,8 @@ struct RealGameExecutor: GameExecutor {
                 continue
             }
 
-            do {
-                try MoveValidator.validate(move, board: board, side: currentSide)
-                board.performMove(move)
-            } catch let gameError as GameError {
-                gameError.printErrorMessage()
-                throw gameError
-            } catch {
-                continue
-            }
+            try MoveValidator.validate(move, board: board, side: currentSide)
+            board.performMove(move)
 
             round += 1
             currentSide = currentSide.oppositeSide
