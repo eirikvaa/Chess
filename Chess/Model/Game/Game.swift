@@ -78,14 +78,8 @@ extension Game {
     }
 
     func performMoveHandleError(move: MoveProtocol) throws {
-        guard let sourcePiece = board[move.sourceCoordinate] else {
-            throw GameError.noPieceInSourcePosition
-        }
-
-        let destinationPiece = board[move.destinationCoordinate]
-
         do {
-            try validateMove(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece)
+            try validateMove(move: move)
         } catch let gameError as GameError {
             printErrorMessage(gameError: gameError)
             throw gameError
@@ -97,23 +91,19 @@ extension Game {
         board.performMove(move)
     }
 
-    func validateMove(move: MoveProtocol, sourcePiece: Piece?, destinationPiece: Piece?) throws {
-        guard let sourcePiece = sourcePiece else {
+    func validateMove(move: MoveProtocol) throws {
+        let sourceCoordinate = move.sourceCoordinate
+        
+        guard let sourcePiece = board[sourceCoordinate] else {
             throw GameError.noPieceInSourcePosition
         }
-
+        
         guard sourcePiece.side == currentSide else {
             throw GameError.invalidPiece
         }
-
-        guard try validateMovePattern(move: move, sourcePiece: sourcePiece, destinationPiece: destinationPiece) else {
-            throw GameError.invalidMove(message: "Invalid move pattern!")
-        }
-    }
-
-    func validateMovePattern(move: MoveProtocol, sourcePiece: Piece, destinationPiece: Piece?) throws -> Bool {
-        let sourceCoordinate = move.sourceCoordinate
+        
         let destinationCoordinate = move.destinationCoordinate
+        let destinationPiece = board[destinationCoordinate]
         let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
         let isAttacking = sourcePiece.side != destinationPiece?.side && destinationPiece != nil
         let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isAttacking: isAttacking)
@@ -157,8 +147,6 @@ extension Game {
                 break
             }
         }
-
-        return true
     }
 
     func finishRound(round: inout Int, side _: Side) {
