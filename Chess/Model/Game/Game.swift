@@ -8,12 +8,6 @@
 
 import Foundation
 
-class Game {
-    static func play(_ gamePlayer: GamePlayer, moves: [MoveProtocol] = []) throws {
-        try gamePlayer.play()
-    }
-}
-
 protocol GamePlayer {
     func play() throws
 }
