@@ -15,7 +15,7 @@ protocol Validator {
 
 struct BoardCoordinateValidator: Validator {
     typealias Element = BoardCoordinate
-    
+
     static func validate(_ element: BoardCoordinate) -> Bool {
         RankValidator.validate(element.rank) && FileValidator.validate(element.file)
     }
@@ -23,7 +23,7 @@ struct BoardCoordinateValidator: Validator {
 
 struct RankValidator: Validator {
     typealias Element = Rank
-    
+
     static func validate(_ element: Rank) -> Bool {
         Rank.validRanks ~= element
     }
@@ -31,7 +31,7 @@ struct RankValidator: Validator {
 
 struct FileValidator: Validator {
     typealias Element = File
-    
+
     static func validate(_ element: File) -> Bool {
         "a" ... "h" ~= element
     }
@@ -40,15 +40,15 @@ struct FileValidator: Validator {
 struct MoveValidator {
     static func validate(_ move: MoveProtocol, board: Board, side: Side) throws {
         let sourceCoordinate = move.sourceCoordinate
-        
+
         guard let sourcePiece = board[sourceCoordinate] else {
             throw GameError.noPieceInSourcePosition
         }
-        
+
         guard sourcePiece.side == side else {
             throw GameError.invalidPiece
         }
-        
+
         let destinationCoordinate = move.destinationCoordinate
         let destinationPiece = board[destinationCoordinate]
         let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)

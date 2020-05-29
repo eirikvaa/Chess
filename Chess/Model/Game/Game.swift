@@ -14,21 +14,21 @@ protocol GameExecutor {
 
 struct TestGameExecutor: GameExecutor {
     private let moves: [String]
-    
+
     init(moves: [String]) {
         self.moves = moves
     }
-    
+
     func play() throws {
         let board = Board()
         var side = Side.white
         var round = 0
-        
+
         try moves.forEach {
             guard let move = try MoveFabric.create(moveType: .algebraic, move: $0, board: board, side: side) else {
                 throw GameError.invalidMoveFormat
             }
-            
+
             do {
                 try MoveValidator.validate(move, board: board, side: side)
                 board.performMove(move)
@@ -50,7 +50,7 @@ struct RealGameExecutor: GameExecutor {
         let board = Board()
         var currentSide = Side.white
         var round = 0
-        
+
         while true {
             print(board)
 

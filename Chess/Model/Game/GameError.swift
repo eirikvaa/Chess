@@ -14,7 +14,7 @@ enum GameError: Error {
     case ownPieceInDestinationPosition
     case invalidPiece
     case invalidMove(message: String)
-    
+
     func printErrorMessage() {
         switch self {
         case .invalidPiece:
