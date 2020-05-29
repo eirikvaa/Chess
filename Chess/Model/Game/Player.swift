@@ -13,7 +13,7 @@ enum Side {
     case black
 
     var sideMultiplier: Int {
-        return self == .black ? -1 : 1
+        self == .black ? -1 : 1
     }
 
     mutating func changeSide() {

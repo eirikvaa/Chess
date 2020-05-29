@@ -13,6 +13,6 @@ struct BoardCell {
 
 extension BoardCell: CustomStringConvertible {
     var description: String {
-        return piece?.graphicalRepresentation ?? " "
+        piece?.graphicalRepresentation ?? " "
     }
 }
