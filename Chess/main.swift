@@ -8,4 +8,4 @@
 
 import Foundation
 
-try RealGamePlayer().play()
+try RealGameExecutor().play()

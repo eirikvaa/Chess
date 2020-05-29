@@ -8,11 +8,11 @@
 
 import Foundation
 
-protocol GamePlayer {
+protocol GameExecutor {
     func play() throws
 }
 
-struct TestGamePlayer: GamePlayer {
+struct TestGameExecutor: GameExecutor {
     private let moves: [String]
     
     init(moves: [String]) {
@@ -45,7 +45,7 @@ struct TestGamePlayer: GamePlayer {
     }
 }
 
-struct RealGamePlayer: GamePlayer {
+struct RealGameExecutor: GameExecutor {
     func play() throws {
         var currentSide = Side.white
         let moveType: MoveType = .algebraic
