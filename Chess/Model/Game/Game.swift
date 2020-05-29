@@ -47,12 +47,8 @@ struct TestGameExecutor: GameExecutor {
 
 struct RealGameExecutor: GameExecutor {
     func play() throws {
-        var currentSide = Side.white
-        let moveType: MoveType = .algebraic
-        
         let board = Board()
-        board.resetBoard()
-
+        var currentSide = Side.white
         var round = 0
         
         while true {
@@ -66,7 +62,7 @@ struct RealGameExecutor: GameExecutor {
                 break
             }
 
-            guard let move = try? MoveFabric.create(moveType: moveType, move: input, board: board, side: currentSide) else {
+            guard let move = try? MoveFabric.create(moveType: .algebraic, move: input, board: board, side: currentSide) else {
                 print("Move not on correct format, try again.")
                 continue
             }
@@ -77,8 +73,6 @@ struct RealGameExecutor: GameExecutor {
                 gameError.printErrorMessage()
                 throw gameError
             } catch {
-                // If something went wrong during playing, we did something wrong, but don't
-                // want to play from the start, so just try again.
                 continue
             }
             
