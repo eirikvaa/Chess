@@ -9,94 +9,62 @@
 import XCTest
 
 class MoveComponentTests: XCTestCase {
-    func testSimplePawnMove() {
+    func testSimplePawnMove() throws {
         let move = "e4"
-        let c = MoveComponents(value: move)
-
-        XCTAssertEqual(c.check, false)
-        XCTAssertEqual(c.isAttacking, false)
-        XCTAssertEqual(c.destination, "e4")
-        XCTAssertEqual(c.pieceType, .pawn)
-        XCTAssertEqual(c.sourceRank, nil)
-        XCTAssertEqual(c.sourceFile, nil)
-        XCTAssertEqual(c.pieceName, nil)
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: false, isCapture: false, destination: "e4", pieceType: .pawn, rank: nil, file: nil)
     }
 
-    func testPawnAttack() {
+    func testPawnAttack() throws {
         let move = "xe4"
-        let c = MoveComponents(value: move)
-
-        XCTAssertEqual(c.check, false)
-        XCTAssertEqual(c.isAttacking, true)
-        XCTAssertEqual(c.destination, "e4")
-        XCTAssertEqual(c.pieceType, .pawn)
-        XCTAssertEqual(c.sourceRank, nil)
-        XCTAssertEqual(c.sourceFile, nil)
-        XCTAssertEqual(c.pieceName, nil)
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: false, isCapture: true, destination: "e4", pieceType: .pawn, rank: nil, file: nil)
     }
 
-    func testBishopMove() {
+    func testBishopMove() throws {
         let move = "Bc3"
-        let c = MoveComponents(value: move)
-
-        XCTAssertEqual(c.check, false)
-        XCTAssertEqual(c.isAttacking, false)
-        XCTAssertEqual(c.destination, "c3")
-        XCTAssertEqual(c.pieceType, .bishop)
-        XCTAssertEqual(c.sourceRank, nil)
-        XCTAssertEqual(c.sourceFile, nil)
-        XCTAssertEqual(c.pieceName, "B")
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: false, isCapture: false, destination: "c3", pieceType: .bishop, rank: nil, file: nil)
     }
 
-    func testBishopAttack() {
+    func testBishopAttack() throws {
         let move = "Bxc3"
-        let c = MoveComponents(value: move)
-
-        XCTAssertEqual(c.check, false)
-        XCTAssertEqual(c.isAttacking, true)
-        XCTAssertEqual(c.destination, "c3")
-        XCTAssertEqual(c.pieceType, .bishop)
-        XCTAssertEqual(c.sourceRank, nil)
-        XCTAssertEqual(c.sourceFile, nil)
-        XCTAssertEqual(c.pieceName, "B")
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: false, isCapture: true, destination: "c3", pieceType: .bishop, rank: nil, file: nil)
     }
 
-    func testBishopAttackCheck() {
+    func testBishopAttackCheck() throws {
         let move = "Bxc3+"
-        let c = MoveComponents(value: move)
-
-        XCTAssertEqual(c.check, true)
-        XCTAssertEqual(c.isAttacking, true)
-        XCTAssertEqual(c.destination, "c3")
-        XCTAssertEqual(c.pieceType, .bishop)
-        XCTAssertEqual(c.sourceRank, nil)
-        XCTAssertEqual(c.sourceFile, nil)
-        XCTAssertEqual(c.pieceName, "B")
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: true, isCapture: true, destination: "c3", pieceType: .bishop, rank: nil, file: nil)
     }
 
-    func testRookDisambiguatingWithFile() {
+    func testRookDisambiguatingWithFile() throws {
         let move = "Rdf8"
-        let c = MoveComponents(value: move)
-
-        XCTAssertEqual(c.check, false)
-        XCTAssertEqual(c.isAttacking, false)
-        XCTAssertEqual(c.destination, "f8")
-        XCTAssertEqual(c.pieceType, .rook)
-        XCTAssertEqual(c.sourceRank, nil)
-        XCTAssertEqual(c.sourceFile, "d")
-        XCTAssertEqual(c.pieceName, "R")
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: false, isCapture: false, destination: "f8", pieceType: .rook, rank: nil, file: "d")
     }
 
-    func testQueenWithFileAndRank() {
+    func testQueenWithFileAndRank() throws {
         let move = "Qh4xe1"
-        let c = MoveComponents(value: move)
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: false, isCapture: true, destination: "e1", pieceType: .queen, rank: 4, file: "h")
+    }
+    
+    func testHei() throws {
+        let move = "Qf6"
+        let im = try SANMoveInterpreter().interpret(move)
+        assertProperties(move: im, isCheck: false, isCapture: false, destination: "f6", pieceType: .queen)
+    }
+}
 
-        XCTAssertEqual(c.check, false)
-        XCTAssertEqual(c.isAttacking, true)
-        XCTAssertEqual(c.destination, "e1")
-        XCTAssertEqual(c.pieceType, .queen)
-        XCTAssertEqual(c.sourceRank, 4)
-        XCTAssertEqual(c.sourceFile, "h")
-        XCTAssertEqual(c.pieceName, "Q")
+extension MoveComponentTests {
+    func assertProperties(move: Move, isCheck: Bool, isCapture: Bool, destination: BoardCoordinate, pieceType: PieceType, rank: Rank? = nil, file: File? = nil) {
+        XCTAssertEqual(move.options.contains(.check), isCheck)
+        XCTAssertEqual(move.options.contains(.capture), isCapture)
+        XCTAssertEqual(move.piece.type, pieceType)
+        XCTAssertEqual(move.sourceRank, rank)
+        XCTAssertEqual(move.sourceFile, file)
+        XCTAssertEqual(move.destination, destination)
     }
 }

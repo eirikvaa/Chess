@@ -38,8 +38,12 @@ struct FileValidator: Validator {
 }
 
 struct MoveValidator {
-    static func validate(_ move: MoveProtocol, board: Board, side: Side) throws {
-        let sourceCoordinate = move.sourceCoordinate
+    static func validate(_ move: Move, board: Board, side: Side) throws {
+        let sourceCoordinate = try board.getSourceDestination(piece: move.piece,
+                                                              destination: move.destination,
+                                                              side: side,
+                                                              isAttacking: move.options.contains(.capture))
+        move.source = sourceCoordinate
 
         guard let sourcePiece = board[sourceCoordinate] else {
             throw GameError.noPieceInSourcePosition
@@ -49,7 +53,7 @@ struct MoveValidator {
             throw GameError.invalidPiece
         }
 
-        let destinationCoordinate = move.destinationCoordinate
+        let destinationCoordinate = move.destination
         let destinationPiece = board[destinationCoordinate]
         let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
         let isAttacking = sourcePiece.side != destinationPiece?.side && destinationPiece != nil

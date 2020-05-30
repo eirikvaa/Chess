@@ -8,4 +8,4 @@
 
 import Foundation
 
-try RealGameExecutor().play()
+try RealGameExecutor(moveFormatValidator: SANMoveFormatValidator()).play()

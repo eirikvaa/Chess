@@ -36,12 +36,17 @@ class Board {
         }
     }
 
-    func performMove(_ move: MoveProtocol) {
-        var sourcePiece = self[move.sourceCoordinate]
+    func performMove(_ move: Move) {
+        guard let source = move.source else {
+            // TODO: Handle error properly
+            return
+        }
+        
+        var sourcePiece = self[source]
 
         sourcePiece?.moved = true
-        self[move.destinationCoordinate] = sourcePiece
-        self[move.sourceCoordinate] = nil
+        self[move.destination] = sourcePiece
+        self[move.source!] = nil
     }
 
     func compareCells(cellA: BoardCell, type: PieceType, side: Side) -> Bool {
@@ -78,9 +83,8 @@ class Board {
         return .init(stringLiteral: "")
     }
 
-    func getSourceDestination(pieceName: Character?, destination: BoardCoordinate, side: Side, isAttacking: Bool) throws -> BoardCoordinate {
-        let _piece = PieceFabric.create(pieceName)
-        let pieces = getPieces(of: _piece.type, side: side)
+    func getSourceDestination(piece: Piece, destination: BoardCoordinate, side: Side, isAttacking: Bool) throws -> BoardCoordinate {
+        let pieces = getPieces(of: piece.type, side: side)
 
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)

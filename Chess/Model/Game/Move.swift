@@ -8,101 +8,194 @@
 
 import Foundation
 
-enum MoveType {
-    case algebraic
+/**
+ Protocol for interpreting a move. Will always accept a `String` and return a `Move`.
+ */
+protocol MoveInterpreter {
+    func interpret(_ move: String) throws -> Move
 }
 
-struct MoveFabric {
-    static func create(moveType: MoveType, move: String, board: Board?, side: Side) throws -> MoveProtocol? {
-        switch moveType {
-        case .algebraic: return try AlgebraicMove(move: move, board: board, side: side)
+/**
+ SAN: (S)tandard (A)lgebraic (N)otation
+ The move format required by FIDE (Fédération Internationale des Échecs / International Chess Federation).
+
+ The full format I'm working on (which is not the full format used in official chess, I'm sure...) is this beast:
+    (ex[a-h][1-8]e.p)|(0\-0\-0)|(0\-0)|([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?
+
+ This can be broken down to:
+    ex[a-h][1-8]e.p: *En passant*.
+        Must be declared first otherwise it'll be only partially matched.
+ 
+    (0\-0\-0)|(0\-0): *Castling*.
+        Queen-side and king-side castling, i.e. moving both a rook and the queen/king.
+        The dash must be escaped as it is used for ranges (like [a-h]).
+        (0-0-0) must be matched before (0-0) otherwise the latter fill match when the former should be matched.
+   
+   ([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?: *Core format*.
+       The bulk of the matching. The only required parts are the second pair of [a-h][1-8] as they define
+       pawns being moved for the first time. They one can also move either of the other pieces and specify
+       the source position. The move can be a capture ('x'), a check (+), check mate (#) or a pawn promotion (Q).
+       Pawn can also be promoted to other pieces, but I'll deal with that later.
+*/
+struct SANMoveInterpreter: MoveInterpreter {
+    func interpret(_ move: String) throws -> Move {
+        var sourceFile: File?
+        var sourceRank: Rank?
+        var rawPiece: Piece
+        var isCheck = false
+        var isMate = false
+        var isPromotion = false
+        var isCapture = false
+        var source: BoardCoordinate?
+        let destination: BoardCoordinate
+        
+        let enPassantFormat = #"ex[a-h][1-8]e.p"#
+        if let _ = move.range(of: enPassantFormat, options: .regularExpression) {
+            fatalError("Support for en passant moves is not implemented yet.")
         }
-    }
-}
-
-protocol MoveProtocol {
-    var piece: Piece? { get }
-    var sourceCoordinate: BoardCoordinate { get }
-    var destinationCoordinate: BoardCoordinate { get }
-    var type: MoveType { get }
-
-    init?(move: String, board: Board?, side: Side) throws
-}
-
-struct MoveComponents {
-    private let value: String
-    var pieceType: PieceType = .pawn
-    var isAttacking = false
-    var check = false
-    var destination: BoardCoordinate = .init(stringLiteral: "a1")
-    var sourceFile: File?
-    var sourceRank: Rank?
-    var pieceName: Character?
-
-    var sourceDestination: BoardCoordinate? {
-        guard let sourceFile = sourceFile, let sourceRank = sourceRank else {
-            return nil
+        
+        let castlingFormat = #"(0\-0\-0)|(0\-0)"#
+        if let _ = move.range(of: castlingFormat, options: .regularExpression) {
+            fatalError("Support for castling moves is not implemented yet.")
         }
-
-        return .init(file: sourceFile, rank: sourceRank)
-    }
-
-    init(value: String) {
-        self.value = value
-
-        isAttacking = value.contains("x")
-        check = value.contains("+")
-
-        let match = value.range(of: #"[a-h]?[1-8]?x?[a-h][1-8]"#, options: .regularExpression)
-
-        let coordinates = String(value[match!])
-        destination = .init(stringLiteral: String(coordinates.suffix(2)))
-
-        var split = String(value.dropLast(isAttacking ? 3 : 2))
-
-        if let first = split.first, ["K", "Q", "B", "N", "R"].contains(first) {
-            split = String(split.dropFirst())
+        
+        let coreFormat = #"([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?"#
+        guard let match = move.range(of: coreFormat, options: .regularExpression) else {
+            throw GameError.invalidMove(message: "At least the destination coordinate is not specified.")
         }
-
-        if let match = split.range(of: #"[a-h]?[1-8]?"#, options: .regularExpression) {
-            let sub = split[match]
-
-            switch sub.count {
-            case 2:
-                sourceFile = String(sub.dropLast())
-                sourceRank = Int(String(sub.dropFirst()))!
-            case 1:
-                sourceFile = String(sub)
+        
+        var matchString = move[match]
+        
+        if let last = matchString.last {
+            switch last {
+            case "+":
+                isCheck = true
+                matchString.removeLast()
+            case "#":
+                isMate = true
+                matchString.removeLast()
+            case "Q":
+                isPromotion = true
+                matchString.removeLast()
             default:
                 break
             }
         }
-
-        if let match = value.range(of: #"[K|Q|N|B|R]"#, options: .regularExpression) {
-            let character = String(value[match]).first
-            pieceName = character
-            pieceType = PieceFabric.create(character).type
+        
+        // If we came here then the last two characters in the match must be the destination file and rank.
+        destination = BoardCoordinate(stringLiteral: String(matchString.suffix(2)))
+        matchString.removeLast(2)
+        
+        if matchString.contains("x") {
+            isCapture = true
+            matchString.removeLast()
+        }
+        
+        if let first = matchString.first, ["K", "Q", "B", "N", "R"].contains(first) {
+            rawPiece = PieceFabric.create(first)
+            matchString.removeFirst()
         } else {
-            pieceType = .pawn
+            rawPiece = PieceFabric.create(.pawn)
+        }
+        
+        if let possibleFile = matchString.first, File.validFiles.contains(String(possibleFile)) {
+            sourceFile = String(possibleFile)
+            matchString.removeFirst()
+        }
+        
+        if let possibleRank = matchString.first, let integerValue = Int(String(possibleRank)), Rank.validRanks.contains(integerValue) {
+            sourceRank = integerValue
+            matchString.removeFirst()
+        }
+        
+        if matchString.isEmpty == false {
+            fatalError("We interpreted the raw move wrong! :-(")
+        }
+        
+        if let file = sourceFile, let rank = sourceRank {
+            source = .init(file: file, rank: rank)
+        }
+        
+        var options: [MoveOptions] = []
+        if isCheck { options.append(.check) }
+        if isMate { options.append(.mate) }
+        if isCapture { options.append(.capture) }
+        if isPromotion { options.append(.promotion) }
+        
+        let move = SANMove(rawInput: move,
+                           piece: rawPiece,
+                           source: source,
+                           destination: destination,
+                           options: options)
+        move.sourceFile = sourceFile
+        move.sourceRank = sourceRank
+        
+        return move
+    }
+}
+
+enum MoveOptions {
+    case check
+    case mate
+    case enPassant
+    case capture
+    case promotion
+    case queenCastling
+    case kingCastling
+}
+
+protocol Move: class {
+    var type: MoveType { get }
+    var rawInput: String { get }
+    var piece: Piece { get }
+    var source: BoardCoordinate? { get set }
+    var destination: BoardCoordinate { get }
+    var options: [MoveOptions] { get }
+    var sourceFile: File? { get set }
+    var sourceRank: Rank? { get set }
+}
+
+class SANMove: Move {
+    let type: MoveType = .algebraic
+    let rawInput: String
+    let piece: Piece
+    var source: BoardCoordinate?
+    let destination: BoardCoordinate
+    let options: [MoveOptions]
+    var sourceFile: File?
+    var sourceRank: Rank?
+    
+    init(rawInput: String, piece: Piece, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOptions]) {
+        self.rawInput = rawInput
+        self.piece = piece
+        self.source = source
+        self.destination = destination
+        self.options = options
+    }
+}
+
+protocol MoveFormatValidator {
+    var format: String { get }
+    func validate(_ move: String) -> Bool
+}
+
+
+struct SANMoveFormatValidator: MoveFormatValidator {
+    var format = ##"(ex[a-h][1-8]e.p)|([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?|(0\-0\-0)|(0\-0)"##
+    
+    func validate(_ move: String) -> Bool {
+        return move.range(of: format, options: .regularExpression) != nil
+    }
+}
+
+struct MoveFabric {
+    static func create(moveType: MoveType) -> MoveInterpreter {
+        switch moveType {
+        case .algebraic: return SANMoveInterpreter()
         }
     }
 }
 
-struct AlgebraicMove: MoveProtocol {
-    var piece: Piece?
-    let sourceCoordinate: BoardCoordinate
-    let destinationCoordinate: BoardCoordinate
-    let type = MoveType.algebraic
-
-    init?(move: String, board: Board?, side: Side) throws {
-        let components = MoveComponents(value: move)
-
-        destinationCoordinate = components.destination
-        sourceCoordinate = try board!.getSourceDestination(
-            pieceName: components.pieceName,
-            destination: components.destination,
-            side: side,
-            isAttacking: components.isAttacking
-        )
-    }
+enum MoveType {
+    case algebraic
 }

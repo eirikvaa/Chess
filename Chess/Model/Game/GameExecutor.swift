@@ -9,13 +9,21 @@
 import Foundation
 
 protocol GameExecutor {
+    init (moveFormatValidator: MoveFormatValidator)
     func play() throws
 }
 
 struct TestGameExecutor: GameExecutor {
-    private let moves: [String]
+    private var moves: [String]
+    private let moveFormatValidator: MoveFormatValidator
 
-    init(moves: [String]) {
+    init(moveFormatValidator: MoveFormatValidator) {
+        self.moveFormatValidator = moveFormatValidator
+        self.moves = []
+    }
+    
+    init(moves: [String], moveFormatValidator: MoveFormatValidator) {
+        self.init(moveFormatValidator: moveFormatValidator)
         self.moves = moves
     }
 
@@ -25,13 +33,13 @@ struct TestGameExecutor: GameExecutor {
         var round = 0
 
         try moves.forEach {
-            guard let move = try MoveFabric.create(moveType: .algebraic, move: $0, board: board, side: side) else {
-                throw GameError.invalidMoveFormat
-            }
+            print(board)
+            let moveInterpreter = MoveFabric.create(moveType: .algebraic)
+            let interpretedMove = try moveInterpreter.interpret($0)
             
-            try MoveValidator.validate(move, board: board, side: side)
+            try MoveValidator.validate(interpretedMove, board: board, side: side)
             
-            board.performMove(move)
+            board.performMove(interpretedMove)
             round += 1
             side = side.oppositeSide
         }
@@ -39,6 +47,12 @@ struct TestGameExecutor: GameExecutor {
 }
 
 struct RealGameExecutor: GameExecutor {
+    private let moveFormatValidator: MoveFormatValidator
+
+    init(moveFormatValidator: MoveFormatValidator) {
+        self.moveFormatValidator = moveFormatValidator
+    }
+    
     func play() throws {
         let board = Board()
         var currentSide = Side.white
@@ -54,9 +68,10 @@ struct RealGameExecutor: GameExecutor {
                 print("Quitting ...")
                 break
             }
-
-            guard let move = try? MoveFabric.create(moveType: .algebraic, move: input, board: board, side: currentSide) else {
-                print("Move not on correct format, try again.")
+            
+            let moveFabric = MoveFabric.create(moveType: .algebraic)
+            guard let move = try? moveFabric.interpret(input) else {
+                print("Invalid move format.")
                 continue
             }
 
