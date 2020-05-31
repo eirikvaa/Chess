@@ -99,12 +99,12 @@ struct SANMoveInterpreter: MoveInterpreter {
         }
         
         if let possibleFile = matchString.first, File.validFiles.contains(String(possibleFile)) {
-            sourceFile = String(possibleFile)
+            sourceFile = File(stringLiteral: String(possibleFile))
             matchString.removeFirst()
         }
         
         if let possibleRank = matchString.first, let integerValue = Int(String(possibleRank)), Rank.validRanks.contains(integerValue) {
-            sourceRank = integerValue
+            sourceRank = Rank(integerLiteral: integerValue)
             matchString.removeFirst()
         }
         
@@ -112,11 +112,9 @@ struct SANMoveInterpreter: MoveInterpreter {
             fatalError("We interpreted the raw move wrong! :-(")
         }
         
-        if let file = sourceFile, let rank = sourceRank {
-            source = .init(file: file, rank: rank)
-        }
+        source = .init(file: sourceFile, rank: sourceRank)
         
-        var options: [MoveOptions] = []
+        var options: [MoveOption] = []
         if isCheck { options.append(.check) }
         if isMate { options.append(.mate) }
         if isCapture { options.append(.capture) }
@@ -127,14 +125,12 @@ struct SANMoveInterpreter: MoveInterpreter {
                            source: source,
                            destination: destination,
                            options: options)
-        move.sourceFile = sourceFile
-        move.sourceRank = sourceRank
         
         return move
     }
 }
 
-enum MoveOptions {
+enum MoveOption {
     case check
     case mate
     case enPassant
@@ -150,7 +146,7 @@ protocol Move: class {
     var piece: Piece { get }
     var source: BoardCoordinate? { get set }
     var destination: BoardCoordinate { get }
-    var options: [MoveOptions] { get }
+    var options: [MoveOption] { get }
     var sourceFile: File? { get set }
     var sourceRank: Rank? { get set }
 }
@@ -161,30 +157,16 @@ class SANMove: Move {
     let piece: Piece
     var source: BoardCoordinate?
     let destination: BoardCoordinate
-    let options: [MoveOptions]
+    let options: [MoveOption]
     var sourceFile: File?
     var sourceRank: Rank?
     
-    init(rawInput: String, piece: Piece, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOptions]) {
+    init(rawInput: String, piece: Piece, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOption]) {
         self.rawInput = rawInput
         self.piece = piece
         self.source = source
         self.destination = destination
         self.options = options
-    }
-}
-
-protocol MoveFormatValidator {
-    var format: String { get }
-    func validate(_ move: String) -> Bool
-}
-
-
-struct SANMoveFormatValidator: MoveFormatValidator {
-    var format = ##"(ex[a-h][1-8]e.p)|([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?|(0\-0\-0)|(0\-0)"##
-    
-    func validate(_ move: String) -> Bool {
-        return move.range(of: format, options: .regularExpression) != nil
     }
 }
 

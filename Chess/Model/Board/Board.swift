@@ -16,7 +16,7 @@ class Board {
             var rankCells: [BoardCell] = []
 
             for file in File.validFiles {
-                rankCells.append(.init(coordinate: .init(file: file, rank: rank), piece: nil))
+                rankCells.append(.init(coordinate: .init(file: File(stringLiteral: file), rank: Rank(integerLiteral: rank)), piece: nil))
             }
 
             cells.append(rankCells)
@@ -28,11 +28,11 @@ class Board {
     subscript(coordinate: BoardCoordinate) -> Piece? {
         get {
             assert(BoardCoordinateValidator.validate(coordinate), "Invalid coordinate!")
-            return cells[coordinate.rank - 1][coordinate.fileIndex].piece
+            return cells[coordinate.rank!.rank - 1][coordinate.fileIndex].piece
         }
         set {
             assert(BoardCoordinateValidator.validate(coordinate), "Invalid coordinate!")
-            cells[coordinate.rank - 1][coordinate.fileIndex].piece = newValue
+            cells[coordinate.rank!.rank - 1][coordinate.fileIndex].piece = newValue
         }
     }
 
@@ -164,11 +164,11 @@ class Board {
         }
 
         for (index, file) in File.validFiles.enumerated() {
-            self[BoardCoordinate(file: file, rank: 8)] = blackBackRank[index]
-            self[BoardCoordinate(file: file, rank: 7)] = blackSecondRank[index]
+            self[BoardCoordinate(file: File(stringLiteral: file), rank: 8)] = blackBackRank[index]
+            self[BoardCoordinate(file: File(stringLiteral: file), rank: 7)] = blackSecondRank[index]
 
-            self[BoardCoordinate(file: file, rank: 2)] = whiteSecondRank[index]
-            self[BoardCoordinate(file: file, rank: 1)] = whiteBackRank[index]
+            self[BoardCoordinate(file: File(stringLiteral: file), rank: 2)] = whiteSecondRank[index]
+            self[BoardCoordinate(file: File(stringLiteral: file), rank: 1)] = whiteBackRank[index]
         }
     }
 }

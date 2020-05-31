@@ -63,8 +63,8 @@ extension MoveComponentTests {
         XCTAssertEqual(move.options.contains(.check), isCheck)
         XCTAssertEqual(move.options.contains(.capture), isCapture)
         XCTAssertEqual(move.piece.type, pieceType)
-        XCTAssertEqual(move.sourceRank, rank)
-        XCTAssertEqual(move.sourceFile, file)
+        XCTAssertEqual(move.source?.rank, rank)
+        XCTAssertEqual(move.source?.file, file)
         XCTAssertEqual(move.destination, destination)
     }
 }

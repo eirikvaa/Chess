@@ -17,7 +17,7 @@ struct BoardCoordinateValidator: Validator {
     typealias Element = BoardCoordinate
 
     static func validate(_ element: BoardCoordinate) -> Bool {
-        RankValidator.validate(element.rank) && FileValidator.validate(element.file)
+        RankValidator.validate(element.rank!) && FileValidator.validate(element.file!)
     }
 }
 
@@ -25,7 +25,7 @@ struct RankValidator: Validator {
     typealias Element = Rank
 
     static func validate(_ element: Rank) -> Bool {
-        Rank.validRanks ~= element
+        Rank.validRanks ~= element.rank
     }
 }
 
@@ -33,7 +33,7 @@ struct FileValidator: Validator {
     typealias Element = File
 
     static func validate(_ element: File) -> Bool {
-        "a" ... "h" ~= element
+        "a" ... "h" ~= element.file
     }
 }
 
@@ -98,5 +98,19 @@ struct MoveValidator {
                 break
             }
         }
+    }
+}
+
+protocol MoveFormatValidator {
+    var format: String { get }
+    func validate(_ move: String) -> Bool
+}
+
+
+struct SANMoveFormatValidator: MoveFormatValidator {
+    var format = ##"(ex[a-h][1-8]e.p)|([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?|(0\-0\-0)|(0\-0)"##
+    
+    func validate(_ move: String) -> Bool {
+        return move.range(of: format, options: .regularExpression) != nil
     }
 }
