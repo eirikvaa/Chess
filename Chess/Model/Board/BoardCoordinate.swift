@@ -28,40 +28,28 @@ struct BoardCoordinate: ExpressibleByStringLiteral, Equatable {
     }
     
     var fileIndex: Int {
-        File.validFiles.firstIndex(of: file?.file ?? "a") ?? 0
-    }
-
-    func fileIndexToFile(_ index: Int) -> File {
-        return File.init(stringLiteral: File.validFiles[index])
-    }
-
-    func difference(from coordinate: BoardCoordinate) -> Delta {
-        let deltaX = file?.difference(from: coordinate.file ?? "a")
-        let deltaY = (coordinate.rank?.rank ?? 1) - (rank?.rank ?? 1)
-        return .init(x: deltaX!, y: deltaY)
-    }
-
-    func move(by delta: Delta) -> BoardCoordinate {
-        let newFile = fileIndexToFile(file!.fileIndex + delta.x)
-        return .init(file: newFile, rank: rank! + delta.y)
+        file?.fileIndex ?? 0
     }
     
     static func == (lhs: BoardCoordinate, rhs: BoardCoordinate) -> Bool {
         (lhs.file, lhs.rank) == (rhs.file, rhs.rank)
     }
-}
-
-extension BoardCoordinate: ExpressibleByStringInterpolation {}
-
-extension BoardCoordinate {
+    
+    static func - (lhs: BoardCoordinate, rhs: BoardCoordinate) -> Delta {
+        let deltaX = lhs.fileIndex - rhs.fileIndex
+        let deltaY = (lhs.rank?.rank ?? 1) - (rhs.rank?.rank ?? 1)
+        return .init(x: deltaX, y: deltaY)
+    }
+    
     mutating func move(by direction: Direction, side: Side) -> BoardCoordinate {
         let delta = Delta(x: 0, y: 0).advance(by: direction) * side.sideMultiplier
-        return move(by: delta)
+        let newFile = File(fileIndex: file!.fileIndex + delta.x)
+        return .init(file: newFile, rank: rank! + delta.y)
     }
 }
 
 extension BoardCoordinate: CustomStringConvertible {
     var description: String {
-        "\(file)\(rank)"
+        "\(String(describing: file))\(String(describing: rank))"
     }
 }

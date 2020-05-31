@@ -88,7 +88,7 @@ class Board {
 
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)
-            let delta = sourceCoordinate.difference(from: destination)
+            let delta = destination - sourceCoordinate
 
             let validPattern = piece.validPattern(delta: delta, side: side, isAttacking: isAttacking)
 

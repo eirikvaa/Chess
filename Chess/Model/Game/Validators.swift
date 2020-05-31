@@ -55,7 +55,7 @@ struct MoveValidator {
 
         let destinationCoordinate = move.destination
         let destinationPiece = board[destinationCoordinate]
-        let moveDelta = sourceCoordinate.difference(from: destinationCoordinate)
+        let moveDelta = destinationCoordinate - sourceCoordinate
         let isAttacking = sourcePiece.side != destinationPiece?.side && destinationPiece != nil
         let validPattern = sourcePiece.validPattern(delta: moveDelta, side: side, isAttacking: isAttacking)
 

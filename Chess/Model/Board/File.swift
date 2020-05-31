@@ -15,15 +15,17 @@ struct File: ExpressibleByStringLiteral, Comparable {
         self.file = value
     }
     
+    init(fileIndex: Int) {
+        guard 0 ... 7 ~= fileIndex else {
+            self.file = "a"
+            return
+        }
+        
+        self.file = File.validFiles[fileIndex]
+    }
+    
     var fileIndex: Int {
         File.validFiles.firstIndex(of: self.file) ?? 0
-    }
-
-    func difference(from file: File) -> Int {
-        let destinationIndex = File.validFiles.firstIndex(of: file.file)!
-        let sourceIndex = File.validFiles.firstIndex(of: self.file)!
-
-        return destinationIndex - sourceIndex
     }
     
     static func == (lhs: File, rhs: File) -> Bool {
@@ -32,5 +34,13 @@ struct File: ExpressibleByStringLiteral, Comparable {
     
     static func < (lhs: File, rhs: File) -> Bool {
         lhs.file < rhs.file
+    }
+    
+    static func - (lhs: File, rhs: File) -> File {
+        let validFiles = File.validFiles
+        let difference = rhs.fileIndex - lhs.fileIndex
+        
+        assert(0 ... 7 ~= difference, "\(difference + 1) is not a valid file index.")
+        return File(stringLiteral: validFiles[difference])
     }
 }

@@ -23,4 +23,8 @@ struct Rank: ExpressibleByIntegerLiteral, Equatable {
     static func ==(lhs: Rank, rhs: Rank) -> Bool {
         lhs.rank == rhs.rank
     }
+    
+    static func - (lhs: Rank, rhs: Rank) -> Rank {
+        .init(integerLiteral: rhs.rank - lhs.rank)
+    }
 }
