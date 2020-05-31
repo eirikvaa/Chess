@@ -56,8 +56,7 @@ struct MoveValidator {
         let destinationCoordinate = move.destination
         let destinationPiece = board[destinationCoordinate]
         let moveDelta = destinationCoordinate - sourceCoordinate
-        let isAttacking = sourcePiece.side != destinationPiece?.side && destinationPiece != nil
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: side, isAttacking: isAttacking)
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: side, isAttacking: move.options.contains(.capture))
 
         guard validPattern.directions.count > 0 else {
             throw GameError.invalidMove(message: "No valid directions to destination position")
