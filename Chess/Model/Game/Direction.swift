@@ -29,31 +29,6 @@ enum Direction {
         }
     }
 
-    func relativeDelta(for side: Side) -> Delta {
-        let delta: Delta
-
-        switch self {
-        case .north:
-            delta = .init(x: 0, y: 1)
-        case .northWest:
-            delta = .init(x: -1, y: 1)
-        case .northEast:
-            delta = .init(x: 1, y: 1)
-        case .south:
-            delta = .init(x: 0, y: -1)
-        case .southWest:
-            delta = .init(x: -1, y: -1)
-        case .southEast:
-            delta = .init(x: 1, y: -1)
-        case .west:
-            delta = .init(x: -1, y: 0)
-        case .east:
-            delta = .init(x: 1, y: 0)
-        }
-
-        return delta * side.sideMultiplier
-    }
-
     func sideRelativeDirection(_ side: Side) -> Direction {
         switch side {
         case .white: return self
