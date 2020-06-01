@@ -11,10 +11,6 @@ import Foundation
 struct Rook: Piece {
     var id = UUID().uuidString
 
-    func numberOfMoves(for movePattern: MovePattern) -> Int {
-        movePattern.directions.count
-    }
-
     func validPattern(delta: Delta, side: Side, isAttacking _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (1..., 0):

@@ -29,10 +29,6 @@ class PieceTests: XCTestCase {
         assertMovement(type: .pawn, delta: (0, -2), side: .black, expectedPattern: [.south, .south], isAttacking: false)
     }
 
-    func testPawnNumberOfMovesSingleNorth() {
-        assertNumberOfMoves(type: .pawn, movePattern: [.north], expectedValue: 1)
-    }
-
     // MARK: Rook
 
     func testBlackRookCanMoveSoutShouldSucceed() {
@@ -45,11 +41,5 @@ extension PieceTests {
         let piece = PieceFabric.create(type)
         let actualPattern = piece.validPattern(delta: .init(x: delta.file, y: delta.rank), side: side, isAttacking: isAttacking)
         XCTAssertEqual(actualPattern, expectedPattern)
-    }
-
-    func assertNumberOfMoves(type: PieceType, movePattern: MovePattern, expectedValue: Int) {
-        let piece = PieceFabric.create(type)
-        let numberOfMoves = piece.numberOfMoves(for: movePattern)
-        XCTAssertEqual(numberOfMoves, expectedValue)
     }
 }

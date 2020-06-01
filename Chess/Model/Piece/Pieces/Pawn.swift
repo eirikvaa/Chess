@@ -11,10 +11,6 @@ import Foundation
 struct Pawn: Piece {
     var id = UUID().uuidString
 
-    func numberOfMoves(for movePattern: MovePattern) -> Int {
-        moved ? 2 : movePattern.directions.count
-    }
-
     func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
         switch (delta.x, delta.y, moved, side, isAttacking) {
         case (0, 1, false, .white, false),

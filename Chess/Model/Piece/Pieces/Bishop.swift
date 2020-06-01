@@ -11,10 +11,6 @@ import Foundation
 struct Bishop: Piece {
     var id = UUID().uuidString
 
-    func numberOfMoves(for movePattern: MovePattern) -> Int {
-        movePattern.directions.count
-    }
-
     func validPattern(delta: Delta, side _: Side, isAttacking _: Bool) -> MovePattern {
         guard delta.equalMagnitude else {
             return .init(directions: [])

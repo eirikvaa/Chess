@@ -11,10 +11,6 @@ import Foundation
 struct Queen: Piece {
     var id = UUID().uuidString
 
-    func numberOfMoves(for movePattern: MovePattern) -> Int {
-        movePattern.directions.count
-    }
-
     var type = PieceType.queen
     var side: Side = .white
     var graphicalRepresentation: String {
