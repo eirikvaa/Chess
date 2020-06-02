@@ -50,6 +50,8 @@ struct BoardCoordinate: ExpressibleByStringLiteral, Equatable {
 
 extension BoardCoordinate: CustomStringConvertible {
     var description: String {
-        "\(String(describing: file))\(String(describing: rank))"
+        let source = file ?? File(stringLiteral: "")
+        let destination = rank ?? Rank(integerLiteral: 0)
+        return "\((source, destination))"
     }
 }

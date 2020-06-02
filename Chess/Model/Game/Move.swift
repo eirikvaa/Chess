@@ -140,7 +140,7 @@ enum MoveOption {
     case kingCastling
 }
 
-protocol Move: class {
+protocol Move: class, CustomStringConvertible {
     var type: MoveType { get }
     var rawInput: String { get }
     var piece: Piece { get }
@@ -167,6 +167,10 @@ class SANMove: Move {
         self.source = source
         self.destination = destination
         self.options = options
+    }
+    
+    var description: String {
+        rawInput
     }
 }
 

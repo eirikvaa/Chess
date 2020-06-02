@@ -109,7 +109,7 @@ class Board {
             }
         }
 
-        throw GameError.invalidMove(message: "No valid source position for destination position \(destination).")
+        throw GameError.invalidMove(message: "No valid source position for destination position \(destination) with move \(move).")
     }
 
     func canAttack(at coordinate: BoardCoordinate, side: Side) -> Bool {

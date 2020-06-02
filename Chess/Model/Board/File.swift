@@ -6,7 +6,7 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct File: ExpressibleByStringLiteral, Comparable {
+struct File: ExpressibleByStringLiteral, Comparable, CustomStringConvertible {
     var file = "a"
     
     static var validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
@@ -42,5 +42,9 @@ struct File: ExpressibleByStringLiteral, Comparable {
         
         assert(0 ... 7 ~= difference, "\(difference + 1) is not a valid file index.")
         return File(stringLiteral: validFiles[difference])
+    }
+    
+    var description: String {
+        file
     }
 }

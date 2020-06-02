@@ -6,7 +6,7 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct Rank: ExpressibleByIntegerLiteral, Equatable {
+struct Rank: ExpressibleByIntegerLiteral, Equatable, CustomStringConvertible {
     var rank = 1
     
     static var validRanks = 1 ... 8
@@ -26,5 +26,9 @@ struct Rank: ExpressibleByIntegerLiteral, Equatable {
     
     static func - (lhs: Rank, rhs: Rank) -> Rank {
         .init(integerLiteral: rhs.rank - lhs.rank)
+    }
+    
+    var description: String {
+        String(rank)
     }
 }

@@ -45,6 +45,8 @@ struct TestGameExecutor: GameExecutor {
                 
                 try MoveValidator.validate($0, board: board, currentSide: currentSide)
                 
+                print("Playing \($0)")
+                
                 board.performMove($0)
                 round += 1
                 currentSide = currentSide.oppositeSide
