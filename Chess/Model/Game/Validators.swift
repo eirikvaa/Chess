@@ -39,27 +39,33 @@ struct FileValidator: Validator {
 
 struct MoveValidator {
     static func validate(_ move: Move, board: Board, side: Side) throws {
+        let isCapture = move.options.contains(.capture)
         let sourceCoordinate = try board.getSourceDestination(piece: move.piece,
                                                               destination: move.destination,
                                                               side: side,
-                                                              isAttacking: move.options.contains(.capture))
+                                                              isAttacking: isCapture)
+        
         move.source = sourceCoordinate
-
+        let destinationCoordinate = move.destination
+        let destinationPiece = board[destinationCoordinate]
+        let moveDelta = destinationCoordinate - sourceCoordinate
+        
         guard let sourcePiece = board[sourceCoordinate] else {
             throw GameError.noPieceInSourcePosition
+        }
+
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: side, isAttacking: isCapture)
+        
+        guard validPattern.directions.count > 0 else {
+            throw GameError.invalidMove(message: "No valid directions to destination position")
         }
 
         guard sourcePiece.side == side else {
             throw GameError.invalidPiece
         }
 
-        let destinationCoordinate = move.destination
-        let destinationPiece = board[destinationCoordinate]
-        let moveDelta = destinationCoordinate - sourceCoordinate
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: side, isAttacking: move.options.contains(.capture))
-
-        guard validPattern.directions.count > 0 else {
-            throw GameError.invalidMove(message: "No valid directions to destination position")
+        if destinationPiece?.side == side {
+            throw GameError.invalidMove(message: "Cannot move to position occupied by self")
         }
 
         for direction in validPattern.directions {

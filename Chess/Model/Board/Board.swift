@@ -139,10 +139,6 @@ class Board {
                 throw GameError.invalidMove(message: "Cannot move over opposite piece")
             }
         }
-
-        if self[destination]?.side == side {
-            throw GameError.invalidMove(message: "Cannot move to position occupied by self")
-        }
     }
 
     func resetBoard() {
