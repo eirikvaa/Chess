@@ -37,7 +37,7 @@ struct TestGameExecutor: GameExecutor {
             let moveInterpreter = MoveFabric.create(moveType: .algebraic)
             let interpretedMove = try moveInterpreter.interpret($0)
             
-            try MoveValidator.validate(interpretedMove, board: board, side: side)
+            try MoveValidator.validate(interpretedMove, board: board, currentSide: side)
             
             board.performMove(interpretedMove)
             round += 1
@@ -75,7 +75,7 @@ struct RealGameExecutor: GameExecutor {
                 continue
             }
 
-            try MoveValidator.validate(move, board: board, side: currentSide)
+            try MoveValidator.validate(move, board: board, currentSide: currentSide)
             board.performMove(move)
 
             round += 1

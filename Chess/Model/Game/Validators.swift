@@ -38,9 +38,9 @@ struct FileValidator: Validator {
 }
 
 struct MoveValidator {
-    static func validate(_ move: Move, board: Board, side: Side) throws {
+    static func validate(_ move: Move, board: Board, currentSide: Side) throws {
         let isCapture = move.options.contains(.capture)
-        let sourceCoordinate = try board.getSourceDestination(side: side, move: move)
+        let sourceCoordinate = try board.getSourceDestination(side: currentSide, move: move)
         
         move.source = sourceCoordinate
         let destinationCoordinate = move.destination
@@ -51,17 +51,17 @@ struct MoveValidator {
             throw GameError.noPieceInSourcePosition
         }
 
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: side, isAttacking: isCapture)
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isAttacking: isCapture)
         
         guard validPattern.directions.count > 0 else {
             throw GameError.invalidMove(message: "No valid directions to destination position")
         }
 
-        guard sourcePiece.side == side else {
+        guard sourcePiece.side == currentSide else {
             throw GameError.invalidPiece
         }
 
-        if destinationPiece?.side == side {
+        if destinationPiece?.side == currentSide {
             throw GameError.invalidMove(message: "Cannot move to position occupied by self")
         }
 
@@ -84,11 +84,11 @@ struct MoveValidator {
                 try board.moveMultipleSteps(
                     direction: direction,
                     moves: moveDelta.maximumMagnitude,
-                    side: side,
+                    side: currentSide,
                     canCrossOver: false,
                     move: move)
             case (_, .knight):
-                let validAttack = board.canAttack(at: destinationCoordinate, side: side)
+                let validAttack = board.canAttack(at: destinationCoordinate, side: currentSide)
                 let validMove = destinationPiece == nil
 
                 guard validAttack || validMove else {
