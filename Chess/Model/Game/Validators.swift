@@ -40,10 +40,7 @@ struct FileValidator: Validator {
 struct MoveValidator {
     static func validate(_ move: Move, board: Board, side: Side) throws {
         let isCapture = move.options.contains(.capture)
-        let sourceCoordinate = try board.getSourceDestination(piece: move.piece,
-                                                              destination: move.destination,
-                                                              side: side,
-                                                              isAttacking: isCapture)
+        let sourceCoordinate = try board.getSourceDestination(side: side, move: move)
         
         move.source = sourceCoordinate
         let destinationCoordinate = move.destination

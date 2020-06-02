@@ -83,14 +83,17 @@ class Board {
         return .init(stringLiteral: "")
     }
 
-    func getSourceDestination(piece: Piece, destination: BoardCoordinate, side: Side, isAttacking: Bool) throws -> BoardCoordinate {
+    func getSourceDestination(side: Side, move: Move) throws -> BoardCoordinate {
+        let piece = move.piece
+        let destination = move.destination
+        let isCapture = move.options.contains(.capture)
         let pieces = getPieces(of: piece.type, side: side)
 
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)
             let delta = destination - sourceCoordinate
 
-            let validPattern = piece.validPattern(delta: delta, side: side, isAttacking: isAttacking)
+            let validPattern = piece.validPattern(delta: delta, side: side, isAttacking: isCapture)
 
             guard validPattern.directions.count > 0 else {
                 continue
