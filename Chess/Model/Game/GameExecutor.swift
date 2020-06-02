@@ -29,7 +29,7 @@ struct TestGameExecutor: GameExecutor {
 
     func play() throws {
         let board = Board()
-        var side = Side.white
+        var currentSide = Side.white
         var round = 0
 
         try moves.forEach {
@@ -37,11 +37,11 @@ struct TestGameExecutor: GameExecutor {
             let moveInterpreter = MoveFabric.create(moveType: .algebraic)
             let interpretedMove = try moveInterpreter.interpret($0)
             
-            try MoveValidator.validate(interpretedMove, board: board, currentSide: side)
+            try MoveValidator.validate(interpretedMove, board: board, currentSide: currentSide)
             
             board.performMove(interpretedMove)
             round += 1
-            side = side.oppositeSide
+            currentSide = currentSide.oppositeSide
         }
     }
 }
