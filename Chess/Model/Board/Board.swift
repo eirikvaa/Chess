@@ -124,7 +124,12 @@ class Board {
         return true
     }
 
-    func moveMultipleSteps(source: BoardCoordinate, destination: BoardCoordinate, direction: Direction, moves: Int, side: Side, canCrossOver: Bool = true) throws {
+    func moveMultipleSteps(direction: Direction, moves: Int, side: Side, canCrossOver: Bool = true, move: Move) throws {
+        guard let source = move.source else {
+            throw GameError.noPieceInSourcePosition
+        }
+        
+        let destination = move.destination
         var currentCoordinate = source
 
         for _ in 0 ..< moves {

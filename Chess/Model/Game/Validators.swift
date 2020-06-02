@@ -82,13 +82,11 @@ struct MoveValidator {
                  (_, .king),
                  (_, .bishop):
                 try board.moveMultipleSteps(
-                    source: sourceCoordinate,
-                    destination: destinationCoordinate,
                     direction: direction,
                     moves: moveDelta.maximumMagnitude,
                     side: side,
-                    canCrossOver: false
-                )
+                    canCrossOver: false,
+                    move: move)
             case (_, .knight):
                 let validAttack = board.canAttack(at: destinationCoordinate, side: side)
                 let validMove = destinationPiece == nil
