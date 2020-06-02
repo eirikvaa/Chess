@@ -15,6 +15,7 @@ protocol GameExecutor {
 
 struct TestGameExecutor: GameExecutor {
     private var moves: [String]
+    private var realMoves: [Move] = []
     private let moveFormatValidator: MoveFormatValidator
 
     init(moveFormatValidator: MoveFormatValidator) {
@@ -26,22 +27,40 @@ struct TestGameExecutor: GameExecutor {
         self.init(moveFormatValidator: moveFormatValidator)
         self.moves = moves
     }
+    
+    init(moves: [Move]) {
+        self.realMoves = moves
+        self.moves = []
+        self.moveFormatValidator = SANMoveFormatValidator()
+    }
 
     func play() throws {
         let board = Board()
         var currentSide = Side.white
         var round = 0
-
-        try moves.forEach {
-            print(board)
-            let moveInterpreter = MoveFabric.create(moveType: .algebraic)
-            let interpretedMove = try moveInterpreter.interpret($0)
-            
-            try MoveValidator.validate(interpretedMove, board: board, currentSide: currentSide)
-            
-            board.performMove(interpretedMove)
-            round += 1
-            currentSide = currentSide.oppositeSide
+        
+        if realMoves.count > 0 {
+            try realMoves.forEach {
+                print(board)
+                
+                try MoveValidator.validate($0, board: board, currentSide: currentSide)
+                
+                board.performMove($0)
+                round += 1
+                currentSide = currentSide.oppositeSide
+            }
+        } else {
+            try moves.forEach {
+                print(board)
+                let moveInterpreter = MoveFabric.create(moveType: .algebraic)
+                let interpretedMove = try moveInterpreter.interpret($0)
+                
+                try MoveValidator.validate(interpretedMove, board: board, currentSide: currentSide)
+                
+                board.performMove(interpretedMove)
+                round += 1
+                currentSide = currentSide.oppositeSide
+            }
         }
     }
 }

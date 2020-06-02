@@ -47,6 +47,8 @@
 		E51CCF7723B62FD700F57536 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
 		E51CCF7A23B649D600F57536 /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51CCF7923B649D600F57536 /* GameError.swift */; };
 		E51CCF7B23B651C400F57536 /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51CCF7923B649D600F57536 /* GameError.swift */; };
+		E51D92352486C90A0061DF92 /* GameReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D92342486C90A0061DF92 /* GameReader.swift */; };
+		E51D92362486C90A0061DF92 /* GameReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D92342486C90A0061DF92 /* GameReader.swift */; };
 		E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E551399C23B818E200FD1D01 /* MoveTests.swift */; };
 		E5625C562480729F00FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
 		E5625C572480738400FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
@@ -93,6 +95,7 @@
 		E50F659723B7C2A50042B527 /* Pawn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pawn.swift; sourceTree = "<group>"; };
 		E50F659A23B7C39A0042B527 /* Delta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delta.swift; sourceTree = "<group>"; };
 		E51CCF7923B649D600F57536 /* GameError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameError.swift; sourceTree = "<group>"; };
+		E51D92342486C90A0061DF92 /* GameReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReader.swift; sourceTree = "<group>"; };
 		E551399C23B818E200FD1D01 /* MoveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTests.swift; sourceTree = "<group>"; };
 		E5625C552480729F00FD30AF /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,6 +187,14 @@
 			path = Game;
 			sourceTree = "<group>";
 		};
+		E51D92332486C8F10061DF92 /* GameReader */ = {
+			isa = PBXGroup;
+			children = (
+				E51D92342486C90A0061DF92 /* GameReader.swift */,
+			);
+			path = GameReader;
+			sourceTree = "<group>";
+		};
 		E5BE32A923B5082F00EE526A = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +216,7 @@
 		E5BE32B423B5082F00EE526A /* Chess */ = {
 			isa = PBXGroup;
 			children = (
+				E51D92332486C8F10061DF92 /* GameReader */,
 				E5BE32BC23B5084D00EE526A /* Model */,
 				E5BE32B523B5082F00EE526A /* main.swift */,
 			);
@@ -349,6 +361,7 @@
 				E50F656A23B7C0530042B527 /* Direction.swift in Sources */,
 				E5C1FD7D23B50A4100A33411 /* Piece.swift in Sources */,
 				E50F658523B7C2770042B527 /* PieceFabric.swift in Sources */,
+				E51D92352486C90A0061DF92 /* GameReader.swift in Sources */,
 				E50F658F23B7C2970042B527 /* Bishop.swift in Sources */,
 				E50F658923B7C28E0042B527 /* King.swift in Sources */,
 				E50F659B23B7C39A0042B527 /* Delta.swift in Sources */,
@@ -380,6 +393,7 @@
 				E50F659323B7C29C0042B527 /* Knight.swift in Sources */,
 				E51CCF7423B62FD700F57536 /* GameExecutor.swift in Sources */,
 				E50F658D23B7C2920042B527 /* Queen.swift in Sources */,
+				E51D92362486C90A0061DF92 /* GameReader.swift in Sources */,
 				E5625C572480738400FD30AF /* Validators.swift in Sources */,
 				E5F83AB223B8D930001366FE /* MoveComponentTests.swift in Sources */,
 				E51CCF7523B62FD700F57536 /* Board.swift in Sources */,

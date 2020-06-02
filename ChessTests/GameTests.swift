@@ -161,6 +161,20 @@ class GameTests: XCTestCase {
             message: "Should not throw"
         )
     }
+    
+    func testMorozevichVsKamsky2012() {
+        let game =
+        """
+        1. Nf3 Nf6 2. c4 c5 3. Nc3 b6 4. e3 g6 5. d4 Bg7 6. d5 O-O 7. Be2 e6 8. e4 exd5
+        9. e5 Ne4 10. Nxd5 Nc6 11. Qd3 f5 12. exf6 Nxf6 13. Bg5 Bb7 14. Rd1 Qe8 15. Bxf6
+        Bxf6 16. O-O Rd8 17. Qd2 Qf7 18. Bd3 Nb4 19. Be4 Nxd5 20. Bxd5 Bxd5 21. cxd5 Qg7
+        22. b3 g5 23. h3 h5 24. d6 g4 25. Qd5+ Rf7 26. Ne1 gxh3 27. Rd3 hxg2 28. Nxg2 h4
+        29. Kh1 Qg5 30. Qe4 Rg7 31. Ne3 h3 32. Rdd1 Qe5 33. Qf3 Rf8 34. Nf5 Rg6 35. Rde1
+        Qc3 36. Qd5+ 1-0
+        """
+        let moves = PGNGameReader.read(textRepresentation: game)
+        assertNonThrowingGame(moves)
+    }
 }
 
 extension GameTests {
@@ -174,5 +188,10 @@ extension GameTests {
         let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
 
         XCTAssertNoThrow(try game.play(), message)
+    }
+    
+    func assertNonThrowingGame(_ moves: [Move]) {
+        let game = TestGameExecutor(moves: moves)
+        XCTAssertNoThrow(try game.play())
     }
 }
