@@ -51,7 +51,7 @@ struct MoveValidator {
             throw GameError.noPieceInSourcePosition
         }
 
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isAttacking: isCapture)
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isCapture: isCapture)
         
         guard validPattern.directions.count > 0 else {
             throw GameError.invalidMove(message: "No valid directions to destination position")

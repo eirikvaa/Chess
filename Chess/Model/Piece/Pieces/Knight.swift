@@ -11,7 +11,7 @@ import Foundation
 struct Knight: Piece {
     var id = UUID().uuidString
 
-    func validPattern(delta: Delta, side _: Side, isAttacking _: Bool) -> MovePattern {
+    func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (-1, 2):
             return [.north, .north, .west]

@@ -11,7 +11,7 @@ import Foundation
 struct Bishop: Piece {
     var id = UUID().uuidString
 
-    func validPattern(delta: Delta, side _: Side, isAttacking _: Bool) -> MovePattern {
+    func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
         guard delta.equalMagnitude else {
             return .init(directions: [])
         }

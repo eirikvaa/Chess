@@ -11,7 +11,7 @@ import Foundation
 struct Rook: Piece {
     var id = UUID().uuidString
 
-    func validPattern(delta: Delta, side: Side, isAttacking _: Bool) -> MovePattern {
+    func validPattern(delta: Delta, side: Side, isCapture _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (1..., 0):
             let direction = Direction.east.sideRelativeDirection(side)

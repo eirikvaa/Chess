@@ -93,7 +93,7 @@ class Board {
             let sourceCoordinate = getCoordinate(of: piece)
             let delta = destination - sourceCoordinate
 
-            let validPattern = piece.validPattern(delta: delta, side: side, isAttacking: isCapture)
+            let validPattern = piece.validPattern(delta: delta, side: side, isCapture: isCapture)
 
             guard validPattern.directions.count > 0 else {
                 continue

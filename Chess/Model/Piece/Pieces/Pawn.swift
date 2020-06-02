@@ -11,8 +11,8 @@ import Foundation
 struct Pawn: Piece {
     var id = UUID().uuidString
 
-    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern {
-        switch (delta.x, delta.y, moved, side, isAttacking) {
+    func validPattern(delta: Delta, side: Side, isCapture: Bool) -> MovePattern {
+        switch (delta.x, delta.y, moved, side, isCapture) {
         case (0, 1, false, .white, false),
              (0, 1, true, .white, false):
             return [.north]

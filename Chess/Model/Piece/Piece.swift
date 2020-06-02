@@ -14,5 +14,5 @@ protocol Piece {
     var movePatterns: [MovePattern] { get }
     var moved: Bool { get set }
 
-    func validPattern(delta: Delta, side: Side, isAttacking: Bool) -> MovePattern
+    func validPattern(delta: Delta, side: Side, isCapture: Bool) -> MovePattern
 }
