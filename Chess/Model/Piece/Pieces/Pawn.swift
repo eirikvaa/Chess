@@ -10,6 +10,12 @@ import Foundation
 
 struct Pawn: Piece {
     var id = UUID().uuidString
+    var side: Side = .white
+    var type = PieceType.pawn
+    var moved = false
+    var graphicalRepresentation: String {
+        side == .white ? "♙" : "♟"
+    }
 
     func validPattern(delta: Delta, side: Side, isCapture: Bool) -> MovePattern {
         switch (delta.x, delta.y, moved, side, isCapture) {
@@ -35,20 +41,4 @@ struct Pawn: Piece {
             return []
         }
     }
-
-    var type = PieceType.pawn
-    var side: Side = .white
-    var graphicalRepresentation: String {
-        side == .white ? "♙" : "♟"
-    }
-
-    var movePatterns: [MovePattern] = [
-        [.north],
-        [.northEast],
-        [.northWest],
-        [.south],
-        [.southWest],
-        [.southEast],
-    ]
-    var moved = false
 }

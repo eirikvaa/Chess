@@ -8,11 +8,10 @@
 
 protocol Piece {
     var id: String { get }
-    var type: PieceType { get }
     var side: Side { get set }
-    var graphicalRepresentation: String { get }
-    var movePatterns: [MovePattern] { get }
+    var type: PieceType { get }
     var moved: Bool { get set }
+    var graphicalRepresentation: String { get }
 
     func validPattern(delta: Delta, side: Side, isCapture: Bool) -> MovePattern
 }

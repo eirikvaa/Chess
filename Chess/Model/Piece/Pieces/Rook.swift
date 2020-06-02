@@ -10,6 +10,12 @@ import Foundation
 
 struct Rook: Piece {
     var id = UUID().uuidString
+    var side: Side = .white
+    var type = PieceType.rook
+    var moved = false
+    var graphicalRepresentation: String {
+        side == .white ? "♖" : "♜"
+    }
 
     func validPattern(delta: Delta, side: Side, isCapture _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
@@ -29,18 +35,4 @@ struct Rook: Piece {
             return []
         }
     }
-
-    var type = PieceType.rook
-    var side: Side = .white
-    var graphicalRepresentation: String {
-        side == .white ? "♖" : "♜"
-    }
-
-    var movePatterns: [MovePattern] = [
-        [.north],
-        [.west],
-        [.east],
-        [.south],
-    ]
-    var moved = false
 }

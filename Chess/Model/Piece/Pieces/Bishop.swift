@@ -10,6 +10,12 @@ import Foundation
 
 struct Bishop: Piece {
     var id = UUID().uuidString
+    var side: Side = .white
+    var type = PieceType.bishop
+    var moved = false
+    var graphicalRepresentation: String {
+        side == .white ? "♗" : "♝"
+    }
 
     func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
         guard delta.equalMagnitude else {
@@ -29,18 +35,4 @@ struct Bishop: Piece {
             return []
         }
     }
-
-    var type = PieceType.bishop
-    var side: Side = .white
-    var graphicalRepresentation: String {
-        side == .white ? "♗" : "♝"
-    }
-
-    var movePatterns: [MovePattern] = [
-        [.northEast],
-        [.southEast],
-        [.southWest],
-        [.northWest],
-    ]
-    var moved = false
 }

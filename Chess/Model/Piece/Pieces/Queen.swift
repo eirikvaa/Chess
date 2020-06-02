@@ -10,24 +10,13 @@ import Foundation
 
 struct Queen: Piece {
     var id = UUID().uuidString
-
-    var type = PieceType.queen
     var side: Side = .white
+    var type = PieceType.queen
+    var moved = false
     var graphicalRepresentation: String {
         side == .white ? "♕" : "♛"
     }
-
-    var movePatterns: [MovePattern] = [
-        [.north],
-        [.northEast],
-        [.east],
-        [.southEast],
-        [.south],
-        [.southWest],
-        [.west],
-        [.northWest],
-    ]
-    var moved = false
+    
     func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
         switch (delta.x, delta.y, delta.equalMagnitude) {
         case (0, 1..., false):

@@ -10,20 +10,13 @@ import Foundation
 
 struct King: Piece {
     var id = UUID().uuidString
-
-    var type = PieceType.king
     var side: Side = .white
+    var type = PieceType.king
+    var moved = false
     var graphicalRepresentation: String {
         side == .white ? "♔" : "♚"
     }
-
-    var movePatterns: [MovePattern] = [
-        [.north],
-        [.east],
-        [.south],
-        [.west],
-    ]
-    var moved = false
+    
     func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (0, 1):
