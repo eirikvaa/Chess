@@ -14,10 +14,11 @@ protocol GameReader {
 
 struct PGNGameReader: GameReader {
     static func read(textRepresentation: String) -> [Move] {
-        let potentialMoves = textRepresentation.split(separator: " ")
-        let cleanMoves = potentialMoves.map { $0.replacingOccurrences(of: "\n", with: " ") }
-        let validMoves = cleanMoves.filter { SANMoveFormatValidator().validate($0) }
-        let moves = validMoves.compactMap { try? SANMoveInterpreter().interpret($0) }
+        let moves = textRepresentation
+            .replacingOccurrences(of: "\n", with: " ")
+            .split(separator: " ")
+            .filter { SANMoveFormatValidator().validate(String($0)) }
+            .compactMap { try? SANMoveInterpreter().interpret(String($0)) }
         
         return moves
     }

@@ -38,6 +38,7 @@ struct TestGameExecutor: GameExecutor {
         let board = Board()
         var currentSide = Side.white
         var round = 0
+        var lastMove: Move?
         
         if realMoves.count > 0 {
             try realMoves.forEach {
@@ -47,9 +48,10 @@ struct TestGameExecutor: GameExecutor {
                 
                 print("Playing \($0)")
                 
-                board.performMove($0)
+                board.performMove($0, side: currentSide, lastMove: lastMove)
                 round += 1
                 currentSide = currentSide.oppositeSide
+                lastMove = $0
             }
         } else {
             try moves.forEach {
@@ -59,11 +61,14 @@ struct TestGameExecutor: GameExecutor {
                 
                 try MoveValidator.validate(interpretedMove, board: board, currentSide: currentSide)
                 
-                board.performMove(interpretedMove)
+                board.performMove(interpretedMove, side: currentSide, lastMove: lastMove)
                 round += 1
                 currentSide = currentSide.oppositeSide
+                lastMove = interpretedMove
             }
         }
+        
+        print(board)
     }
 }
 
@@ -78,6 +83,7 @@ struct RealGameExecutor: GameExecutor {
         let board = Board()
         var currentSide = Side.white
         var round = 0
+        var lastMove: Move?
 
         while true {
             print(board)
@@ -97,10 +103,13 @@ struct RealGameExecutor: GameExecutor {
             }
 
             try MoveValidator.validate(move, board: board, currentSide: currentSide)
-            board.performMove(move)
+            board.performMove(move, side: currentSide, lastMove: lastMove)
 
             round += 1
             currentSide = currentSide.oppositeSide
+            lastMove = move
         }
+        
+        print(board)
     }
 }

@@ -39,8 +39,19 @@ struct FileValidator: Validator {
 
 struct MoveValidator {
     static func validate(_ move: Move, board: Board, currentSide: Side) throws {
+        if move.isCastling() {
+            // TODO: Implement validation of castling moves
+            return
+        }
+        
         let isCapture = move.options.contains(.capture)
         let sourceCoordinate = try board.getSourceDestination(side: currentSide, move: move)
+        
+        if move.options.contains(.enPassant) {
+            // TODO: Implement validation for en passant
+            move.source = sourceCoordinate
+            return
+        }
         
         move.source = sourceCoordinate
         let destinationCoordinate = move.destination
@@ -108,7 +119,7 @@ protocol MoveFormatValidator {
 
 
 struct SANMoveFormatValidator: MoveFormatValidator {
-    var format = ##"(ex[a-h][1-8]e.p)|([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?|(0\-0\-0)|(0\-0)"##
+    var format = ##"(ex[a-h][1-8]e.p)|([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?|(O\-O\-O)|(O\-O)"##
     
     func validate(_ move: String) -> Bool {
         return move.range(of: format, options: .regularExpression) != nil

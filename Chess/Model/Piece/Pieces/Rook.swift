@@ -20,16 +20,16 @@ struct Rook: Piece {
     func validPattern(delta: Delta, side: Side, isCapture _: Bool) -> MovePattern {
         switch (delta.x, delta.y) {
         case (1..., 0):
-            let direction = Direction.east.sideRelativeDirection(side)
+            let direction = Direction.east//.sideRelativeDirection(side)
             return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
         case (...(-1), 0):
-            let direction = Direction.west.sideRelativeDirection(side)
+            let direction = Direction.west//.sideRelativeDirection(side)
             return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
         case (0, 1...):
-            let direction = Direction.north.sideRelativeDirection(side)
+            let direction = Direction.north//.sideRelativeDirection(side)
             return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.y)))
-        case (0, ...(-2)):
-            let direction = Direction.south.sideRelativeDirection(side)
+        case (0, (-8)...(-1)):
+            let direction = Direction.south//.sideRelativeDirection(side)
             return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.y)))
         default:
             return []

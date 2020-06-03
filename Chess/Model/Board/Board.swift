@@ -36,7 +36,30 @@ class Board {
         }
     }
 
-    func performMove(_ move: Move) {
+    func performMove(_ move: Move, side: Side, lastMove: Move?) {
+        if move.options.contains(.enPassant) {
+            let lastPawnCoordinate = lastMove!.destination
+            self[move.destination] = move.piece
+            self[move.source!] = nil
+            self[lastPawnCoordinate] = nil
+        }
+        
+        if move.options.contains(.kingCastling) {
+            let kingSideRookCoordinate: BoardCoordinate = side == .black ? "h8" : "h1"
+            let kingCoordinate: BoardCoordinate = side == .black ? "e8" : "e1"
+            let kingSideRook = self[kingSideRookCoordinate]
+            let king = self[kingCoordinate]
+            
+            self[side == .black ? "g8" : "g1"] = king
+            self[side == .black ? "f8" : "f1"] = kingSideRook
+            self[kingSideRookCoordinate] = nil
+            self[kingCoordinate] = nil
+        } else if move.options.contains(.queenCastling) {
+            let queenSideRookCoordinate: BoardCoordinate = move.piece.side == .black ? "e8" : "e1"
+            let queenCoordinate: BoardCoordinate = move.piece.side == .black ? "d8" : "d1"
+            return
+        }
+        
         guard let source = move.source else {
             // TODO: Handle error properly
             return
@@ -92,8 +115,14 @@ class Board {
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)
             let delta = destination - sourceCoordinate
-
+            
             let validPattern = piece.validPattern(delta: delta, side: side, isCapture: isCapture)
+            
+            if sourceCoordinate.rank == 5 && piece.type == .pawn && isCapture && self[move.destination] == nil {
+                move.options.append(.enPassant)
+                move.source = sourceCoordinate
+                return sourceCoordinate
+            }
 
             guard validPattern.directions.count > 0 else {
                 continue
@@ -104,6 +133,17 @@ class Board {
                 currentCoordinate = currentCoordinate.move(by: direction.sideRelativeDirection(side), side: side)
 
                 if currentCoordinate == destination {
+                    // Disambiguate between two pieces when an extra file is provided (like Rdd1).
+                    // If two rooks can move to the same cell (say d1), then the extra d (between R and d1)
+                    // must be specified. Therefore we check if the rank is nil and the source is not nil.
+                    // If this is the case, the move source file and the file of the potential source coordiante
+                    // must be the same, otherwise we'll pick the wrong piece.
+                    if move.source?.rank == nil && move.source?.file != nil {
+                        if move.source?.file != sourceCoordinate.file {
+                            continue
+                        }
+                    }
+                    move.source = sourceCoordinate
                     return sourceCoordinate
                 }
             }

@@ -34,9 +34,9 @@ struct Pawn: Piece {
         case (0, -2, false, .black, false):
             return [.south, .south]
         case (1, -1, _, .black, true):
-            return [.southWest]
-        case (-1, -1, _, .black, true):
             return [.southEast]
+        case (-1, -1, _, .black, true):
+            return [.southWest]
         default:
             return []
         }

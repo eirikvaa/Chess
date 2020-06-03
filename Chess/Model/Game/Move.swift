@@ -48,15 +48,28 @@ struct SANMoveInterpreter: MoveInterpreter {
         var isCapture = false
         var source: BoardCoordinate?
         let destination: BoardCoordinate
+        var isQueenSideCastling = false
+        var isKingSideCastling = false
         
         let enPassantFormat = #"ex[a-h][1-8]e.p"#
         if let _ = move.range(of: enPassantFormat, options: .regularExpression) {
             fatalError("Support for en passant moves is not implemented yet.")
         }
         
-        let castlingFormat = #"(0\-0\-0)|(0\-0)"#
-        if let _ = move.range(of: castlingFormat, options: .regularExpression) {
-            fatalError("Support for castling moves is not implemented yet.")
+        let castlingFormat = #"(O\-O\-O)|(O\-O)"#
+        if let match = move.range(of: castlingFormat, options: .regularExpression) {
+            switch move[match] {
+            case "O-O": isKingSideCastling = true
+            case "O-O-O": isQueenSideCastling = true
+            default: break
+            }
+        }
+        
+        if isKingSideCastling || isQueenSideCastling {
+            return SANMove(rawInput: move, piece: Pawn(), source: nil, destination: "h8", options: [
+                .queenCastling,
+                .kingCastling
+            ])
         }
         
         let coreFormat = #"([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?"#
@@ -119,6 +132,8 @@ struct SANMoveInterpreter: MoveInterpreter {
         if isMate { options.append(.mate) }
         if isCapture { options.append(.capture) }
         if isPromotion { options.append(.promotion) }
+        if isQueenSideCastling { options.append(.queenCastling) }
+        if isKingSideCastling { options.append(.kingCastling) }
         
         let move = SANMove(rawInput: move,
                            piece: rawPiece,
@@ -146,9 +161,15 @@ protocol Move: class, CustomStringConvertible {
     var piece: Piece { get }
     var source: BoardCoordinate? { get set }
     var destination: BoardCoordinate { get }
-    var options: [MoveOption] { get }
+    var options: [MoveOption] { get set }
     var sourceFile: File? { get set }
     var sourceRank: Rank? { get set }
+}
+
+extension Move {
+    func isCastling() -> Bool {
+        options.contains(.kingCastling) || options.contains(.queenCastling)
+    }
 }
 
 class SANMove: Move {
@@ -157,7 +178,7 @@ class SANMove: Move {
     let piece: Piece
     var source: BoardCoordinate?
     let destination: BoardCoordinate
-    let options: [MoveOption]
+    var options: [MoveOption]
     var sourceFile: File?
     var sourceRank: Rank?
     
