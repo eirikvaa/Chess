@@ -59,17 +59,14 @@ struct SANMoveInterpreter: MoveInterpreter {
         let castlingFormat = #"(O\-O\-O)|(O\-O)"#
         if let match = move.range(of: castlingFormat, options: .regularExpression) {
             switch move[match] {
-            case "O-O": isKingSideCastling = true
             case "O-O-O": isQueenSideCastling = true
+            case "O-O": isKingSideCastling = true
             default: break
             }
         }
         
         if isKingSideCastling || isQueenSideCastling {
-            return SANMove(rawInput: move, piece: Pawn(), source: nil, destination: "h8", options: [
-                .queenCastling,
-                .kingCastling
-            ])
+            return SANMove(rawInput: move, piece: Pawn(), source: nil, destination: "h8", options: isKingSideCastling ? [.kingCastling] : [.queenCastling])
         }
         
         let coreFormat = #"([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?"#

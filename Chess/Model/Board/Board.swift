@@ -55,9 +55,15 @@ class Board {
             self[kingSideRookCoordinate] = nil
             self[kingCoordinate] = nil
         } else if move.options.contains(.queenCastling) {
-            let queenSideRookCoordinate: BoardCoordinate = move.piece.side == .black ? "e8" : "e1"
-            let queenCoordinate: BoardCoordinate = move.piece.side == .black ? "d8" : "d1"
-            return
+            let queenSideRookCoordinate: BoardCoordinate = move.piece.side == .black ? "a8" : "a1"
+            let queenSideRook = self[queenSideRookCoordinate]
+            let kingCoordinate: BoardCoordinate = move.piece.side == .black ? "e8" : "e1"
+            let king = self[kingCoordinate]
+            
+            self[side == .black ? "c8" : "c1"] = king
+            self[side == .black ? "d8" : "d1"] = queenSideRook
+            self[queenSideRookCoordinate] = nil
+            self[kingCoordinate] = nil
         }
         
         guard let source = move.source else {
