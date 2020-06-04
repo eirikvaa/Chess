@@ -50,9 +50,10 @@ class Board {
             let promotionPiece = move.promotionPiece
             self[move.destination] = promotionPiece
             self[move.source!] = nil
+            return
         }
         
-        if move.options.contains(.kingCastling) {
+        if move.options.contains(.kingCastling) { // King castling: O-O
             let kingSideRookCoordinate: BoardCoordinate = side == .black ? "h8" : "h1"
             let kingCoordinate: BoardCoordinate = side == .black ? "e8" : "e1"
             let kingSideRook = self[kingSideRookCoordinate]
@@ -62,16 +63,18 @@ class Board {
             self[side == .black ? "f8" : "f1"] = kingSideRook
             self[kingSideRookCoordinate] = nil
             self[kingCoordinate] = nil
-        } else if move.options.contains(.queenCastling) {
-            let queenSideRookCoordinate: BoardCoordinate = move.piece.side == .black ? "a8" : "a1"
+            return
+        } else if move.options.contains(.queenCastling) { // Queen castling: O-O-O
+            let queenSideRookCoordinate: BoardCoordinate = side == .black ? "a8" : "a1"
             let queenSideRook = self[queenSideRookCoordinate]
-            let kingCoordinate: BoardCoordinate = move.piece.side == .black ? "e8" : "e1"
+            let kingCoordinate: BoardCoordinate = side == .black ? "e8" : "e1"
             let king = self[kingCoordinate]
             
             self[side == .black ? "c8" : "c1"] = king
             self[side == .black ? "d8" : "d1"] = queenSideRook
             self[queenSideRookCoordinate] = nil
             self[kingCoordinate] = nil
+            return
         }
         
         guard let source = move.source else {
@@ -174,8 +177,13 @@ class Board {
                     // must be specified. Therefore we check if the rank is nil and the source is not nil.
                     // If this is the case, the move source file and the file of the potential source coordiante
                     // must be the same, otherwise we'll pick the wrong piece.
+                    // The else if block does the same, only when an extra rank is provided (like R8g5).
                     if move.source?.rank == nil && move.source?.file != nil {
                         if move.source?.file != sourceCoordinate.file {
+                            continue
+                        }
+                    } else if move.source?.file == nil && move.source?.rank != nil {
+                        if move.source?.rank != sourceCoordinate.rank {
                             continue
                         }
                     }
