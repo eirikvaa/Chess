@@ -105,6 +105,24 @@ class Board {
         // Will never end up here
         return .init(stringLiteral: "")
     }
+    
+    func tryMovingToSource(source: BoardCoordinate, destination: BoardCoordinate, movePattern: MovePattern, canMoveOver: Bool, side: Side) -> Bool {
+        var current = source
+        
+        for direction in movePattern.directions {
+            current = current.move(by: direction.sideRelativeDirection(side), side: side)
+            
+            if current == destination {
+                return true
+            }
+            
+            if self[current] != nil && !canMoveOver {
+                return false
+            }
+        }
+        
+        return true
+    }
 
     func getSourceDestination(side: Side, move: Move) throws -> BoardCoordinate {
         let piece = move.piece
@@ -125,6 +143,10 @@ class Board {
             }
 
             guard validPattern.directions.count > 0 else {
+                continue
+            }
+            
+            guard tryMovingToSource(source: sourceCoordinate, destination: destination, movePattern: validPattern, canMoveOver: piece.type == .knight, side: side) else {
                 continue
             }
 

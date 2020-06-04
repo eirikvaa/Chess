@@ -52,6 +52,7 @@
 		E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E551399C23B818E200FD1D01 /* MoveTests.swift */; };
 		E5625C562480729F00FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
 		E5625C572480738400FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
+		E5B3DB97248840C60094FE74 /* twic920.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E5B3DB9424883DB70094FE74 /* twic920.pgn */; };
 		E5BE32B623B5082F00EE526A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32B523B5082F00EE526A /* main.swift */; };
 		E5BE32BE23B5087A00EE526A /* GameExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* GameExecutor.swift */; };
 		E5BE32C023B5088200EE526A /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
@@ -61,18 +62,30 @@
 		E5EE5DB023B5368F0066C281 /* PieceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DAF23B5368F0066C281 /* PieceTests.swift */; };
 		E5EE5DB223B53FE10066C281 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
 		E5EE5DB623B62BCA0066C281 /* GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB523B62BCA0066C281 /* GameTests.swift */; };
+		E5F10F98248915580073B2FF /* twic920.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E5B3DB9424883DB70094FE74 /* twic920.pgn */; };
 		E5F83AB223B8D930001366FE /* MoveComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F83AB123B8D930001366FE /* MoveComponentTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		E5BE32B023B5082F00EE526A /* CopyFiles */ = {
+		E5B3DB99248845C80094FE74 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			dstPath = "";
+			dstSubfolderSpec = 7;
 			files = (
+				E5F10F98248915580073B2FF /* twic920.pgn in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5BE32B023B5082F00EE526A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				E5B3DB97248840C60094FE74 /* twic920.pgn in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -98,6 +111,7 @@
 		E51D92342486C90A0061DF92 /* GameReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReader.swift; sourceTree = "<group>"; };
 		E551399C23B818E200FD1D01 /* MoveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTests.swift; sourceTree = "<group>"; };
 		E5625C552480729F00FD30AF /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
+		E5B3DB9424883DB70094FE74 /* twic920.pgn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = twic920.pgn; sourceTree = "<group>"; };
 		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE32B523B5082F00EE526A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E5BE32BD23B5087A00EE526A /* GameExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameExecutor.swift; sourceTree = "<group>"; };
@@ -195,6 +209,14 @@
 			path = GameReader;
 			sourceTree = "<group>";
 		};
+		E5B3DB9324883BE30094FE74 /* PGNGames */ = {
+			isa = PBXGroup;
+			children = (
+				E5B3DB9424883DB70094FE74 /* twic920.pgn */,
+			);
+			path = PGNGames;
+			sourceTree = "<group>";
+		};
 		E5BE32A923B5082F00EE526A = {
 			isa = PBXGroup;
 			children = (
@@ -216,6 +238,7 @@
 		E5BE32B423B5082F00EE526A /* Chess */ = {
 			isa = PBXGroup;
 			children = (
+				E5B3DB9324883BE30094FE74 /* PGNGames */,
 				E51D92332486C8F10061DF92 /* GameReader */,
 				E5BE32BC23B5084D00EE526A /* Model */,
 				E5BE32B523B5082F00EE526A /* main.swift */,
@@ -286,6 +309,7 @@
 				E5BE32CD23B5099F00EE526A /* Sources */,
 				E5BE32CE23B5099F00EE526A /* Frameworks */,
 				E5BE32CF23B5099F00EE526A /* Resources */,
+				E5B3DB99248845C80094FE74 /* CopyFiles */,
 			);
 			buildRules = (
 			);
