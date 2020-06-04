@@ -47,7 +47,8 @@ class Board {
         }
         
         if move.options.contains(.promotion) {
-            let promotionPiece = move.promotionPiece
+            var promotionPiece = move.promotionPiece
+            promotionPiece?.side = side
             self[move.destination] = promotionPiece
             self[move.source!] = nil
             return
