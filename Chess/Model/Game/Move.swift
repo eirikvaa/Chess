@@ -45,6 +45,7 @@ struct SANMoveInterpreter: MoveInterpreter {
         var isCheck = false
         var isMate = false
         var isPromotion = false
+        var promotionDestinationPiece: Piece?
         var isCapture = false
         var source: BoardCoordinate?
         let destination: BoardCoordinate
@@ -63,6 +64,12 @@ struct SANMoveInterpreter: MoveInterpreter {
             case "O-O": isKingSideCastling = true
             default: break
             }
+        }
+        
+        if let promotionIndex = move.firstIndex(of: "=") {
+            isPromotion = true
+            let promotionToPiece = move[move.index(after: promotionIndex)]
+            promotionDestinationPiece = PieceFabric.create(promotionToPiece)
         }
         
         if isKingSideCastling || isQueenSideCastling {
@@ -137,6 +144,7 @@ struct SANMoveInterpreter: MoveInterpreter {
                            source: source,
                            destination: destination,
                            options: options)
+        move.promotionPiece = promotionDestinationPiece
         
         return move
     }
@@ -161,6 +169,7 @@ protocol Move: class, CustomStringConvertible {
     var options: [MoveOption] { get set }
     var sourceFile: File? { get set }
     var sourceRank: Rank? { get set }
+    var promotionPiece: Piece? { get set }
 }
 
 extension Move {
@@ -178,6 +187,7 @@ class SANMove: Move {
     var options: [MoveOption]
     var sourceFile: File?
     var sourceRank: Rank?
+    var promotionPiece: Piece?
     
     init(rawInput: String, piece: Piece, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOption]) {
         self.rawInput = rawInput

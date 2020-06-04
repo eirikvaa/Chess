@@ -179,7 +179,8 @@ class GameTests: XCTestCase {
     func testTWIC920PGNFile() throws {
         let games = try PGNGameReader.readFile("twic920")
         
-        for gameString in games[2...2] {
+        for gameString in games[0...30] {
+            print("Testing the following game:\n\n\(gameString)")
             let movesInGame = PGNGameReader.read(textRepresentation: gameString)
             assertNonThrowingGame(movesInGame)
         }

@@ -38,10 +38,18 @@ class Board {
 
     func performMove(_ move: Move, side: Side, lastMove: Move?) {
         if move.options.contains(.enPassant) {
+            let sourcePiece = self[move.source!]
             let lastPawnCoordinate = lastMove!.destination
-            self[move.destination] = move.piece
+            self[move.destination] = sourcePiece
             self[move.source!] = nil
             self[lastPawnCoordinate] = nil
+            return
+        }
+        
+        if move.options.contains(.promotion) {
+            let promotionPiece = move.promotionPiece
+            self[move.destination] = promotionPiece
+            self[move.source!] = nil
         }
         
         if move.options.contains(.kingCastling) {
@@ -142,7 +150,7 @@ class Board {
             
             let validPattern = piece.validPattern(delta: delta, side: side, isCapture: isCapture)
             
-            if sourceCoordinate.rank == 5 && piece.type == .pawn && isCapture && self[move.destination] == nil {
+            if ((side == .black && sourceCoordinate.rank == 4) || (side == .white && sourceCoordinate.rank == 5)) && piece.type == .pawn && isCapture && self[move.destination] == nil {
                 move.options.append(.enPassant)
                 move.source = sourceCoordinate
                 return sourceCoordinate
