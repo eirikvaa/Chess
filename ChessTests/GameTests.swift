@@ -165,9 +165,8 @@ class GameTests: XCTestCase {
     func testTWIC920PGNFile() throws {
         let games = try PGNGameReader.readFile("twic920")
         
-        let startIndex = 5
         var failedGames: [(Int, String)] = []
-        for (index, gameString) in games[0...200].enumerated() {
+        for (index, gameString) in games[0...10].enumerated() {
             let movesInGame = PGNGameReader.read(textRepresentation: gameString)
             
             let game = TestGameExecutor(moves: movesInGame)
