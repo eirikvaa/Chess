@@ -67,8 +67,11 @@ struct SANMoveInterpreter: MoveInterpreter {
         
         if isKingSideCastling || isQueenSideCastling {
             // It doesn't really matter what we return here, because a castling move will kind of shortcut its way
-            // through the entire validation (as of now). This should probably be improved, though.
-            return SANMove(rawInput: move, pieceType: .pawn, source: nil, destination: "h8", options: isKingSideCastling ? [.kingCastling] : [.queenCastling])
+            // through the entire validation (as of now). The important thing is that it includes the options
+            // for either the queen side or king side castling.
+            // This should probably be improved, though.
+            let option: MoveOption = isKingSideCastling ? .kingCastling : .queenCastling
+            return SANMove(rawInput: move, pieceType: .pawn, source: nil, destination: "h8", options: [option])
         }
         
         let coreFormat = #"([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?"#
