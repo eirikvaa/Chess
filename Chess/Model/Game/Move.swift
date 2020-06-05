@@ -66,6 +66,8 @@ struct SANMoveInterpreter: MoveInterpreter {
         }
         
         if isKingSideCastling || isQueenSideCastling {
+            // It doesn't really matter what we return here, because a castling move will kind of shortcut its way
+            // through the entire validation (as of now). This should probably be improved, though.
             return SANMove(rawInput: move, pieceType: .pawn, source: nil, destination: "h8", options: isKingSideCastling ? [.kingCastling] : [.queenCastling])
         }
         
