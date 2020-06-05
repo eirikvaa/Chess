@@ -39,9 +39,6 @@ protocol MoveInterpreter {
 */
 struct SANMoveInterpreter: MoveInterpreter {
     func interpret(_ move: String) throws -> Move {
-        var sourceFile: File?
-        var sourceRank: Rank?
-        var rawPiece: Piece
         var pieceType: PieceType
         var isCheck = false
         var isMate = false
@@ -110,19 +107,19 @@ struct SANMoveInterpreter: MoveInterpreter {
         }
         
         if let first = matchString.first, ["K", "Q", "B", "N", "R"].contains(first) {
-            rawPiece = PieceFabric.create(first)
             pieceType = PieceTypeFabric.create(first)
             matchString.removeFirst()
         } else {
-            rawPiece = PieceFabric.create(.pawn)
             pieceType = .pawn
         }
         
+        var sourceFile: File?
         if let possibleFile = matchString.first, File.validFiles.contains(String(possibleFile)) {
             sourceFile = File(stringLiteral: String(possibleFile))
             matchString.removeFirst()
         }
         
+        var sourceRank: Rank?
         if let possibleRank = matchString.first, let integerValue = Int(String(possibleRank)), Rank.validRanks.contains(integerValue) {
             sourceRank = Rank(integerLiteral: integerValue)
             matchString.removeFirst()
@@ -171,8 +168,6 @@ protocol Move: class, CustomStringConvertible {
     var source: BoardCoordinate? { get set }
     var destination: BoardCoordinate { get }
     var options: [MoveOption] { get set }
-    var sourceFile: File? { get set }
-    var sourceRank: Rank? { get set }
     var promotionPiece: Piece? { get set }
 }
 
@@ -190,14 +185,11 @@ class SANMove: Move, NSCopying {
     var source: BoardCoordinate?
     let destination: BoardCoordinate
     var options: [MoveOption]
-    var sourceFile: File?
-    var sourceRank: Rank?
     var promotionPiece: Piece?
     
     func copy(with zone: NSZone? = nil) -> Any {
         let move = SANMove(rawInput: rawInput, pieceType: pieceType, source: source, destination: destination, options: options)
-        move.sourceFile = sourceFile
-        move.sourceRank = sourceRank
+        move.source = source
         move.promotionPiece = promotionPiece
         return move
     }
