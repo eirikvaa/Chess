@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Board {
+class Board: NSCopying {
     private var cells: [[BoardCell]] = []
 
     init() {
@@ -23,6 +23,10 @@ class Board {
         }
 
         resetBoard()
+    }
+    
+    private init(cells: [[BoardCell]]) {
+        self.cells = cells
     }
 
     subscript(coordinate: BoardCoordinate) -> Piece? {
@@ -89,13 +93,19 @@ class Board {
         self[move.destination] = sourcePiece
         self[move.source!] = nil
     }
+    
+    func copy(with zone: NSZone? = nil) -> Any {
+        let currentCells = cells
+        let board = Board(cells: currentCells)
+        return board
+    }
 
     func compareCells(cellA: BoardCell, type: PieceType, side: Side) -> Bool {
         guard let pieceA = cellA.piece else {
             return false
         }
 
-        return pieceA.type == type && pieceA.side == side
+        return pieceA.type == type && self[cellA.coordinate]?.side == side
     }
 
     func getPieces(of type: PieceType, side: Side) -> [Piece] {
@@ -141,12 +151,68 @@ class Board {
         
         return true
     }
+    
+    /**
+     Test if the passed-in move puts the King in check. This will make a copy of the board and try out
+     the move in a safe manner before reporting back if the move is illegal or not.
+     */
+    func testIfMovePutsKingInChess(source: BoardCoordinate, move: Move, side: Side, lastMove: Move?) -> Bool {
+        let sandboxBoard = self.copy() as! Board
+        let sandboxedMove = (move as! SANMove).copy() as! SANMove // TODO: Fix this abomination
+        sandboxedMove.source = source
+        
+        sandboxBoard.performMove(sandboxedMove, side: side, lastMove: lastMove)
+        
+        // We avoid checking for the King because the King cannot put another King in check.
+        let pieceTypes: [PieceType] = [.queen, .knight, .bishop, .rook, .pawn]
+        let attackerSide = side.oppositeSide
+        let isCapture = move.options.contains(.capture)
+        let thisSideKing = sandboxBoard.getPieces(of: .king, side: side)[0]
+        let thisSideKingCoordinate = sandboxBoard.getCoordinate(of: thisSideKing)
+        
+        for pieceType in pieceTypes {
+            let attackerPieces = sandboxBoard.getPieces(of: pieceType, side: attackerSide)
+            
+            for piece in attackerPieces {
+                let sourceCoordinate = sandboxBoard.getCoordinate(of: piece)
+                let delta = thisSideKingCoordinate - sourceCoordinate
+                let validPattern = piece.validPattern(delta: delta, side: attackerSide, isCapture: isCapture)
+                
+                guard validPattern.directions.count > 0 else {
+                    continue
+                }
+                
+                guard sandboxBoard.tryMovingToSource(source: sourceCoordinate, destination: thisSideKingCoordinate, movePattern: validPattern, canMoveOver: false, side: side) else {
+                    continue
+                }
+                
+                var current = sourceCoordinate
+                for direction in validPattern.directions {
+                    if [.north, .south].contains(direction) && piece.type == .pawn {
+                        continue
+                    }
+                    
+                    current = current.move(by: direction, side: attackerSide)
+                    
+                    guard current.isValid else {
+                        break
+                    }
+                    
+                    if self[current]?.type == .king {
+                        return true
+                    }
+                }
+            }
+        }
+        
+        return false
+    }
 
-    func getSourceDestination(side: Side, move: Move) throws -> BoardCoordinate {
-        let piece = move.piece
+    func getSourceDestination(side: Side, move: Move, lastMove: Move?) throws -> BoardCoordinate {
+        //let piece = move.piece
         let destination = move.destination
         let isCapture = move.options.contains(.capture)
-        let pieces = getPieces(of: piece.type, side: side)
+        let pieces = getPieces(of: move.pieceType, side: side)
 
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)
@@ -154,14 +220,14 @@ class Board {
             
             let validPattern = piece.validPattern(delta: delta, side: side, isCapture: isCapture)
             
+            guard validPattern.directions.count > 0 else {
+                continue
+            }
+            
             if ((side == .black && sourceCoordinate.rank == 4) || (side == .white && sourceCoordinate.rank == 5)) && piece.type == .pawn && isCapture && self[move.destination] == nil {
                 move.options.append(.enPassant)
                 move.source = sourceCoordinate
                 return sourceCoordinate
-            }
-
-            guard validPattern.directions.count > 0 else {
-                continue
             }
             
             guard tryMovingToSource(source: sourceCoordinate, destination: destination, movePattern: validPattern, canMoveOver: piece.type == .knight, side: side) else {
@@ -188,6 +254,11 @@ class Board {
                             continue
                         }
                     }
+                    
+                    if testIfMovePutsKingInChess(source: sourceCoordinate, move: move, side: side, lastMove: lastMove) {
+                        continue
+                    }
+                    
                     move.source = sourceCoordinate
                     return sourceCoordinate
                 }

@@ -38,14 +38,14 @@ struct FileValidator: Validator {
 }
 
 struct MoveValidator {
-    static func validate(_ move: Move, board: Board, currentSide: Side) throws {
+    static func validate(_ move: Move, board: Board, currentSide: Side, lastMove: Move?) throws {
         if move.isCastling() {
             // TODO: Implement validation of castling moves
             return
         }
         
         let isCapture = move.options.contains(.capture)
-        let sourceCoordinate = try board.getSourceDestination(side: currentSide, move: move)
+        let sourceCoordinate = try board.getSourceDestination(side: currentSide, move: move, lastMove: lastMove)
         
         if move.options.contains(.enPassant) {
             // TODO: Implement validation for en passant

@@ -62,7 +62,7 @@ extension MoveComponentTests {
     func assertProperties(move: Move, isCheck: Bool, isCapture: Bool, destination: BoardCoordinate, pieceType: PieceType, rank: Rank? = nil, file: File? = nil) {
         XCTAssertEqual(move.options.contains(.check), isCheck)
         XCTAssertEqual(move.options.contains(.capture), isCapture)
-        XCTAssertEqual(move.piece.type, pieceType)
+        XCTAssertEqual(move.pieceType, pieceType)
         XCTAssertEqual(move.source?.rank, rank)
         XCTAssertEqual(move.source?.file, file)
         XCTAssertEqual(move.destination, destination)

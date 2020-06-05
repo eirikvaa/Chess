@@ -14,7 +14,7 @@ struct Pawn: Piece {
     var type = PieceType.pawn
     var moved = false
     var graphicalRepresentation: String {
-        side == .white ? "♙" : "♟"
+        side == .white ? "♟" : "♙"
     }
 
     func validPattern(delta: Delta, side: Side, isCapture: Bool) -> MovePattern {

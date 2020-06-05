@@ -14,3 +14,16 @@ enum PieceType {
     case rook
     case pawn
 }
+
+struct PieceTypeFabric {
+    static func create(_ character: Character) -> PieceType {
+        switch character {
+        case "K": return .king
+        case "Q": return .queen
+        case "B": return .bishop
+        case "N": return .knight
+        case "R": return .rook
+        default: return .pawn
+        }
+    }
+}

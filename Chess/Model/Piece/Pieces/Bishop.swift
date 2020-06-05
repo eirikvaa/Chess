@@ -14,7 +14,7 @@ struct Bishop: Piece {
     var type = PieceType.bishop
     var moved = false
     var graphicalRepresentation: String {
-        side == .white ? "♗" : "♝"
+        side == .white ? "♝" : "♗"
     }
 
     func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {

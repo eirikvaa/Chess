@@ -14,7 +14,7 @@ struct Rook: Piece {
     var type = PieceType.rook
     var moved = false
     var graphicalRepresentation: String {
-        side == .white ? "♖" : "♜"
+        side == .white ? "♜" : "♖"
     }
 
     func validPattern(delta: Delta, side: Side, isCapture _: Bool) -> MovePattern {

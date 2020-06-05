@@ -16,6 +16,14 @@ struct BoardCoordinate: ExpressibleByStringLiteral, Equatable {
     var file: File?
     var rank: Rank?
     
+    var isValid: Bool {
+        guard let file = file, let rank = rank else {
+            return false
+        }
+        
+        return FileValidator.validate(file) && RankValidator.validate(rank)
+    }
+    
     init(file: File?, rank: Rank?) {
         self.file = file
         self.rank = rank

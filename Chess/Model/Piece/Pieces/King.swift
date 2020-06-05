@@ -14,7 +14,7 @@ struct King: Piece {
     var type = PieceType.king
     var moved = false
     var graphicalRepresentation: String {
-        side == .white ? "♔" : "♚"
+        side == .white ? "♚" : "♔"
     }
     
     func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {

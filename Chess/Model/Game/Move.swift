@@ -42,6 +42,7 @@ struct SANMoveInterpreter: MoveInterpreter {
         var sourceFile: File?
         var sourceRank: Rank?
         var rawPiece: Piece
+        var pieceType: PieceType
         var isCheck = false
         var isMate = false
         var isPromotion = false
@@ -73,7 +74,7 @@ struct SANMoveInterpreter: MoveInterpreter {
         }
         
         if isKingSideCastling || isQueenSideCastling {
-            return SANMove(rawInput: move, piece: Pawn(), source: nil, destination: "h8", options: isKingSideCastling ? [.kingCastling] : [.queenCastling])
+            return SANMove(rawInput: move, pieceType: .pawn, source: nil, destination: "h8", options: isKingSideCastling ? [.kingCastling] : [.queenCastling])
         }
         
         let coreFormat = #"([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?"#
@@ -110,9 +111,11 @@ struct SANMoveInterpreter: MoveInterpreter {
         
         if let first = matchString.first, ["K", "Q", "B", "N", "R"].contains(first) {
             rawPiece = PieceFabric.create(first)
+            pieceType = PieceTypeFabric.create(first)
             matchString.removeFirst()
         } else {
             rawPiece = PieceFabric.create(.pawn)
+            pieceType = .pawn
         }
         
         if let possibleFile = matchString.first, File.validFiles.contains(String(possibleFile)) {
@@ -140,7 +143,7 @@ struct SANMoveInterpreter: MoveInterpreter {
         if isKingSideCastling { options.append(.kingCastling) }
         
         let move = SANMove(rawInput: move,
-                           piece: rawPiece,
+                           pieceType: pieceType,
                            source: source,
                            destination: destination,
                            options: options)
@@ -164,6 +167,7 @@ protocol Move: class, CustomStringConvertible {
     var type: MoveType { get }
     var rawInput: String { get }
     var piece: Piece { get }
+    var pieceType: PieceType { get }
     var source: BoardCoordinate? { get set }
     var destination: BoardCoordinate { get }
     var options: [MoveOption] { get set }
@@ -178,10 +182,11 @@ extension Move {
     }
 }
 
-class SANMove: Move {
+class SANMove: Move, NSCopying {
     let type: MoveType = .algebraic
     let rawInput: String
     let piece: Piece
+    var pieceType: PieceType
     var source: BoardCoordinate?
     let destination: BoardCoordinate
     var options: [MoveOption]
@@ -189,9 +194,18 @@ class SANMove: Move {
     var sourceRank: Rank?
     var promotionPiece: Piece?
     
-    init(rawInput: String, piece: Piece, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOption]) {
+    func copy(with zone: NSZone? = nil) -> Any {
+        let move = SANMove(rawInput: rawInput, pieceType: pieceType, source: source, destination: destination, options: options)
+        move.sourceFile = sourceFile
+        move.sourceRank = sourceRank
+        move.promotionPiece = promotionPiece
+        return move
+    }
+    
+    init(rawInput: String, pieceType: PieceType, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOption]) {
         self.rawInput = rawInput
-        self.piece = piece
+        self.piece = Pawn()
+        self.pieceType = pieceType
         self.source = source
         self.destination = destination
         self.options = options

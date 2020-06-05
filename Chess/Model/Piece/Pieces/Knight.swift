@@ -14,7 +14,7 @@ struct Knight: Piece {
     var type = PieceType.knight
     var moved = false
     var graphicalRepresentation: String {
-        side == .white ? "♘" : "♞"
+        side == .white ? "♞" : "♘"
     }
     
     func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
