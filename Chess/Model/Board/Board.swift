@@ -100,7 +100,7 @@ class Board: NSCopying {
         return board
     }
 
-    private func compareCells(cellA: BoardCell, type: PieceType, side: Side) -> Bool {
+    func compareCells(cellA: BoardCell, type: PieceType, side: Side) -> Bool {
         guard let pieceA = cellA.piece else {
             return false
         }
@@ -108,7 +108,7 @@ class Board: NSCopying {
         return pieceA.type == type && self[cellA.coordinate]?.side == side
     }
 
-    private func getPieces(of type: PieceType, side: Side) -> [Piece] {
+    func getPieces(of type: PieceType, side: Side) -> [Piece] {
         var pieces = [Piece]()
 
         for row in cells {
@@ -121,7 +121,7 @@ class Board: NSCopying {
         return pieces
     }
 
-    private func getCoordinate(of piece: Piece) -> BoardCoordinate {
+    func getCoordinate(of piece: Piece) -> BoardCoordinate {
         for row in cells {
             for cell in row {
                 if cell.piece?.id == piece.id {
@@ -134,7 +134,7 @@ class Board: NSCopying {
         return .init(stringLiteral: "")
     }
     
-    private func tryMovingToSource(source: BoardCoordinate, destination: BoardCoordinate, movePattern: MovePattern, canMoveOver: Bool, side: Side) -> Bool {
+    func tryMovingToSource(source: BoardCoordinate, destination: BoardCoordinate, movePattern: MovePattern, canMoveOver: Bool, side: Side) -> Bool {
         var current = source
         
         for direction in movePattern.directions {
@@ -156,7 +156,7 @@ class Board: NSCopying {
      Test if the passed-in move puts the King in check. This will make a copy of the board and try out
      the move in a safe manner before reporting back if the move is illegal or not.
      */
-    private func testIfMovePutsKingInChess(source: BoardCoordinate, move: Move, side: Side, lastMove: Move?) -> Bool {
+    func testIfMovePutsKingInChess(source: BoardCoordinate, move: Move, side: Side, lastMove: Move?) -> Bool {
         let sandboxBoard = self.copy() as! Board
         let sandboxedMove = (move as! SANMove).copy() as! SANMove // TODO: Fix this abomination
         sandboxedMove.source = source
@@ -208,7 +208,7 @@ class Board: NSCopying {
         return false
     }
     
-    private func emptyCell(_ boardCoordinate: BoardCoordinate) -> Bool {
+    func emptyCell(_ boardCoordinate: BoardCoordinate) -> Bool {
         self[boardCoordinate] == nil
     }
     
@@ -220,7 +220,7 @@ class Board: NSCopying {
      
      [1]: https://en.wikipedia.org/wiki/En_passant
      */
-    private func checkIfValidEnPassant(source: BoardCoordinate, move: Move, pieceType: PieceType, side: Side) -> Bool {
+    func checkIfValidEnPassant(source: BoardCoordinate, move: Move, pieceType: PieceType, side: Side) -> Bool {
         let isBlackEnPassant = source.rank == 4 && side == .black
         let isWhiteEnPassant = source.rank == 5 && side == .white
         let isCapture = move.options.contains(.capture)
@@ -229,7 +229,7 @@ class Board: NSCopying {
         return (isBlackEnPassant || isWhiteEnPassant) && isCapture && destinationIsEmpty && pieceIsPawn
     }
 
-    func getSourceDestination(side: Side, move: Move, lastMove: Move?) throws -> BoardCoordinate {
+    func getSourceDestination(side: Side, move: Move) throws -> BoardCoordinate {
         let destination = move.destination
         let isCapture = move.options.contains(.capture)
         let pieces = getPieces(of: move.pieceType, side: side)
@@ -243,43 +243,12 @@ class Board: NSCopying {
             guard validPattern.directions.count > 0 else {
                 continue
             }
-            
-            if checkIfValidEnPassant(source: sourceCoordinate, move: move, pieceType: piece.type, side: side) {
-                move.options.append(.enPassant)
-                move.source = sourceCoordinate
-                return sourceCoordinate
-            }
-            
-            guard tryMovingToSource(source: sourceCoordinate, destination: destination, movePattern: validPattern, canMoveOver: piece.type == .knight, side: side) else {
-                continue
-            }
 
             var currentCoordinate = sourceCoordinate
             for direction in validPattern.directions {
                 currentCoordinate = currentCoordinate.move(by: direction.sideRelativeDirection(side), side: side)
 
                 if currentCoordinate == destination {
-                    // Disambiguate between two pieces when an extra file is provided (like Rdd1).
-                    // If two rooks can move to the same cell (say d1), then the extra d (between R and d1)
-                    // must be specified. Therefore we check if the rank is nil and the source is not nil.
-                    // If this is the case, the move source file and the file of the potential source coordiante
-                    // must be the same, otherwise we'll pick the wrong piece.
-                    // The else if block does the same, only when an extra rank is provided (like R8g5).
-                    if move.source?.file == nil && move.source?.rank != nil {
-                        if move.source?.rank != sourceCoordinate.rank {
-                            continue
-                        }
-                    } else if move.source?.rank == nil && move.source?.file != nil {
-                        if move.source?.file != sourceCoordinate.file {
-                            continue
-                        }
-                    }
-                    
-                    if testIfMovePutsKingInChess(source: sourceCoordinate, move: move, side: side, lastMove: lastMove) {
-                        continue
-                    }
-                    
-                    move.source = sourceCoordinate
                     return sourceCoordinate
                 }
             }
