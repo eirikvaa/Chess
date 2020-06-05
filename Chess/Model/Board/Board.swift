@@ -100,7 +100,7 @@ class Board: NSCopying {
         return board
     }
 
-    func compareCells(cellA: BoardCell, type: PieceType, side: Side) -> Bool {
+    private func compareCells(cellA: BoardCell, type: PieceType, side: Side) -> Bool {
         guard let pieceA = cellA.piece else {
             return false
         }
@@ -108,7 +108,7 @@ class Board: NSCopying {
         return pieceA.type == type && self[cellA.coordinate]?.side == side
     }
 
-    func getPieces(of type: PieceType, side: Side) -> [Piece] {
+    private func getPieces(of type: PieceType, side: Side) -> [Piece] {
         var pieces = [Piece]()
 
         for row in cells {
@@ -121,7 +121,7 @@ class Board: NSCopying {
         return pieces
     }
 
-    func getCoordinate(of piece: Piece) -> BoardCoordinate {
+    private func getCoordinate(of piece: Piece) -> BoardCoordinate {
         for row in cells {
             for cell in row {
                 if cell.piece?.id == piece.id {
@@ -134,7 +134,7 @@ class Board: NSCopying {
         return .init(stringLiteral: "")
     }
     
-    func tryMovingToSource(source: BoardCoordinate, destination: BoardCoordinate, movePattern: MovePattern, canMoveOver: Bool, side: Side) -> Bool {
+    private func tryMovingToSource(source: BoardCoordinate, destination: BoardCoordinate, movePattern: MovePattern, canMoveOver: Bool, side: Side) -> Bool {
         var current = source
         
         for direction in movePattern.directions {
@@ -156,7 +156,7 @@ class Board: NSCopying {
      Test if the passed-in move puts the King in check. This will make a copy of the board and try out
      the move in a safe manner before reporting back if the move is illegal or not.
      */
-    func testIfMovePutsKingInChess(source: BoardCoordinate, move: Move, side: Side, lastMove: Move?) -> Bool {
+    private func testIfMovePutsKingInChess(source: BoardCoordinate, move: Move, side: Side, lastMove: Move?) -> Bool {
         let sandboxBoard = self.copy() as! Board
         let sandboxedMove = (move as! SANMove).copy() as! SANMove // TODO: Fix this abomination
         sandboxedMove.source = source
@@ -207,6 +207,27 @@ class Board: NSCopying {
         
         return false
     }
+    
+    private func emptyCell(_ boardCoordinate: BoardCoordinate) -> Bool {
+        self[boardCoordinate] == nil
+    }
+    
+    /**
+     There are several conditions for performing a valid en passant [1]:
+        - the capturing pawn must be on its fifth rank;
+        - the captured pawn must be on an adjacent file and must have just moved two squares in a single move (i.e. a double-step move);
+        - the capture can only be made on the move immediately after the enemy pawn makes the double-step move; otherwise, the right to capture it en passant is lost.
+     
+     [1]: https://en.wikipedia.org/wiki/En_passant
+     */
+    private func checkIfValidEnPassant(source: BoardCoordinate, move: Move, pieceType: PieceType, side: Side) -> Bool {
+        let isBlackEnPassant = source.rank == 4 && side == .black
+        let isWhiteEnPassant = source.rank == 5 && side == .white
+        let isCapture = move.options.contains(.capture)
+        let destinationIsEmpty = emptyCell(move.destination)
+        let pieceIsPawn = pieceType == .pawn
+        return (isBlackEnPassant || isWhiteEnPassant) && isCapture && destinationIsEmpty && pieceIsPawn
+    }
 
     func getSourceDestination(side: Side, move: Move, lastMove: Move?) throws -> BoardCoordinate {
         let destination = move.destination
@@ -223,7 +244,7 @@ class Board: NSCopying {
                 continue
             }
             
-            if ((side == .black && sourceCoordinate.rank == 4) || (side == .white && sourceCoordinate.rank == 5)) && piece.type == .pawn && isCapture && self[move.destination] == nil {
+            if checkIfValidEnPassant(source: sourceCoordinate, move: move, pieceType: piece.type, side: side) {
                 move.options.append(.enPassant)
                 move.source = sourceCoordinate
                 return sourceCoordinate
