@@ -245,12 +245,12 @@ class Board: NSCopying {
                     // If this is the case, the move source file and the file of the potential source coordiante
                     // must be the same, otherwise we'll pick the wrong piece.
                     // The else if block does the same, only when an extra rank is provided (like R8g5).
-                    if move.source?.rank == nil && move.source?.file != nil {
-                        if move.source?.file != sourceCoordinate.file {
+                    if move.source?.file == nil && move.source?.rank != nil {
+                        if move.source?.rank != sourceCoordinate.rank {
                             continue
                         }
-                    } else if move.source?.file == nil && move.source?.rank != nil {
-                        if move.source?.rank != sourceCoordinate.rank {
+                    } else if move.source?.rank == nil && move.source?.file != nil {
+                        if move.source?.file != sourceCoordinate.file {
                             continue
                         }
                     }
