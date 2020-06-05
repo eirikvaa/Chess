@@ -50,11 +50,6 @@ struct SANMoveInterpreter: MoveInterpreter {
         var isQueenSideCastling = false
         var isKingSideCastling = false
         
-        let enPassantFormat = #"ex[a-h][1-8]e.p"#
-        if let _ = move.range(of: enPassantFormat, options: .regularExpression) {
-            fatalError("Support for en passant moves is not implemented yet.")
-        }
-        
         let castlingFormat = #"(O\-O\-O)|(O\-O)"#
         if let match = move.range(of: castlingFormat, options: .regularExpression) {
             switch move[match] {
