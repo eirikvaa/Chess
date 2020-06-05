@@ -178,8 +178,6 @@ class GameTests: XCTestCase {
                 print(error)
                 failedGames.append((index, gameString))
             }
-            
-            //print("Tested the following game[\(startIndex)]:\n\n\(gameString)")
         }
         
         for (index, game) in failedGames {

@@ -209,7 +209,6 @@ class Board: NSCopying {
     }
 
     func getSourceDestination(side: Side, move: Move, lastMove: Move?) throws -> BoardCoordinate {
-        //let piece = move.piece
         let destination = move.destination
         let isCapture = move.options.contains(.capture)
         let pieces = getPieces(of: move.pieceType, side: side)
