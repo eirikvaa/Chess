@@ -103,10 +103,9 @@ struct MoveValidator {
             return
         }
         
-        let isCapture = move.options.contains(.capture)
         let sourceCoordinate = try validate2(board: board, side: currentSide, move: move, lastMove: lastMove)
         
-        if move.options.contains(.enPassant) {
+        if move.isEnPassant() {
             // TODO: Implement validation for en passant
             move.source = sourceCoordinate
             return
@@ -121,7 +120,7 @@ struct MoveValidator {
             throw GameError.noPieceInSourcePosition
         }
 
-        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isCapture: isCapture)
+        let validPattern = sourcePiece.validPattern(delta: moveDelta, side: currentSide, isCapture: move.isCapture())
         
         guard validPattern.directions.count > 0 else {
             throw GameError.invalidMove(message: "No valid directions to destination position")
@@ -134,38 +133,14 @@ struct MoveValidator {
         if destinationPiece?.side == currentSide {
             throw GameError.invalidMove(message: "Cannot move to position occupied by self")
         }
-
+        
         for direction in validPattern.directions {
-            switch (direction, sourcePiece.type) {
-            case (.north, .pawn),
-                 (.south, .pawn):
-                guard destinationPiece == nil else {
-                    throw GameError.invalidMove(message: "Destination position occupied")
+            if sourcePiece.type == .pawn {
+                if [.north, .south].contains(direction) && destinationPiece != nil {
+                    throw GameError.invalidMove(message: "[\(move.rawInput)] Cannot move pawn north -- desination is occupied.")
+                } else if [.northEast, .northWest, .southEast, .southWest].contains(direction) && destinationPiece == nil {
+                    throw GameError.invalidMove(message: "[\(move.rawInput)] Cannt move pawn diagonally -- destination is empty.")
                 }
-            case (.northEast, .pawn),
-                 (.northWest, .pawn):
-                guard destinationPiece != nil else {
-                    throw GameError.invalidMove(message: "Attack requires opponent piece in destination position")
-                }
-            case (_, .rook),
-                 (_, .queen),
-                 (_, .king),
-                 (_, .bishop):
-                try board.moveMultipleSteps(
-                    direction: direction,
-                    moves: moveDelta.maximumMagnitude,
-                    side: currentSide,
-                    canCrossOver: false,
-                    move: move)
-            case (_, .knight):
-                let validAttack = board.canAttack(at: destinationCoordinate, side: currentSide)
-                let validMove = destinationPiece == nil
-
-                guard validAttack || validMove else {
-                    throw GameError.invalidMove(message: "Must either be a valid attack or valid move.")
-                }
-            default:
-                break
             }
         }
     }

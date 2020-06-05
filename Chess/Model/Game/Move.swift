@@ -178,6 +178,14 @@ extension Move {
     func isCastling() -> Bool {
         options.contains(.kingCastling) || options.contains(.queenCastling)
     }
+    
+    func isCapture() -> Bool {
+        options.contains(.capture)
+    }
+    
+    func isEnPassant() -> Bool {
+        options.contains(.enPassant)
+    }
 }
 
 class SANMove: Move, NSCopying {
