@@ -62,6 +62,9 @@ struct SANMoveInterpreter: MoveInterpreter {
         if let promotionIndex = move.firstIndex(of: "=") {
             isPromotion = true
             let promotionToPiece = move[move.index(after: promotionIndex)]
+            
+            // We avoid creating new pieces, but in this case it's okay as promotion is technically
+            // replacing an old piece with a new one.
             promotionDestinationPiece = PieceFabric.create(promotionToPiece)
         }
         
