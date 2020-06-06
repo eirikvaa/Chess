@@ -51,6 +51,11 @@ struct MoveValidator {
             let delta = move.destination - possibleSource
             let validPattern = $0.validPattern(delta: delta, side: currentSide, isCapture: move.isCapture())
             
+            // If no initial valid patterns to get from source to destination, break out.
+            if validPattern.directions.isEmpty {
+                return nil
+            }
+            
             // Cannot move pieces of the other side
             guard board[possibleSource]?.side == currentSide else {
                 return nil
@@ -72,19 +77,18 @@ struct MoveValidator {
                 }
             }
             
-            if validPattern.directions.isEmpty {
-                return nil
-            }
-            
+            // If the move is an en passant, we shortcut the entire validation by returning this.
             if board.checkIfValidEnPassant(source: possibleSource, move: move, pieceType: $0.type, side: currentSide) {
                 move.options.append(.enPassant)
                 return $0
             }
             
+            // Try to move from the source to the destination, jumping over pieces if possible.
             guard board.tryMovingToSource(source: possibleSource, destination: move.destination, movePattern: validPattern, canMoveOver: $0.type == .knight, side: currentSide) else {
                 return nil
             }
             
+            // Test if the move we are about to perform will set our king in check. That is an invalid move.
             if board.testIfMovePutsKingInChess(source: possibleSource, move: move, side: currentSide, lastMove: lastMove) {
                 return nil
             }
