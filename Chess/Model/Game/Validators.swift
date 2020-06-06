@@ -51,6 +51,17 @@ struct MoveValidator {
             let delta = move.destination - possibleSource
             let validPattern = $0.validPattern(delta: delta, side: currentSide, isCapture: move.isCapture())
             
+            // Disambiguation happens first with the file, then the rank, then the file and rank.
+            if move.source?.file == nil && move.source?.rank != nil {
+                if move.source?.rank != possibleSource.rank {
+                    return nil
+                }
+            } else if move.source?.rank == nil && move.source?.file != nil {
+                if move.source?.file != possibleSource.file {
+                    return nil
+                }
+            }
+            
             if validPattern.directions.isEmpty {
                 return nil
             }
@@ -73,23 +84,6 @@ struct MoveValidator {
                 currentCoordinate = currentCoordinate.move(by: direction, side: currentSide)
 
                 if currentCoordinate == move.destination {
-                    // Disambiguate between two pieces when an extra file is provided (like Rdd1).
-                    // If two rooks can move to the same cell (say d1), then the extra d (between R and d1)
-                    // must be specified. Therefore we check if the rank is nil and the source is not nil.
-                    // If this is the case, the move source file and the file of the potential source coordiante
-                    // must be the same, otherwise we'll pick the wrong piece.
-                    // The else if block does the same, only when an extra rank is provided (like R8g5).
-                    if move.source?.file == nil && move.source?.rank != nil {
-                        if move.source?.rank != possibleSource.rank {
-                            continue
-                        }
-                    } else if move.source?.rank == nil && move.source?.file != nil {
-                        if move.source?.file != possibleSource.file {
-                            continue
-                        }
-                    }
-                    
-                    //move.source = sourceCoordinate
                     return $0
                 }
             }
