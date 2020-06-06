@@ -42,11 +42,11 @@ struct TestGameExecutor: GameExecutor {
         
         if realMoves.count > 0 {
             try realMoves.forEach {
-                //print(board)
+                print(board)
                 
                 try MoveValidator.validate($0, board: board, currentSide: currentSide, lastMove: lastMove)
                 
-                //print("Playing \($0)")
+                print("Playing \($0)")
                 
                 board.performMove($0, side: currentSide, lastMove: lastMove)
                 round += 1
@@ -55,7 +55,7 @@ struct TestGameExecutor: GameExecutor {
             }
         } else {
             try moves.forEach {
-                //print(board)
+                print(board)
                 let moveInterpreter = MoveFabric.create(moveType: .algebraic)
                 let interpretedMove = try moveInterpreter.interpret($0)
                 
@@ -68,7 +68,7 @@ struct TestGameExecutor: GameExecutor {
             }
         }
         
-        //print(board)
+        print(board)
     }
 }
 

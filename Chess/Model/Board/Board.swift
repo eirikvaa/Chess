@@ -138,7 +138,7 @@ class Board: NSCopying {
         var current = source
         
         for direction in movePattern.directions {
-            current = current.move(by: direction.sideRelativeDirection(side), side: side)
+            current = current.move(by: direction, side: side)
             
             if current == destination {
                 return true

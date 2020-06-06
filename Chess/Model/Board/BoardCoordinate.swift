@@ -50,7 +50,7 @@ struct BoardCoordinate: ExpressibleByStringLiteral, Equatable {
     }
     
     mutating func move(by direction: Direction, side: Side) -> BoardCoordinate {
-        let delta = Delta(x: 0, y: 0).advance(by: direction) * side.sideMultiplier
+        let delta = Delta(x: 0, y: 0).advance(by: direction)
         let newFile = File(fileIndex: file!.fileIndex + delta.x)
         return .init(file: newFile, rank: rank! + delta.y)
     }

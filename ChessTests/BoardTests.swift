@@ -16,7 +16,7 @@ class BoardTests: XCTestCase {
     }
 
     func testBlackPlayerMovesNorth() {
-        assertMovement(s: "e7", d: "e6", direction: .north, side: .black)
+        assertMovement(s: "e7", d: "e6", direction: .south, side: .black)
     }
 
     func testWhitePlayerMoveNorthWest() {
@@ -24,7 +24,7 @@ class BoardTests: XCTestCase {
     }
 
     func testBlackPlayerMoveNorthWest() {
-        assertMovement(s: "e7", d: "f6", direction: .northWest, side: .black)
+        assertMovement(s: "e7", d: "f6", direction: .southEast, side: .black)
     }
 }
 

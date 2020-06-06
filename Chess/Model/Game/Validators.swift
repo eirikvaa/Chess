@@ -38,36 +38,41 @@ struct FileValidator: Validator {
 }
 
 struct MoveValidator {
-    static func validate2(board: Board, side: Side, move: Move, lastMove: Move?) throws -> BoardCoordinate {
-        let destination = move.destination
-        let isCapture = move.options.contains(.capture)
-        let pieces = board.getPieces(of: move.pieceType, side: side)
-
-        for piece in pieces {
-            let sourceCoordinate = board.getCoordinate(of: piece)
-            let delta = destination - sourceCoordinate
+    static func validate(_ move: Move, board: Board, currentSide: Side, lastMove: Move?) throws {
+        if move.isCastling() {
+            // TODO: Implement validation of castling moves
+            return
+        }
+        
+        let possibleSourcePieces = board.getPieces(of: move.pieceType, side: currentSide)
+        
+        let filteredSourceCoordinates: [Piece] = possibleSourcePieces.compactMap {
+            let possibleSource = board.getCoordinate(of: $0)
+            let delta = move.destination - possibleSource
+            let validPattern = $0.validPattern(delta: delta, side: currentSide, isCapture: move.isCapture())
             
-            let validPattern = piece.validPattern(delta: delta, side: side, isCapture: isCapture)
-            
-            guard validPattern.directions.count > 0 else {
-                continue
+            if validPattern.directions.isEmpty {
+                return nil
             }
             
-            if board.checkIfValidEnPassant(source: sourceCoordinate, move: move, pieceType: piece.type, side: side) {
+            if board.checkIfValidEnPassant(source: possibleSource, move: move, pieceType: $0.type, side: currentSide) {
                 move.options.append(.enPassant)
-                move.source = sourceCoordinate
-                return sourceCoordinate
+                return $0
             }
             
-            guard board.tryMovingToSource(source: sourceCoordinate, destination: destination, movePattern: validPattern, canMoveOver: piece.type == .knight, side: side) else {
-                continue
+            guard board.tryMovingToSource(source: possibleSource, destination: move.destination, movePattern: validPattern, canMoveOver: $0.type == .knight, side: currentSide) else {
+                return nil
             }
-
-            var currentCoordinate = sourceCoordinate
+            
+            if board.testIfMovePutsKingInChess(source: possibleSource, move: move, side: currentSide, lastMove: lastMove) {
+                return nil
+            }
+            
+            var currentCoordinate = possibleSource
             for direction in validPattern.directions {
-                currentCoordinate = currentCoordinate.move(by: direction.sideRelativeDirection(side), side: side)
+                currentCoordinate = currentCoordinate.move(by: direction, side: currentSide)
 
-                if currentCoordinate == destination {
+                if currentCoordinate == move.destination {
                     // Disambiguate between two pieces when an extra file is provided (like Rdd1).
                     // If two rooks can move to the same cell (say d1), then the extra d (between R and d1)
                     // must be specified. Therefore we check if the rank is nil and the source is not nil.
@@ -75,38 +80,33 @@ struct MoveValidator {
                     // must be the same, otherwise we'll pick the wrong piece.
                     // The else if block does the same, only when an extra rank is provided (like R8g5).
                     if move.source?.file == nil && move.source?.rank != nil {
-                        if move.source?.rank != sourceCoordinate.rank {
+                        if move.source?.rank != possibleSource.rank {
                             continue
                         }
                     } else if move.source?.rank == nil && move.source?.file != nil {
-                        if move.source?.file != sourceCoordinate.file {
+                        if move.source?.file != possibleSource.file {
                             continue
                         }
                     }
                     
-                    if board.testIfMovePutsKingInChess(source: sourceCoordinate, move: move, side: side, lastMove: lastMove) {
-                        continue
-                    }
-                    
-                    move.source = sourceCoordinate
-                    return sourceCoordinate
+                    //move.source = sourceCoordinate
+                    return $0
                 }
             }
-        }
-
-        throw GameError.invalidMove(message: "No valid source position for destination position \(destination) with move \(move).")
-    }
-    
-    static func validate(_ move: Move, board: Board, currentSide: Side, lastMove: Move?) throws {
-        if move.isCastling() {
-            // TODO: Implement validation of castling moves
-            return
+            
+            return nil
         }
         
-        let sourceCoordinate = try validate2(board: board, side: currentSide, move: move, lastMove: lastMove)
+        guard filteredSourceCoordinates.count == 1 else {
+            throw GameError.invalidMove(message: "[\(move.rawInput)] Found zero or multiple possible source pieces: \(filteredSourceCoordinates.map({board.getCoordinate(of: $0)}))")
+        }
+        
+        let sourceCoordinate = board.getCoordinate(of: filteredSourceCoordinates[0])
         
         if move.isEnPassant() {
             // TODO: Implement validation for en passant
+            // move.options.append(.enPassant)
+            // move.source = sourceCoordinate
             move.source = sourceCoordinate
             return
         }

@@ -12,10 +12,6 @@ enum Side {
     case white
     case black
 
-    var sideMultiplier: Int {
-        self == .black ? -1 : 1
-    }
-
     var oppositeSide: Side {
         switch self {
         case .black: return .white
