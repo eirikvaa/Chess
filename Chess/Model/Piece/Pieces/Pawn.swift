@@ -17,8 +17,10 @@ struct Pawn: Piece {
         side == .white ? "♟" : "♙"
     }
 
-    func validPattern(delta: Delta, side: Side, isCapture: Bool) -> MovePattern {
-        switch (delta.x, delta.y, moved, side, isCapture) {
+    func validPattern(source: BoardCoordinate, destination: BoardCoordinate, move: Move) -> MovePattern {
+        let delta = destination - source
+        
+        switch (delta.x, delta.y, moved, move.side, move.isCapture()) {
         case (0, 1, false, .white, false),
              (0, 1, true, .white, false):
             return [.north]

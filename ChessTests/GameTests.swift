@@ -166,7 +166,7 @@ class GameTests: XCTestCase {
         let games = try PGNGameReader.readFile("twic920")
         
         var failedGames: [(Int, String)] = []
-        for (index, gameString) in games[0...300].enumerated() {
+        for (index, gameString) in games[100...300].enumerated() {
             let movesInGame = PGNGameReader.read(textRepresentation: gameString)
             
             let game = TestGameExecutor(moves: movesInGame)

@@ -39,6 +39,8 @@ struct FileValidator: Validator {
 
 struct MoveValidator {
     static func validate(_ move: Move, board: Board, currentSide: Side, lastMove: Move?) throws {
+        move.side = currentSide
+        
         if move.isCastling() {
             // TODO: Implement validation of castling moves
             return
@@ -48,8 +50,7 @@ struct MoveValidator {
         
         let filteredSourcePieces: [Piece] = possibleSourcePieces.compactMap {
             let possibleSource = board.getCoordinate(of: $0)
-            let delta = move.destination - possibleSource
-            let validPattern = $0.validPattern(delta: delta, side: currentSide, isCapture: move.isCapture())
+            let validPattern = $0.validPattern(source: possibleSource, destination: move.destination, move: move)
             
             // If no initial valid patterns to get from source to destination, break out.
             if validPattern.directions.isEmpty {

@@ -17,7 +17,9 @@ struct Queen: Piece {
         side == .white ? "♛" : "♕"
     }
     
-    func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
+    func validPattern(source: BoardCoordinate, destination: BoardCoordinate, move: Move) -> MovePattern {
+        let delta = destination - source
+        
         switch (delta.x, delta.y, delta.equalMagnitude) {
         case (0, 1..., false):
             return .init(directions: .init(repeating: .north, count: delta.magnitude(of: \.y)))

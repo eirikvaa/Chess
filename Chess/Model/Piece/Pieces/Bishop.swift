@@ -17,7 +17,9 @@ struct Bishop: Piece {
         side == .white ? "♝" : "♗"
     }
 
-    func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
+    func validPattern(source: BoardCoordinate, destination: BoardCoordinate, move: Move) -> MovePattern {
+        let delta = destination - source
+        
         guard delta.equalMagnitude else {
             return .init(directions: [])
         }
@@ -25,11 +27,11 @@ struct Bishop: Piece {
         switch (delta.x, delta.y) {
         case (1..., 1...):
             return .init(directions: .init(repeating: .northEast, count: delta.magnitude(of: \.x)))
-        case (...(-1), ...(-1)):
+        case ((-8)...(-1), (-8)...(-1)):
             return .init(directions: .init(repeating: .southWest, count: delta.magnitude(of: \.x)))
-        case (1..., ...(-1)):
+        case (1..., (-8)...(-1)):
             return .init(directions: .init(repeating: .southEast, count: delta.magnitude(of: \.x)))
-        case (...(-1), 1...):
+        case ((-8)...(-1), 1...):
             return .init(directions: .init(repeating: .northWest, count: delta.magnitude(of: \.x)))
         default:
             return []

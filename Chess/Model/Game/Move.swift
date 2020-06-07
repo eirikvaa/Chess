@@ -74,7 +74,7 @@ struct SANMoveInterpreter: MoveInterpreter {
             // for either the queen side or king side castling.
             // This should probably be improved, though.
             let option: MoveOption = isKingSideCastling ? .kingCastling : .queenCastling
-            return SANMove(rawInput: move, pieceType: .pawn, source: nil, destination: "h8", options: [option])
+            return SANMove(rawInput: move, pieceType: .pawn, side: .white, source: nil, destination: "h8", options: [option])
         }
         
         let coreFormat = #"([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?"#
@@ -144,6 +144,7 @@ struct SANMoveInterpreter: MoveInterpreter {
         
         let move = SANMove(rawInput: move,
                            pieceType: pieceType,
+                           side: .white,
                            source: source,
                            destination: destination,
                            options: options)
@@ -166,7 +167,7 @@ enum MoveOption {
 protocol Move: class, CustomStringConvertible {
     var type: MoveType { get }
     var rawInput: String { get }
-    var piece: Piece { get }
+    var side: Side { get set }
     var pieceType: PieceType { get }
     var source: BoardCoordinate? { get set }
     var destination: BoardCoordinate { get }
@@ -191,7 +192,7 @@ extension Move {
 class SANMove: Move, NSCopying {
     let type: MoveType = .algebraic
     let rawInput: String
-    let piece: Piece
+    var side: Side
     var pieceType: PieceType
     var source: BoardCoordinate?
     let destination: BoardCoordinate
@@ -199,15 +200,15 @@ class SANMove: Move, NSCopying {
     var promotionPiece: Piece?
     
     func copy(with zone: NSZone? = nil) -> Any {
-        let move = SANMove(rawInput: rawInput, pieceType: pieceType, source: source, destination: destination, options: options)
+        let move = SANMove(rawInput: rawInput, pieceType: pieceType, side: side, source: source, destination: destination, options: options)
         move.source = source
         move.promotionPiece = promotionPiece
         return move
     }
     
-    init(rawInput: String, pieceType: PieceType, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOption]) {
+    init(rawInput: String, pieceType: PieceType, side: Side, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOption]) {
         self.rawInput = rawInput
-        self.piece = Pawn()
+        self.side = side
         self.pieceType = pieceType
         self.source = source
         self.destination = destination

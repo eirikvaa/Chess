@@ -166,7 +166,6 @@ class Board: NSCopying {
         // We avoid checking for the King because the King cannot put another King in check.
         let pieceTypes: [PieceType] = [.queen, .knight, .bishop, .rook, .pawn]
         let attackerSide = side.oppositeSide
-        let isCapture = move.options.contains(.capture)
         let thisSideKing = sandboxBoard.getPieces(of: .king, side: side)[0]
         let thisSideKingCoordinate = sandboxBoard.getCoordinate(of: thisSideKing)
         
@@ -175,8 +174,7 @@ class Board: NSCopying {
             
             for piece in attackerPieces {
                 let sourceCoordinate = sandboxBoard.getCoordinate(of: piece)
-                let delta = thisSideKingCoordinate - sourceCoordinate
-                let validPattern = piece.validPattern(delta: delta, side: attackerSide, isCapture: isCapture)
+                let validPattern = piece.validPattern(source: sourceCoordinate, destination: thisSideKingCoordinate, move: move)
                 
                 guard validPattern.directions.count > 0 else {
                     continue
@@ -231,14 +229,12 @@ class Board: NSCopying {
 
     func getSourceDestination(side: Side, move: Move) throws -> BoardCoordinate {
         let destination = move.destination
-        let isCapture = move.options.contains(.capture)
         let pieces = getPieces(of: move.pieceType, side: side)
 
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)
-            let delta = destination - sourceCoordinate
             
-            let validPattern = piece.validPattern(delta: delta, side: side, isCapture: isCapture)
+            let validPattern = piece.validPattern(source: sourceCoordinate, destination: destination, move: move)
             
             guard validPattern.directions.count > 0 else {
                 continue

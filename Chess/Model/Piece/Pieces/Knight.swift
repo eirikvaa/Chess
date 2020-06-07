@@ -17,7 +17,9 @@ struct Knight: Piece {
         side == .white ? "♞" : "♘"
     }
     
-    func validPattern(delta: Delta, side _: Side, isCapture _: Bool) -> MovePattern {
+    func validPattern(source: BoardCoordinate, destination: BoardCoordinate, move: Move) -> MovePattern {
+        let delta = destination - source
+        
         switch (delta.x, delta.y) {
         case (-1, 2):
             return [.north, .north, .west]

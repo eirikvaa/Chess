@@ -13,5 +13,5 @@ protocol Piece {
     var moved: Bool { get set }
     var graphicalRepresentation: String { get }
 
-    func validPattern(delta: Delta, side: Side, isCapture: Bool) -> MovePattern
+    func validPattern(source: BoardCoordinate, destination: BoardCoordinate, move: Move) -> MovePattern
 }
