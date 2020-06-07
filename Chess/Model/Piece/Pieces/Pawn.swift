@@ -20,27 +20,14 @@ struct Pawn: Piece {
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate, move: Move) -> MovePattern {
         let delta = destination - source
         
-        switch (delta.x, delta.y, moved, move.side, move.isCapture()) {
-        case (0, 1, false, .white, false),
-             (0, 1, true, .white, false):
-            return [.north]
-        case (0, 2, false, .white, false):
-            return [.north, .north]
-        case (-1, 1, _, .white, true):
-            return [.northWest]
-        case (1, 1, _, .white, true):
-            return [.northEast]
-        case (0, -1, false, .black, false),
-             (0, -1, true, .black, false):
-            return [.south]
-        case (0, -2, false, .black, false):
-            return [.south, .south]
-        case (1, -1, _, .black, true):
-            return [.southEast]
-        case (-1, -1, _, .black, true):
-            return [.southWest]
-        default:
-            return []
+        switch (delta.x, delta.y) {
+        case (0, 1...2): return MovePattern(directions: Array(repeating: Direction.north, count: delta.y))
+        case (0, (-2)...(-1)): return MovePattern(directions: Array(repeating: Direction.south, count: abs(delta.y)))
+        case (1, 1): return [.northEast]
+        case (-1, 1): return [.northWest]
+        case (1, -1): return [.southEast]
+        case (-1, -1): return [.southWest]
+        default: return []
         }
     }
 }

@@ -176,6 +176,22 @@ class Board: NSCopying {
                 let sourceCoordinate = sandboxBoard.getCoordinate(of: piece)
                 let validPattern = piece.validPattern(source: sourceCoordinate, destination: thisSideKingCoordinate, move: move)
                 
+                if piece.type == .pawn {
+                    if !piece.moved {
+                        let blackPredicate = attackerSide == .black && [[.south], [.south, .south], [.southWest], [.southEast]].contains(validPattern)
+                        let whitePredicate = attackerSide == .white && [[.north], [.north, .north], [.northWest], [.northEast]].contains(validPattern)
+                        if !blackPredicate && !whitePredicate {
+                            continue
+                        }
+                    } else if piece.moved {
+                        let blackPredicate = attackerSide == .black && [[.south], [.southWest], [.southEast]].contains(validPattern)
+                        let whitePredicate = attackerSide == .white && [[.north], [.northWest], [.northEast]].contains(validPattern)
+                        if !blackPredicate && !whitePredicate {
+                            continue
+                        }
+                    }
+                }
+                
                 guard validPattern.directions.count > 0 else {
                     continue
                 }

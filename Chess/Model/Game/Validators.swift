@@ -57,6 +57,22 @@ struct MoveValidator {
                 return nil
             }
             
+            if $0.type == .pawn {
+                if !$0.moved {
+                    let blackPredicate = currentSide == .black && [[.south], [.south, .south], [.southWest], [.southEast]].contains(validPattern)
+                    let whitePredicate = currentSide == .white && [[.north], [.north, .north], [.northWest], [.northEast]].contains(validPattern)
+                    if !blackPredicate && !whitePredicate {
+                        return nil
+                    }
+                } else if $0.moved {
+                    let blackPredicate = currentSide == .black && [[.south], [.southWest], [.southEast]].contains(validPattern)
+                    let whitePredicate = currentSide == .white && [[.north], [.northWest], [.northEast]].contains(validPattern)
+                    if !blackPredicate && !whitePredicate {
+                        return nil
+                    }
+                }
+            }
+            
             // Cannot move pieces of the other side
             guard board[possibleSource]?.side == currentSide else {
                 return nil
@@ -82,6 +98,12 @@ struct MoveValidator {
             if board.checkIfValidEnPassant(source: possibleSource, move: move, pieceType: $0.type, side: currentSide) {
                 move.options.append(.enPassant)
                 return $0
+            }
+            
+            if $0.type == .pawn && !move.isCapture() {
+                if possibleSource.file != move.destination.file {
+                    return nil
+                }
             }
             
             // Try to move from the source to the destination, jumping over pieces if possible.
