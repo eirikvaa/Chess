@@ -17,7 +17,7 @@ struct Rook: Piece {
         side == .white ? "♜" : "♖"
     }
 
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate, move: Move) -> MovePattern {
+    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source
         
         switch (delta.x, delta.y) {

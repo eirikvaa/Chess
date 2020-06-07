@@ -50,7 +50,7 @@ struct MoveValidator {
         
         let filteredSourcePieces: [Piece] = possibleSourcePieces.compactMap {
             let possibleSource = board.getCoordinate(of: $0)
-            let validPattern = $0.validPattern(source: possibleSource, destination: move.destination, move: move)
+            let validPattern = $0.validPattern(source: possibleSource, destination: move.destination)
             
             // If no initial valid patterns to get from source to destination, break out.
             if validPattern.directions.isEmpty {
