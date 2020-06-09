@@ -16,6 +16,17 @@ struct Queen: Piece {
     var graphicalRepresentation: String {
         side == .white ? "♛" : "♕"
     }
+    var validPatterns: [MovePattern] {
+        [
+            .eight(.north),
+            .eight(.northEast),
+            .eight(.east),
+            .eight(.southEast),
+            .eight(.south),
+            .eight(.southWest),
+            .eight(.west),
+            .eight(.northWest)        ]
+    }
     
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source

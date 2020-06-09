@@ -16,6 +16,18 @@ struct Knight: Piece {
     var graphicalRepresentation: String {
         side == .white ? "♞" : "♘"
     }
+    var validPatterns: [MovePattern] {
+        [
+            .two(.north) + .one(.west),
+            .two(.north) + .one(.east),
+            .two(.east) + .one(.north),
+            .two(.east) + .one(.south),
+            .two(.south) + .one(.east),
+            .two(.south) + .one(.west),
+            .two(.west) + .one(.south),
+            .two(.west) + .one(.north),
+        ]
+    }
     
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source

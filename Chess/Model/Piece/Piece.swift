@@ -12,6 +12,7 @@ protocol Piece {
     var type: PieceType { get }
     var moved: Bool { get set }
     var graphicalRepresentation: String { get }
+    var validPatterns: [MovePattern] { get }
 
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern
 }

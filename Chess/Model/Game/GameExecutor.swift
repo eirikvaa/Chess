@@ -8,22 +8,27 @@
 
 import Foundation
 
-protocol GameExecutor {
+protocol GameExecutor: class {
+    var isCheckMate: Bool { get set }
+    var winner: Side? { get set }
     init (moveFormatValidator: MoveFormatValidator)
     func play() throws
 }
 
-struct TestGameExecutor: GameExecutor {
+class TestGameExecutor: GameExecutor {
+    var isCheckMate = false
+    var winner: Side?
+    
     private var moves: [String]
     private var realMoves: [Move] = []
     private let moveFormatValidator: MoveFormatValidator
 
-    init(moveFormatValidator: MoveFormatValidator) {
+    required init(moveFormatValidator: MoveFormatValidator) {
         self.moveFormatValidator = moveFormatValidator
         self.moves = []
     }
     
-    init(moves: [String], moveFormatValidator: MoveFormatValidator) {
+    convenience init(moves: [String], moveFormatValidator: MoveFormatValidator) {
         self.init(moveFormatValidator: moveFormatValidator)
         self.moves = moves
     }
@@ -62,6 +67,15 @@ struct TestGameExecutor: GameExecutor {
                 try MoveValidator.validate(interpretedMove, board: board, currentSide: currentSide, lastMove: lastMove)
                 
                 board.performMove(interpretedMove, side: currentSide, lastMove: lastMove)
+                
+                if board.isKingInCheck(side: currentSide.oppositeSide) {
+                    print(board)
+                    print("\(currentSide.name) won as \(currentSide.oppositeSide.name) is check mate.")
+                    isCheckMate = true
+                    winner = currentSide
+                    return
+                }
+                
                 round += 1
                 currentSide = currentSide.oppositeSide
                 lastMove = interpretedMove
@@ -72,10 +86,13 @@ struct TestGameExecutor: GameExecutor {
     }
 }
 
-struct RealGameExecutor: GameExecutor {
+class RealGameExecutor: GameExecutor {
+    var isCheckMate = false
+    var winner: Side?
+    
     private let moveFormatValidator: MoveFormatValidator
 
-    init(moveFormatValidator: MoveFormatValidator) {
+    required init(moveFormatValidator: MoveFormatValidator) {
         self.moveFormatValidator = moveFormatValidator
     }
     
@@ -102,8 +119,22 @@ struct RealGameExecutor: GameExecutor {
                 continue
             }
 
-            try MoveValidator.validate(move, board: board, currentSide: currentSide, lastMove: lastMove)
+            do {
+                try MoveValidator.validate(move, board: board, currentSide: currentSide, lastMove: lastMove)
+            } catch {
+                print("Invalid move, please try again.")
+                continue
+            }
+            
             board.performMove(move, side: currentSide, lastMove: lastMove)
+            
+            if board.isKingInCheck(side: currentSide.oppositeSide) {
+                print(board)
+                print("\(currentSide.name) won as \(currentSide.oppositeSide.name) is check mate.")
+                isCheckMate = true
+                winner = currentSide
+                return
+            }
 
             round += 1
             currentSide = currentSide.oppositeSide

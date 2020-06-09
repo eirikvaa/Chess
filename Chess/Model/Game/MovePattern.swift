@@ -10,9 +10,19 @@ struct MovePattern {
     let directions: [Direction]
 }
 
+extension MovePattern: CustomStringConvertible {
+    var description: String {
+        String(describing: directions)
+    }
+}
+
 extension MovePattern: ExpressibleByArrayLiteral {
     init(arrayLiteral elements: Direction...) {
         directions = elements
+    }
+    
+    static func + (lhs: MovePattern, rhs: MovePattern) -> MovePattern {
+        .init(directions: lhs.directions + rhs.directions)
     }
 }
 

@@ -8,5 +8,5 @@
 
 import Foundation
 
-//try RealGameExecutor(moveFormatValidator: SANMoveFormatValidator()).play()
-let file = try PGNGameReader.readFile("twic920")
+try RealGameExecutor(moveFormatValidator: SANMoveFormatValidator()).play()
+//let file = try PGNGameReader.readFile("twic920")

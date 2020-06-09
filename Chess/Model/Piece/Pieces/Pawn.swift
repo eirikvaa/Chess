@@ -8,6 +8,24 @@
 
 import Foundation
 
+extension MovePattern {
+    static func n(_ direction: Direction, count: Int) -> MovePattern {
+        .init(directions: Array(repeating: direction, count: count))
+    }
+    
+    static func one(_ direction: Direction) -> MovePattern {
+        n(direction, count: 1)
+    }
+    
+    static func two(_ direction: Direction) -> MovePattern {
+        n(direction, count: 2)
+    }
+    
+    static func eight(_ direction: Direction) -> MovePattern {
+        n(direction, count: 8)
+    }
+}
+
 struct Pawn: Piece {
     var id = UUID().uuidString
     var side: Side = .white
@@ -15,6 +33,14 @@ struct Pawn: Piece {
     var moved = false
     var graphicalRepresentation: String {
         side == .white ? "♟" : "♙"
+    }
+    var validPatterns: [MovePattern] {
+        switch (side, moved) {
+        case (.white, false): return [[.north], [.north, .north], [.northWest], [.northEast]]
+        case (.white, true): return [[.north], [.northWest], [.northEast]]
+        case (.black, false): return [[.south], [.south, .south], [.southWest], [.southEast]]
+        case (.black, true): return [[.south], [.southWest], [.southEast]]
+        }
     }
 
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {

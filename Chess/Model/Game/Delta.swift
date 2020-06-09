@@ -11,6 +11,20 @@ import Foundation
 struct Delta {
     let x: Int
     let y: Int
+    
+    var toDirection: Direction {
+        switch (x, y) {
+        case (1, 0): return .east
+        case (-1, 0): return .west
+        case (0, 1): return .north
+        case (0, -1): return .south
+        case (1, 1): return .northEast
+        case (1, -1): return .southEast
+        case (-1, 1): return .northWest
+        case (-1, -1): return .southWest
+        default: fatalError("\((x,y)) is an invalid delta.")
+        }
+    }
 
     func advance(by direction: Direction) -> Delta {
         switch direction {

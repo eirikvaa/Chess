@@ -52,6 +52,8 @@
 		E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E551399C23B818E200FD1D01 /* MoveTests.swift */; };
 		E5625C562480729F00FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
 		E5625C572480738400FD30AF /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5625C552480729F00FD30AF /* Validators.swift */; };
+		E585B1BE248D6E5000CBD2B2 /* twic921.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E585B1BD248D6E4800CBD2B2 /* twic921.pgn */; };
+		E585B1BF248D6E5600CBD2B2 /* twic921.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E585B1BD248D6E4800CBD2B2 /* twic921.pgn */; };
 		E5B3DB97248840C60094FE74 /* twic920.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E5B3DB9424883DB70094FE74 /* twic920.pgn */; };
 		E5BE32B623B5082F00EE526A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32B523B5082F00EE526A /* main.swift */; };
 		E5BE32BE23B5087A00EE526A /* GameExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* GameExecutor.swift */; };
@@ -73,6 +75,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				E585B1BE248D6E5000CBD2B2 /* twic921.pgn in CopyFiles */,
 				E5F10F98248915580073B2FF /* twic920.pgn in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,6 +86,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				E585B1BF248D6E5600CBD2B2 /* twic921.pgn in CopyFiles */,
 				E5B3DB97248840C60094FE74 /* twic920.pgn in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,6 +115,7 @@
 		E51D92342486C90A0061DF92 /* GameReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReader.swift; sourceTree = "<group>"; };
 		E551399C23B818E200FD1D01 /* MoveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTests.swift; sourceTree = "<group>"; };
 		E5625C552480729F00FD30AF /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
+		E585B1BD248D6E4800CBD2B2 /* twic921.pgn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = twic921.pgn; sourceTree = "<group>"; };
 		E5B3DB9424883DB70094FE74 /* twic920.pgn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = twic920.pgn; sourceTree = "<group>"; };
 		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5BE32B523B5082F00EE526A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -213,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				E5B3DB9424883DB70094FE74 /* twic920.pgn */,
+				E585B1BD248D6E4800CBD2B2 /* twic921.pgn */,
 			);
 			path = PGNGames;
 			sourceTree = "<group>";

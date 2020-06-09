@@ -16,6 +16,14 @@ struct Bishop: Piece {
     var graphicalRepresentation: String {
         side == .white ? "♝" : "♗"
     }
+    var validPatterns: [MovePattern] {
+        [
+            .eight(.northEast),
+            .eight(.southEast),
+            .eight(.northWest),
+            .eight(.southWest)
+        ]
+    }
 
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source

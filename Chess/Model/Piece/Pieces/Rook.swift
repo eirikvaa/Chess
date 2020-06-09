@@ -16,6 +16,14 @@ struct Rook: Piece {
     var graphicalRepresentation: String {
         side == .white ? "♜" : "♖"
     }
+    var validPatterns: [MovePattern] {
+        [
+            .eight(.north),
+            .eight(.east),
+            .eight(.south),
+            .eight(.west)
+        ]
+    }
 
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source

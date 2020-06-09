@@ -162,11 +162,45 @@ class GameTests: XCTestCase {
         )
     }
     
-    func testTWIC920PGNFile() throws {
-        let games = try PGNGameReader.readFile("twic920")
+    func testTWIC920PGNFile() {
+        XCTAssertNoThrow(try assertNonThrowingPGNFile("twic920"))
+    }
+    
+    func testTWIC921PGNFile() {
+        XCTAssertNoThrow(try assertNonThrowingPGNFile("twic921"))
+    }
+    
+    /**
+     Fool's Mate is the fastest check mate that cen be performed.
+     */
+    func testFoolsMate() {
+        let game = assertNonThrowingMoves("f3", "e5", "g4", "Qh4", message: "Fool's mate failed.")
+        XCTAssertEqual(game.isCheckMate, true)
+        XCTAssertEqual(game.winner, .black)
+    }
+}
+
+extension GameTests {
+    func assertThrowingMoves(_ moves: String..., moveType _: MoveType = .algebraic, message: String, side _: Side = .white) {
+        let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
+
+        XCTAssertThrowsError(try game.play(), message)
+    }
+
+    @discardableResult
+    func assertNonThrowingMoves(_ moves: String..., moveType _: MoveType = .algebraic, message: String, side _: Side = .white) -> GameExecutor {
+        let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
+
+        XCTAssertNoThrow(try game.play(), message)
+        
+        return game
+    }
+    
+    func assertNonThrowingPGNFile(_ fileName: String) throws {
+        let games = try PGNGameReader.readFile(fileName)
         
         var failedGames: [(Int, String)] = []
-        for (index, gameString) in games.enumerated() {
+        for (index, gameString) in games[...10].enumerated() {
             let movesInGame = PGNGameReader.read(textRepresentation: gameString)
             
             let game = TestGameExecutor(moves: movesInGame)
@@ -184,19 +218,9 @@ class GameTests: XCTestCase {
             print(index)
             print(game)
         }
-    }
-}
-
-extension GameTests {
-    func assertThrowingMoves(_ moves: String..., moveType _: MoveType = .algebraic, message: String, side _: Side = .white) {
-        let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
-
-        XCTAssertThrowsError(try game.play(), message)
-    }
-
-    func assertNonThrowingMoves(_ moves: String..., moveType _: MoveType = .algebraic, message: String, side _: Side = .white) {
-        let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
-
-        XCTAssertNoThrow(try game.play(), message)
+        
+        if failedGames.isEmpty {
+            print("\(games.count) chess games were played without (apparent) failure.")
+        }
     }
 }
