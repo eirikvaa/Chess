@@ -223,7 +223,7 @@ class Board: NSCopying {
     }
     
     func execute(movePattern: MovePattern, for piece: Piece, on side: Side) {
-        var source = getCoordinate(of: piece)
+        let source = getCoordinate(of: piece)
         var current = source
         
         movePattern.directions.forEach {
