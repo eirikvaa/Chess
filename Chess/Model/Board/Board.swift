@@ -222,42 +222,6 @@ class Board: NSCopying {
         return false
     }
     
-    /**
-     Checkmate is the end-position in which the King has nowhere to move.
-     This implemented by trying out every possible valid move for the King
-     and seeing if all of the moves result in the King being in check.
-     
-     TODO:  Implement the ability to avoid checkmate by moving another one
-            of the players own pieces, either through blocking or capturing.
-     */
-    func testIfCheckMate(side: Side) -> Bool {
-        guard let myKing = getPieces(of: .king, side: side).first else {
-            fatalError("The king is missing, which is illegal.")
-        }
-        
-        let possiblePatterns = myKing.validPatterns
-        var validPatterns: [MovePattern] = []
-        
-        for pattern in possiblePatterns {
-            guard isValidDestination(with: pattern, for: myKing, on: side) else {
-                continue
-            }
-            
-            validPatterns.append(pattern)
-        }
-        
-        for validPattern in validPatterns {
-            let sandboxBoard = self.copy() as! Board
-            sandboxBoard.execute(movePattern: validPattern, for: myKing, on: side)
-            
-            if sandboxBoard.isKingInCheck(side: side) {
-                return true
-            }
-        }
-        
-        return false
-    }
-    
     func execute(movePattern: MovePattern, for piece: Piece, on side: Side) {
         var source = getCoordinate(of: piece)
         var current = source
