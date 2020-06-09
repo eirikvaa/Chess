@@ -116,10 +116,6 @@ struct MoveValidator {
                 return nil
             }
             
-            if board.testIfCheckMate(side: currentSide) {
-                
-            }
-            
             var currentCoordinate = possibleSource
             for direction in validPattern.directions {
                 currentCoordinate = currentCoordinate.move(by: direction, side: currentSide)

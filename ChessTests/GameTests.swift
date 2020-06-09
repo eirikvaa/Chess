@@ -111,10 +111,6 @@ class GameTests: XCTestCase {
 
     // MARK: King
 
-    func testKingAttackShouldSucceed() {
-        assertNonThrowingMoves("e4", "d5", "e5", "d4", "Ke2", "a5", "Ke3", "a4", "Kd4", message: "Should not throw")
-    }
-
     func testKingCannotMoveToPositionOccupiedByOwnPieceShouldThrow() {
         assertThrowingMoves("e2", message: "King cannot move to position occupied by own piece.")
     }
