@@ -28,6 +28,14 @@ class PieceTests: XCTestCase {
     func testBlackPawnMoveTwoNorthShouldSucceed() {
         assertMovement(type: .pawn, source: "e7", destination: "e5", side: .black, expectedPattern: .two(.south))
     }
+    
+    func testWhitePawnMoveTooLongNorthShouldFail() {
+        assertMovement(type: .pawn, source: "e2", destination: "e5", side: .white, expectedPattern: [])
+    }
+    
+    func testBlackPawnMoveTooLongSouthShouldFail() {
+        assertMovement(type: .pawn, source: "e7", destination: "e4", side: .black, expectedPattern: [])
+    }
 
     // MARK: Rook
 
