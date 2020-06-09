@@ -14,32 +14,32 @@ class PieceTests: XCTestCase {
     // MARK: Pawn
 
     func testWhitePawnMoveNorthShouldSucceed() {
-        //assertMovement(type: .pawn, delta: (0, 1), side: .white, expectedPattern: [.north], isAttacking: false)
+        assertMovement(type: .pawn, source: "e2", destination: "e3", side: .white, expectedPattern: .one(.north))
     }
 
     func testWhitePawnMoveTwoNorthShouldSucceed() {
-        //assertMovement(type: .pawn, delta: (0, 2), side: .white, expectedPattern: [.north, .north], isAttacking: false)
+        assertMovement(type: .pawn, source: "e2", destination: "e4", side: .white, expectedPattern: .two(.north))
     }
 
     func testBlackPawnMoveNorthShouldSucceed() {
-        //assertMovement(type: .pawn, delta: (0, -1), side: .black, expectedPattern: [.south], isAttacking: false)
+        assertMovement(type: .pawn, source: "e7", destination: "e6", side: .black, expectedPattern: .one(.south))
     }
 
     func testBlackPawnMoveTwoNorthShouldSucceed() {
-        //assertMovement(type: .pawn, delta: (0, -2), side: .black, expectedPattern: [.south, .south], isAttacking: false)
+        assertMovement(type: .pawn, source: "e7", destination: "e5", side: .black, expectedPattern: .two(.south))
     }
 
     // MARK: Rook
 
     func testBlackRookCanMoveSoutShouldSucceed() {
-        //assertMovement(type: .rook, delta: (0, -2), side: .white, expectedPattern: [.south, .south])
+        assertMovement(type: .rook, source: "c4", destination: "a4", side: .white, expectedPattern: .two(.west))
     }
 }
 
 extension PieceTests {
-    func assertMovement(type: PieceType, delta: (file: Int, rank: Int), side: Side, expectedPattern: MovePattern, isAttacking: Bool = true) {
+    func assertMovement(type: PieceType, source: BoardCoordinate, destination: BoardCoordinate, side: Side, expectedPattern: MovePattern, isAttacking: Bool = true) {
         let piece = PieceFabric.create(type)
-        //let actualPattern = piece.validPattern(delta: .init(x: delta.file, y: delta.rank), side: side, isCapture: isAttacking)
-        //XCTAssertEqual(actualPattern, expectedPattern)
+        let actualPattern = piece.validPattern(source: source, destination: destination)
+        XCTAssertEqual(actualPattern, expectedPattern)
     }
 }
