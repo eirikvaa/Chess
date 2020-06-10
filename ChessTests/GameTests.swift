@@ -146,17 +146,6 @@ class GameTests: XCTestCase {
     }
 
     // MARK: Real-life chess games
-
-    func testCapablancaVsSavielly1924() {
-        assertNonThrowingMoves(
-            "d4", "e6",
-            "Nf3", "f5",
-            "c4", "Nf6",
-            "Bg5", "Be7",
-            "Nc3",
-            message: "Should not throw"
-        )
-    }
     
     func testTWIC920PGNFile() {
         XCTAssertNoThrow(try assertNonThrowingPGNFile("twic920"))

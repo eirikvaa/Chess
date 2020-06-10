@@ -153,11 +153,18 @@ class Board: NSCopying {
     }
     
     /**
+     Creates a sandboxed board when trying out new different moves.
+     */
+    func sandBoxedBoard() -> Board {
+        return self.copy() as! Board
+    }
+    
+    /**
      Test if the passed-in move puts the King in check. This will make a copy of the board and try out
      the move in a safe manner before reporting back if the move is illegal or not.
      */
     func testIfMovePutsKingInChess(source: BoardCoordinate, move: Move, side: Side, lastMove: Move?) -> Bool {
-        let sandboxBoard = self.copy() as! Board
+        let sandboxBoard = sandBoxedBoard()
         let sandboxedMove = (move as! SANMove).copy() as! SANMove // TODO: Fix this abomination
         sandboxedMove.source = source
         
