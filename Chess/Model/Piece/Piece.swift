@@ -6,8 +6,10 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+import Foundation
+
 protocol Piece {
-    var id: String { get }
+    var id: UUID { get }
     var side: Side { get set }
     var type: PieceType { get }
     var moved: Bool { get set }

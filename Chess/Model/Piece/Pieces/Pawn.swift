@@ -26,8 +26,8 @@ extension MovePattern {
     }
 }
 
-struct Pawn: Piece {
-    var id = UUID().uuidString
+struct Pawn: Piece, Identifiable {
+    var id = UUID()
     var side: Side = .white
     var type = PieceType.pawn
     var moved = false

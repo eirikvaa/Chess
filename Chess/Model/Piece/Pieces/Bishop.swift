@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct Bishop: Piece {
-    var id = UUID().uuidString
+struct Bishop: Piece, Identifiable {
+    var id = UUID()
     var side: Side = .white
     var type = PieceType.bishop
     var moved = false

@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct Queen: Piece {
-    var id = UUID().uuidString
+struct Queen: Piece, Identifiable {
+    var id = UUID()
     var side: Side = .white
     var type = PieceType.queen
     var moved = false
