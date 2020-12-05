@@ -47,11 +47,7 @@ class TestGameExecutor: GameExecutor {
         
         if realMoves.count > 0 {
             try realMoves.forEach {
-                print(board)
-                
                 try MoveValidator.validate($0, board: board, currentSide: currentSide, lastMove: lastMove)
-                
-                print("Playing \($0)")
                 
                 board.performMove($0, side: currentSide, lastMove: lastMove)
                 round += 1
@@ -60,7 +56,6 @@ class TestGameExecutor: GameExecutor {
             }
         } else {
             try moves.forEach {
-                print(board)
                 let moveInterpreter = MoveFabric.create(moveType: .algebraic)
                 let interpretedMove = try moveInterpreter.interpret($0)
                 
@@ -69,7 +64,6 @@ class TestGameExecutor: GameExecutor {
                 board.performMove(interpretedMove, side: currentSide, lastMove: lastMove)
                 
                 if board.isKingInCheck(side: currentSide.oppositeSide) {
-                    print(board)
                     print("\(currentSide.name) won as \(currentSide.oppositeSide.name) is check mate.")
                     isCheckMate = true
                     winner = currentSide
@@ -81,8 +75,6 @@ class TestGameExecutor: GameExecutor {
                 lastMove = interpretedMove
             }
         }
-        
-        print(board)
     }
 }
 

@@ -199,11 +199,6 @@ extension GameTests {
             }
         }
         
-        for (index, game) in failedGames {
-            print(index)
-            print(game)
-        }
-        
         if failedGames.isEmpty {
             print("\(games.count) chess games were played without (apparent) failure.")
         }
