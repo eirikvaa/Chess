@@ -6,7 +6,7 @@
 //  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
 
-enum PieceType2 {
+enum PieceType {
     case pawn
     case bishop
     case knight
@@ -26,82 +26,82 @@ enum PieceType2 {
     }
 }
 
-protocol Piece2: AnyObject {
+protocol Piece: AnyObject {
     var content: String { get }
-    var type: PieceType2 { get }
-    var side: Side2 { get set }
+    var type: PieceType { get }
+    var side: Side { get set }
     
-    init(side: Side2)
+    init(side: Side)
 }
 
-class Rook2: Piece2 {
+class Rook: Piece {
     var content: String {
         side == .white ? "♖" : "♜"
     }
-    var type: PieceType2 = .rook
-    var side: Side2 = .white
+    var type: PieceType = .rook
+    var side: Side = .white
     
-    required init(side: Side2) {
+    required init(side: Side) {
         self.side = side
     }
 }
 
-class Bishop2: Piece2 {
+class Bishop: Piece {
     var content: String {
         side == .white ? "♗" : "♝"
     }
-    var type: PieceType2 = .bishop
-    var side: Side2 = .white
+    var type: PieceType = .bishop
+    var side: Side = .white
     
-    required init(side: Side2) {
+    required init(side: Side) {
         self.side = side
     }
 }
 
-class Knight2: Piece2 {
+class Knight: Piece {
     var content: String {
         side == .white ? "♘" : "♞"
     }
-    var type: PieceType2 = .knight
-    var side: Side2 = .white
+    var type: PieceType = .knight
+    var side: Side = .white
     
-    required init(side: Side2) {
+    required init(side: Side) {
         self.side = side
     }
 }
 
-class Pawn2: Piece2 {
+class Pawn: Piece {
     var content: String {
         side == .white ? "♙" : "♟"
     }
-    var type: PieceType2 = .pawn
-    var side: Side2 = .white
+    var type: PieceType = .pawn
+    var side: Side = .white
     
-    required init(side: Side2) {
+    required init(side: Side) {
         self.side = side
     }
 }
 
-class Queen2: Piece2 {
+class Queen: Piece {
     var content: String {
         side == .white ? "♕" : "♛"
     }
-    var type: PieceType2 = .queen
-    var side: Side2 = .white
+    var type: PieceType = .queen
+    var side: Side = .white
     
-    required init(side: Side2) {
+    required init(side: Side) {
         self.side = side
     }
 }
 
-class King2: Piece2 {
+class King: Piece {
     var content: String {
         side == .white ? "♔" : "♚"
     }
-    var type: PieceType2 = .king
-    var side: Side2 = .white
+    var type: PieceType = .king
+    var side: Side = .white
     
-    required init(side: Side2) {
+    required init(side: Side) {
         self.side = side
     }
 }

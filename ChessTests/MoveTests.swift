@@ -12,7 +12,7 @@ import XCTest
 
 class MoveTests: XCTestCase {
     func testPawnMove() throws {
-        let move = try Move2(rawMove: "e4")
+        let move = try Move(rawMove: "e4")
         
         XCTAssertEqual(move.destination, try Coordinate(rawCoordinates: "e4"))
         XCTAssertEqual(move.pieceType, .pawn)
@@ -20,7 +20,7 @@ class MoveTests: XCTestCase {
     }
     
     func testRookMove() throws {
-        let move = try Move2(rawMove: "Ra8")
+        let move = try Move(rawMove: "Ra8")
         
         XCTAssertEqual(move.destination, try Coordinate(rawCoordinates: "a8"))
         XCTAssertEqual(move.pieceType, .rook)
@@ -28,7 +28,7 @@ class MoveTests: XCTestCase {
     }
     
     func testQueenCapture() throws {
-        let move = try Move2(rawMove: "Qxe3")
+        let move = try Move(rawMove: "Qxe3")
         
         XCTAssertEqual(move.destination, try Coordinate(rawCoordinates: "e3"))
         XCTAssertEqual(move.pieceType, .queen)

@@ -6,13 +6,13 @@
 //  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
 
-struct Move2 {
+struct Move {
     enum MoveValidationError: Error {
         case wrongMoveFormat
     }
     
     let destination: Coordinate
-    let pieceType: PieceType2
+    let pieceType: PieceType
     var isCapture = false
     
     init(rawMove: String) throws {
@@ -36,6 +36,6 @@ struct Move2 {
             rest.removeLast()
         }
         
-        self.pieceType = PieceType2(rawPiece: rest)
+        self.pieceType = PieceType(rawPiece: rest)
     }
 }

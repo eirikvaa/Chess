@@ -10,7 +10,7 @@ import Foundation
 
 struct Cell: CustomStringConvertible {
     var coordinate: Coordinate
-    var piece: Piece2?
+    var piece: Piece?
     
     var description: String {
         // TODO: Print piece also

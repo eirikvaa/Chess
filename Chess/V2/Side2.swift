@@ -6,11 +6,11 @@
 //  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
 
-enum Side2 {
+enum Side {
     case white
     case black
     
-    var opposite: Side2 {
+    var opposite: Side {
         switch self {
         case .white: return .black
         case .black: return .white

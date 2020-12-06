@@ -7,14 +7,21 @@
 //
 
 struct GameState {
-    let board = Board2()
-    var currentSide = Side2.white
+    let board = Board()
+    var currentSide = Side.white
     
-    func advance(move: Move2) -> GameState {
+    func advance(move: Move) throws -> GameState {
         var nextState = GameState()
         nextState.currentSide = currentSide.opposite
         
+        findSourcePiece(move: move)
+        
         return nextState
+    }
+    
+    private func findSourcePiece(move: Move) {
+        let relevantPieces = board.getAllPieces(type: move.pieceType, side: currentSide)
+        print(relevantPieces)
     }
 }
 
@@ -25,18 +32,18 @@ class Game2 {
         print(gameState.board)
         
         while true {
+            print("> ", terminator: "")
             guard let userInput = readLine(strippingNewline: true) else {
                 continue
             }
             
-            let move = try Move2(rawMove: userInput)
-            print(move)
+            let move = try Move(rawMove: userInput)
             
-            print(userInput)
+            try executeMove(move: move)
         }
     }
     
-    private func executeMove(move: Move2) {
-        gameState = gameState.advance(move: move)
+    private func executeMove(move: Move) throws {
+        gameState = try gameState.advance(move: move)
     }
 }
