@@ -40,6 +40,23 @@
                BlueprintName = "ChessTests"
                ReferencedContainer = "container:Chess.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "BoardTests">
+               </Test>
+               <Test
+                  Identifier = "GameTests">
+               </Test>
+               <Test
+                  Identifier = "MoveComponentTests">
+               </Test>
+               <Test
+                  Identifier = "PieceTests">
+               </Test>
+               <Test
+                  Identifier = "PlayerTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
