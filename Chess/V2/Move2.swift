@@ -6,15 +6,26 @@
 //  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
 
+/**
+ A move that can be applied to a piece.
+ The initializer validates the move and throws if it's not legal based on the regex.
+ */
 struct Move {
     enum MoveValidationError: Error {
         case wrongMoveFormat
     }
     
+    /// The destination that is encoded in the move.
     let destination: Coordinate
-    let pieceType: PieceType
-    var isCapture = false
     
+    /// The piece type that is encoded in the move.
+    let pieceType: PieceType
+    
+    /// Whether or not the move is a capture, i.e. it captures another piece.
+    let isCapture: Bool
+    
+    /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
+    /// and boards converge to something meaningful.
     init(rawMove: String) throws {
         /// [N|R|B|Q|K]?    : Optional horthand for type of piece. No shorthand means pawn.
         /// x?              : Optional capture
@@ -34,6 +45,8 @@ struct Move {
         if rest.last == "x" {
             isCapture = true
             rest.removeLast()
+        } else {
+            isCapture = false
         }
         
         self.pieceType = PieceType(rawPiece: rest)

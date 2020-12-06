@@ -6,44 +6,38 @@
 //  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
 
-struct GameState {
-    let board = Board()
-    var currentSide = Side.white
-    
-    func advance(move: Move) throws -> GameState {
-        var nextState = GameState()
-        nextState.currentSide = currentSide.opposite
-        
-        findSourcePiece(move: move)
-        
-        return nextState
-    }
-    
-    private func findSourcePiece(move: Move) {
-        let relevantPieces = board.getAllPieces(type: move.pieceType, side: currentSide)
-        print(relevantPieces)
-    }
-}
-
-class Game2 {
+/**
+ Represents the game flow. All validation and execution to moves are delegated to
+ the appropriate classes.
+ */
+class Game {
     private var gameState = GameState()
     
+    /**
+     Start a new game. Will throw if moves are invalid.
+     */
     func play() throws {
-        print(gameState.board)
-        
         while true {
+            print(gameState.board)
             print("> ", terminator: "")
+            
             guard let userInput = readLine(strippingNewline: true) else {
                 continue
             }
             
-            let move = try Move(rawMove: userInput)
-            
-            try executeMove(move: move)
+            do {
+                let move = try Move(rawMove: userInput)
+                try gameState.executeMove(move: move)
+            } catch Move.MoveValidationError.wrongMoveFormat {
+                print("Invalid move format, try again.")
+                continue
+            } catch GameState.GameStateError.illegalMove {
+                print("Illegal move, try again.")
+                continue
+            } catch GameState.GameStateError.noValidSourcePieces {
+                print("No valid source pieces for the given move, try again.")
+                continue
+            }
         }
-    }
-    
-    private func executeMove(move: Move) throws {
-        gameState = try gameState.advance(move: move)
     }
 }

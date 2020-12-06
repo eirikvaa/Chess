@@ -10,5 +10,5 @@ import Foundation
 
 //try RealGameExecutor(moveFormatValidator: SANMoveFormatValidator()).play()
 //let file = try PGNGameReader.readFile("twic920")
-let game2 = Game2()
+let game2 = Game()
 try game2.play()

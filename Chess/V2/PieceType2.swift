@@ -6,6 +6,11 @@
 //  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
 
+import Foundation
+
+/**
+ The type of the piece.
+ */
 enum PieceType {
     case pawn
     case bishop
@@ -26,20 +31,142 @@ enum PieceType {
     }
 }
 
+/**
+ Directions as seen from the perspective of the white player (towards the black player).
+ Avoid adding north-west, et cetera, as those can be composed from these four.
+ */
+enum Direction: CustomStringConvertible {
+    case north
+    case east
+    case south
+    case west
+    
+    var description: String {
+        switch self {
+        case .north: return "N"
+        case .east: return "E"
+        case .south: return "S"
+        case .west: return "W"
+        }
+    }
+}
+
+/**
+ Moves differ between the pieces and the state for which a piece is in.
+  - `.single` and `.double` are used by pawns and kings.
+ */
+enum MoveType {
+    case continuous
+    case diagonal
+    case single
+    case double
+    case shape
+}
+
+/**
+ A move pattern consists of a move type and a list of directions.
+ */
+struct MovePattern: CustomStringConvertible {
+    let moveType: MoveType
+    let directions: [Direction]
+    
+    var description: String {
+        directions.map {
+            String(describing: $0)
+        }.joined()
+    }
+}
+
+/**
+ A piece on the board.
+ */
 protocol Piece: AnyObject {
+    /// An ID for the piece. Only used to locate pieces on the board.
+    var id: UUID { get }
+    
+    /// The graphical representation of the piece, Unicode symbols.
     var content: String { get }
+    
+    /// The type of piece
     var type: PieceType { get }
+    
+    /// The side that owns the piece
     var side: Side { get set }
     
+    /// If the piece has made its first move yet
+    var hasMoved: Bool { get set }
+    
+    /// A list of ways in which the piece can move.
+    var movePatterns: [MovePattern] { get }
+    
+    /// Initialize a piece with the given side. This is really the only information that is not known
+    /// at the time it is initialized.
     init(side: Side)
 }
 
+/**
+ Pawns are the least valuable pieces on the board. Their move patterns depend on the state
+ at which they are in, specifically if they have moved or not from before. If they have not moved yet,
+ they can move ahead two cells. If not, they can only move one cell.
+ */
+class Pawn: Piece, Identifiable {
+    let id = UUID()
+    var content: String {
+        side == .white ? "♙" : "♟"
+    }
+    var type: PieceType = .pawn
+    var side: Side = .white
+    var hasMoved: Bool = false
+    var movePatterns: [MovePattern] {
+        switch (hasMoved, side) {
+        case (false, .white):
+            return [
+                MovePattern(moveType: .single, directions: [.north]),
+                MovePattern(moveType: .double, directions: [.north, .north]),
+                MovePattern(moveType: .diagonal, directions: [.north, .west]),
+                MovePattern(moveType: .diagonal, directions: [.north, .east])
+            ]
+        case (true, .white):
+            return [
+                MovePattern(moveType: .single, directions: [.north]),
+                MovePattern(moveType: .diagonal, directions: [.north, .west]),
+                MovePattern(moveType: .diagonal, directions: [.north, .east])
+            ]
+        case (false, .black):
+            return [
+                MovePattern(moveType: .single, directions: [.south]),
+                MovePattern(moveType: .double, directions: [.south, .south]),
+                MovePattern(moveType: .diagonal, directions: [.south, .west]),
+                MovePattern(moveType: .diagonal, directions: [.south, .east])
+            ]
+        case (true, .black):
+            return [
+                MovePattern(moveType: .single, directions: [.south]),
+                MovePattern(moveType: .diagonal, directions: [.south, .west]),
+                MovePattern(moveType: .diagonal, directions: [.south, .east])
+            ]
+        }
+    }
+    
+    required init(side: Side) {
+        self.side = side
+    }
+}
+
+/*
 class Rook: Piece {
     var content: String {
         side == .white ? "♖" : "♜"
     }
     var type: PieceType = .rook
     var side: Side = .white
+    var hasMoved: Bool = false
+    var movePatterns = MovePatterns(patterns: [
+        MovePattern((.continuous, [.north])),
+        MovePattern((.continuous, [.east])),
+        MovePattern((.continuous, [.south])),
+        MovePattern((.continuous, [.west]))
+    ])
     
     required init(side: Side) {
         self.side = side
@@ -52,6 +179,13 @@ class Bishop: Piece {
     }
     var type: PieceType = .bishop
     var side: Side = .white
+    var hasMoved: Bool = false
+    var movePatterns = MovePatterns(patterns: [
+        MovePattern((.continuous, [.north, .east])),
+        MovePattern((.continuous, [.south, .east])),
+        MovePattern((.continuous, [.south, .west])),
+        MovePattern((.continuous, [.north, .west]))
+    ])
     
     required init(side: Side) {
         self.side = side
@@ -64,18 +198,17 @@ class Knight: Piece {
     }
     var type: PieceType = .knight
     var side: Side = .white
-    
-    required init(side: Side) {
-        self.side = side
-    }
-}
-
-class Pawn: Piece {
-    var content: String {
-        side == .white ? "♙" : "♟"
-    }
-    var type: PieceType = .pawn
-    var side: Side = .white
+    var hasMoved: Bool = false
+    var movePatterns = MovePatterns(patterns: [
+        MovePattern((.shape, [.north, .north, .east])),
+        MovePattern((.shape, [.east, .east, .north])),
+        MovePattern((.shape, [.east, .east, .south])),
+        MovePattern((.shape, [.south, .south, .east])),
+        MovePattern((.shape, [.south, .south, .west])),
+        MovePattern((.shape, [.west, .west, .south])),
+        MovePattern((.shape, [.west, .west, .north])),
+        MovePattern((.shape, [.north, .north, .west])),
+    ])
     
     required init(side: Side) {
         self.side = side
@@ -88,6 +221,17 @@ class Queen: Piece {
     }
     var type: PieceType = .queen
     var side: Side = .white
+    var hasMoved: Bool = false
+    var movePatterns = MovePatterns(patterns: [
+        MovePattern((.continuous, [.north])),
+        MovePattern((.continuous, [.north, .east])),
+        MovePattern((.continuous, [.east])),
+        MovePattern((.continuous, [.south, .east])),
+        MovePattern((.continuous, [.south])),
+        MovePattern((.continuous, [.south, .west])),
+        MovePattern((.continuous, [.west])),
+        MovePattern((.continuous, [.north, .west]))
+    ])
     
     required init(side: Side) {
         self.side = side
@@ -100,8 +244,20 @@ class King: Piece {
     }
     var type: PieceType = .king
     var side: Side = .white
+    var hasMoved: Bool = false
+    var movePatterns = MovePatterns(patterns: [
+        MovePattern((.single, [.north])),
+        MovePattern((.single, [.north, .east])),
+        MovePattern((.single, [.east])),
+        MovePattern((.single, [.south, .east])),
+        MovePattern((.single, [.south])),
+        MovePattern((.single, [.south, .west])),
+        MovePattern((.single, [.west])),
+        MovePattern((.single, [.north, .west]))
+    ])
     
     required init(side: Side) {
         self.side = side
     }
 }
+*/

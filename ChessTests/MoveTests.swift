@@ -34,4 +34,16 @@ class MoveTests: XCTestCase {
         XCTAssertEqual(move.pieceType, .queen)
         XCTAssertEqual(move.isCapture, true)
     }
+    
+    func testDirections() {
+        let coordinate = Coordinate(file: "e", rank: 2)
+        let newCoordinate = coordinate.applyDirection(.north)
+        XCTAssertEqual(newCoordinate, Coordinate(file: "e", rank: 3))
+        
+        let coordinate2 = Coordinate(file: "e", rank: 2)
+        let newCoordinate2 = coordinate2
+            .applyDirection(.north)
+            .applyDirection(.north)
+        XCTAssertEqual(newCoordinate2, Coordinate(file: "e", rank: 4))
+    }
 }
