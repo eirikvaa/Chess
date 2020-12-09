@@ -43,6 +43,7 @@ struct GameState {
 
 private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
+        // If the source coordinate is provided in the raw move, immediately return the corresponding piece
         if let sourceCoordinate = move.source, let piece = board[sourceCoordinate].piece {
             return piece
         }
