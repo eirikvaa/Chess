@@ -37,15 +37,23 @@ enum PieceType {
  */
 enum Direction: CustomStringConvertible {
     case north
+    case northWest
+    case northEast
     case east
     case south
+    case southWest
+    case southEast
     case west
     
     var description: String {
         switch self {
         case .north: return "N"
+        case .northWest: return "NW"
+        case .northEast: return "NE"
         case .east: return "E"
         case .south: return "S"
+        case .southWest: return "SW"
+        case .southEast: return "SE"
         case .west: return "W"
         }
     }
@@ -56,7 +64,7 @@ enum Direction: CustomStringConvertible {
   - `.single` and `.double` are used by pawns and kings.
  */
 enum MoveType {
-    case continuous
+    case straight
     case diagonal
     case single
     case double
@@ -66,14 +74,14 @@ enum MoveType {
 /**
  A move pattern consists of a move type and a list of directions.
  */
-struct MovePattern: CustomStringConvertible {
+struct MovePattern: Equatable, CustomStringConvertible {
     let moveType: MoveType
     let directions: [Direction]
     
     var description: String {
         directions.map {
             String(describing: $0)
-        }.joined()
+        }.joined(separator: "-")
     }
 }
 
@@ -153,26 +161,27 @@ class Pawn: Piece, Identifiable {
     }
 }
 
-/*
+
 class Rook: Piece {
+    var id = UUID()
     var content: String {
         side == .white ? "♖" : "♜"
     }
     var type: PieceType = .rook
     var side: Side = .white
     var hasMoved: Bool = false
-    var movePatterns = MovePatterns(patterns: [
-        MovePattern((.continuous, [.north])),
-        MovePattern((.continuous, [.east])),
-        MovePattern((.continuous, [.south])),
-        MovePattern((.continuous, [.west]))
-    ])
+    var movePatterns: [MovePattern] { [
+        MovePattern(moveType: .straight, directions: [.north]),
+        MovePattern(moveType: .straight, directions: [.east]),
+        MovePattern(moveType: .straight, directions: [.south]),
+        MovePattern(moveType: .straight, directions: [.west])
+    ]}
     
     required init(side: Side) {
         self.side = side
     }
 }
-
+/*
 class Bishop: Piece {
     var content: String {
         side == .white ? "♗" : "♝"

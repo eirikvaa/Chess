@@ -53,7 +53,8 @@ private extension GameState {
             
             // Filter out all illegal move patterns
             let movePatterns = piece.movePatterns.filter { movePattern in
-                if move.pieceType == .pawn {
+                switch move.pieceType {
+                case .pawn:
                     if move.isCapture {
                         
                     } else {
@@ -61,6 +62,19 @@ private extension GameState {
                             return false
                         }
                     }
+                case .rook:
+                    guard let possibleMovePatternDirections = cell.coordinate.getMovePattern(to: move.destination, with: movePattern.moveType)?.directions else {
+                        return false
+                    }
+                    let thisMovePatternDirections = movePattern.directions
+                    
+                    // From `getMovePattern(to:with).directions we get a list of possible directions
+                    // From `movePattern.directions` we get a single direction
+                    // If these two are disjoint, the latter cannot be found in the former list, so reject it.
+                    if Set(thisMovePatternDirections).isDisjoint(with: Set(possibleMovePatternDirections)) {
+                        return false
+                    }
+                default: break
                 }
                 
                 guard board.piece(piece: piece, canMoveTo: move.destination, with: movePattern, move: move) else {

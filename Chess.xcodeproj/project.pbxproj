@@ -10,6 +10,7 @@
 		E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E551399C23B818E200FD1D01 /* MoveTests.swift */; };
 		E585B1BE248D6E5000CBD2B2 /* twic921.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E585B1BD248D6E4800CBD2B2 /* twic921.pgn */; };
 		E585B1BF248D6E5600CBD2B2 /* twic921.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E585B1BD248D6E4800CBD2B2 /* twic921.pgn */; };
+		E599248E257ECF2C00A446E9 /* CoordinateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E599248D257ECF2C00A446E9 /* CoordinateTests.swift */; };
 		E5AAB65A257C22A50054CBEE /* Board2.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAB659257C22A50054CBEE /* Board2.swift */; };
 		E5AAB661257C44880054CBEE /* Move2.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAB660257C44880054CBEE /* Move2.swift */; };
 		E5AAB668257C449B0054CBEE /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAB667257C449B0054CBEE /* String+Ext.swift */; };
@@ -87,6 +88,7 @@
 		E551399C23B818E200FD1D01 /* MoveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTests.swift; sourceTree = "<group>"; };
 		E5625C552480729F00FD30AF /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		E585B1BD248D6E4800CBD2B2 /* twic921.pgn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = twic921.pgn; sourceTree = "<group>"; };
+		E599248D257ECF2C00A446E9 /* CoordinateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateTests.swift; sourceTree = "<group>"; };
 		E5AAB659257C22A50054CBEE /* Board2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board2.swift; sourceTree = "<group>"; };
 		E5AAB660257C44880054CBEE /* Move2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move2.swift; sourceTree = "<group>"; };
 		E5AAB667257C449B0054CBEE /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
@@ -271,8 +273,9 @@
 				E50F656723B751520042B527 /* PlayerTests.swift */,
 				E5C1FD7E23B50D4400A33411 /* BoardTests.swift */,
 				E5EE5DAF23B5368F0066C281 /* PieceTests.swift */,
-				E551399C23B818E200FD1D01 /* MoveTests.swift */,
 				E5F83AB123B8D930001366FE /* MoveComponentTests.swift */,
+				E551399C23B818E200FD1D01 /* MoveTests.swift */,
+				E599248D257ECF2C00A446E9 /* CoordinateTests.swift */,
 				E5BE32D523B509A000EE526A /* Info.plist */,
 			);
 			path = ChessTests;
@@ -413,6 +416,7 @@
 				E5AAB686257C45920054CBEE /* Game2.swift in Sources */,
 				E5E171FA257D2DD10026E55C /* Rank.swift in Sources */,
 				E5E171EC257D27B80026E55C /* GameState.swift in Sources */,
+				E599248E257ECF2C00A446E9 /* CoordinateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

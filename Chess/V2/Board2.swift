@@ -31,7 +31,7 @@ class Board: CustomStringConvertible {
                 switch (file, rank) {
                 case ("a", 1),
                      ("h", 1):
-                    break//piece = Rook(side: .white)
+                    piece = Rook(side: .white)
                 case ("b", 1),
                      ("g", 1):
                     break//piece = Knight(side: .white)
@@ -43,7 +43,7 @@ class Board: CustomStringConvertible {
                 case ("e", 1):
                     break//piece = King(side: .white)
                 case (_, 2):
-                    piece = Pawn(side: .white)
+                    break//piece = Pawn(side: .white)
                 case ("a", 8),
                      ("h", 8):
                     break//piece = Rook(side: .black)
@@ -125,6 +125,30 @@ class Board: CustomStringConvertible {
      */
     func piece(piece: Piece, canMoveTo destinationCoordinate: Coordinate, with movePattern: MovePattern, move: Move) -> Bool {
         let oldCoordinate = getCell(of: piece).coordinate
+        
+        switch movePattern.moveType {
+        case .single:
+            let nextCoordinate = oldCoordinate.applyDirection(movePattern.directions[0])
+            return oldCoordinate == nextCoordinate
+        case .double:
+            let direction = movePattern.directions[0]
+            let nextCoordinate = oldCoordinate
+                .applyDirection(direction)
+                .applyDirection(direction)
+            return oldCoordinate == nextCoordinate
+        case .straight:
+            let direction = movePattern.directions[0]
+            var currentCoordinate = oldCoordinate
+            while true {
+                currentCoordinate = currentCoordinate.applyDirection(direction)
+                
+                if oldCoordinate == currentCoordinate {
+                    return true
+                }
+            }
+        default:
+            break
+        }
         
         var currentCoordinate = oldCoordinate
         movePattern.directions.forEach {
