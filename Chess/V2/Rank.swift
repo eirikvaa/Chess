@@ -30,8 +30,12 @@ struct Rank: Equatable, CustomStringConvertible, ExpressibleByIntegerLiteral {
     static func + (lhs: Rank, rhs: Direction) -> Rank {
         let deltaY: Int
         switch rhs {
-        case .north: deltaY = 1
-        case .south: deltaY = -1
+        case .north,
+             .northWest,
+             .northEast: deltaY = 1
+        case .south,
+             .southWest,
+             .southEast: deltaY = -1
         default: deltaY = 0
         }
         

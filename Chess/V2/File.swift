@@ -40,8 +40,12 @@ struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
         let deltaX: Int
         
         switch rhs {
-        case .east: deltaX = 1
-        case .west: deltaX = -1
+        case .east,
+             .northEast,
+             .southEast: deltaX = 1
+        case .west,
+             .northWest,
+             .southWest: deltaX = -1
         default: deltaX = 0
         }
         

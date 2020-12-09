@@ -68,9 +68,9 @@ struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLitera
         
         switch direction {
         case .north,
-             .south: file = file + direction
+             .south: rank = rank + direction
         case .east,
-             .west: rank = rank + direction
+             .west: file = file + direction
         case .northWest,
              .northEast,
              .southWest,

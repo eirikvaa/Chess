@@ -35,15 +35,37 @@ class MoveTests: XCTestCase {
         XCTAssertEqual(move.isCapture, true)
     }
     
-    func testDirections() {
-        let coordinate = Coordinate(file: "e", rank: 2)
-        let newCoordinate = coordinate.applyDirection(.north)
-        XCTAssertEqual(newCoordinate, Coordinate(file: "e", rank: 3))
+    func testSingleNorth() {
+        let source: Coordinate = "e2"
         
-        let coordinate2 = Coordinate(file: "e", rank: 2)
-        let newCoordinate2 = coordinate2
+        let destination = source.applyDirection(.north)
+        
+        XCTAssertEqual(destination, "e3")
+    }
+    
+    func testDoubleNorth() {
+        let source: Coordinate = "e2"
+        
+        let destination = source
             .applyDirection(.north)
             .applyDirection(.north)
-        XCTAssertEqual(newCoordinate2, Coordinate(file: "e", rank: 4))
+        
+        XCTAssertEqual(destination, "e4")
+    }
+    
+    func testNorthEastDiagonal() {
+        let source: Coordinate = "e2"
+        
+        let destination = source.applyDirection(.northEast)
+        
+        XCTAssertEqual(destination, "f3")
+    }
+    
+    func testSouthWestDiagonal() {
+        let source: Coordinate = "e2"
+        
+        let destination = source.applyDirection(.southWest)
+        
+        XCTAssertEqual(destination, "d1")
     }
 }
