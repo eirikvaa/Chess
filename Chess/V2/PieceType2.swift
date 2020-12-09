@@ -78,6 +78,16 @@ struct MovePattern: Equatable, CustomStringConvertible {
     let moveType: MoveType
     let directions: [Direction]
     
+    init(moveType: MoveType, directions: Direction...) {
+        self.moveType = moveType
+        self.directions = directions
+    }
+    
+    init(moveType: MoveType, directions: [Direction]) {
+        self.moveType = moveType
+        self.directions = directions
+    }
+    
     var description: String {
         directions.map {
             String(describing: $0)
@@ -129,29 +139,29 @@ class Pawn: Piece, Identifiable {
         switch (hasMoved, side) {
         case (false, .white):
             return [
-                MovePattern(moveType: .single, directions: [.north]),
-                MovePattern(moveType: .double, directions: [.north, .north]),
-                MovePattern(moveType: .diagonal, directions: [.north, .west]),
-                MovePattern(moveType: .diagonal, directions: [.north, .east])
+                MovePattern(moveType: .single, directions: .north),
+                MovePattern(moveType: .double, directions: .north, .north),
+                MovePattern(moveType: .diagonal, directions: .north, .west),
+                MovePattern(moveType: .diagonal, directions: .north, .east)
             ]
         case (true, .white):
             return [
-                MovePattern(moveType: .single, directions: [.north]),
-                MovePattern(moveType: .diagonal, directions: [.north, .west]),
-                MovePattern(moveType: .diagonal, directions: [.north, .east])
+                MovePattern(moveType: .single, directions: .north),
+                MovePattern(moveType: .diagonal, directions: .north, .west),
+                MovePattern(moveType: .diagonal, directions: .north, .east)
             ]
         case (false, .black):
             return [
-                MovePattern(moveType: .single, directions: [.south]),
-                MovePattern(moveType: .double, directions: [.south, .south]),
-                MovePattern(moveType: .diagonal, directions: [.south, .west]),
-                MovePattern(moveType: .diagonal, directions: [.south, .east])
+                MovePattern(moveType: .single, directions: .south),
+                MovePattern(moveType: .double, directions: .south, .south),
+                MovePattern(moveType: .diagonal, directions: .south, .west),
+                MovePattern(moveType: .diagonal, directions: .south, .east)
             ]
         case (true, .black):
             return [
-                MovePattern(moveType: .single, directions: [.south]),
-                MovePattern(moveType: .diagonal, directions: [.south, .west]),
-                MovePattern(moveType: .diagonal, directions: [.south, .east])
+                MovePattern(moveType: .single, directions: .south),
+                MovePattern(moveType: .diagonal, directions: .south, .west),
+                MovePattern(moveType: .diagonal, directions: .south, .east)
             ]
         }
     }
@@ -171,10 +181,10 @@ class Rook: Piece {
     var side: Side = .white
     var hasMoved: Bool = false
     var movePatterns: [MovePattern] { [
-        MovePattern(moveType: .straight, directions: [.north]),
-        MovePattern(moveType: .straight, directions: [.east]),
-        MovePattern(moveType: .straight, directions: [.south]),
-        MovePattern(moveType: .straight, directions: [.west])
+        MovePattern(moveType: .straight, directions: .north),
+        MovePattern(moveType: .straight, directions: .east),
+        MovePattern(moveType: .straight, directions: .south),
+        MovePattern(moveType: .straight, directions: .west)
     ]}
     
     required init(side: Side) {
