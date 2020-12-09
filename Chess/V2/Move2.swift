@@ -50,7 +50,16 @@ struct Move {
         } else {
             isCapture = false
         }
+
+        var rawPiece = ""
+        if rest.count > 1 {
+            let (suffix, rest) = rest.removeSuffix(count: 2)
+            rawPiece = rest
+            self.source = Coordinate(stringLiteral: suffix)
+        } else {
+            rawPiece = rest
+        }
         
-        self.pieceType = PieceType(rawPiece: rest)
+        self.pieceType = PieceType(rawPiece: rawPiece)
     }
 }

@@ -34,4 +34,13 @@ class MoveTests: XCTestCase {
         XCTAssertEqual(move.pieceType, .queen)
         XCTAssertEqual(move.isCapture, true)
     }
+    
+    func testSourceCoordinateInMove() throws {
+        let move = try Move(rawMove: "Ra1c1")
+        
+        XCTAssertEqual(move.destination, "c1")
+        XCTAssertEqual(move.source, "a1")
+        XCTAssertEqual(move.pieceType, .rook)
+        XCTAssertEqual(move.isCapture, false)
+    }
 }
