@@ -43,6 +43,10 @@ struct GameState {
 
 private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
+        if let sourceCoordinate = move.source, let piece = board[sourceCoordinate].piece {
+            return piece
+        }
+        
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
         var sourcePieces: [Piece] = []
         
