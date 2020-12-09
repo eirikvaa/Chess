@@ -29,13 +29,16 @@ class Game {
                 let move = try Move(rawMove: userInput)
                 try gameState.executeMove(move: move)
             } catch Move.MoveValidationError.wrongMoveFormat {
-                print("The user entered \(userInput), which is a move in the wrong format. Try agai.")
+                print("The user entered \(userInput), which is a move in the wrong format. Try agai..")
                 continue
             } catch GameState.GameStateError.illegalMove {
                 print("\(userInput) is an illegal move. Try again.")
                 continue
             } catch GameState.GameStateError.noValidSourcePieces {
                 print("There are no valid source pieces that can move to the destination specified by the move \(userInput), try again.")
+                continue
+            } catch GameState.GameStateError.ambiguousMove {
+                print("The move \(userInput) was ambiguous, meaning two or more pieces can move to the same cell. Try again.")
                 continue
             }
         }
