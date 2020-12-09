@@ -37,5 +37,39 @@ class CoordinateTests: XCTestCase {
         XCTAssertEqual(s4.getMovePattern(to: d4, with: .straight),
                        MovePattern(moveType: .straight, directions: [.west, .west]))
     }
+    
+    func testSingleNorth() {
+        let source: Coordinate = "e2"
+        
+        let destination = source.applyDirection(.north)
+        
+        XCTAssertEqual(destination, "e3")
+    }
+    
+    func testDoubleNorth() {
+        let source: Coordinate = "e2"
+        
+        let destination = source
+            .applyDirection(.north)
+            .applyDirection(.north)
+        
+        XCTAssertEqual(destination, "e4")
+    }
+    
+    func testNorthEastDiagonal() {
+        let source: Coordinate = "e2"
+        
+        let destination = source.applyDirection(.northEast)
+        
+        XCTAssertEqual(destination, "f3")
+    }
+    
+    func testSouthWestDiagonal() {
+        let source: Coordinate = "e2"
+        
+        let destination = source.applyDirection(.southWest)
+        
+        XCTAssertEqual(destination, "d1")
+    }
 
 }
