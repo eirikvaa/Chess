@@ -141,27 +141,27 @@ class Pawn: Piece, Identifiable {
             return [
                 MovePattern(moveType: .single, directions: .north),
                 MovePattern(moveType: .double, directions: .north, .north),
-                MovePattern(moveType: .diagonal, directions: .north, .west),
-                MovePattern(moveType: .diagonal, directions: .north, .east)
+                MovePattern(moveType: .diagonal, directions: .northWest),
+                MovePattern(moveType: .diagonal, directions: .northEast)
             ]
         case (true, .white):
             return [
                 MovePattern(moveType: .single, directions: .north),
-                MovePattern(moveType: .diagonal, directions: .north, .west),
-                MovePattern(moveType: .diagonal, directions: .north, .east)
+                MovePattern(moveType: .diagonal, directions: .northWest),
+                MovePattern(moveType: .diagonal, directions: .northEast)
             ]
         case (false, .black):
             return [
                 MovePattern(moveType: .single, directions: .south),
                 MovePattern(moveType: .double, directions: .south, .south),
-                MovePattern(moveType: .diagonal, directions: .south, .west),
-                MovePattern(moveType: .diagonal, directions: .south, .east)
+                MovePattern(moveType: .diagonal, directions: .southWest),
+                MovePattern(moveType: .diagonal, directions: .southEast)
             ]
         case (true, .black):
             return [
                 MovePattern(moveType: .single, directions: .south),
-                MovePattern(moveType: .diagonal, directions: .south, .west),
-                MovePattern(moveType: .diagonal, directions: .south, .east)
+                MovePattern(moveType: .diagonal, directions: .southWest),
+                MovePattern(moveType: .diagonal, directions: .southEast)
             ]
         }
     }
