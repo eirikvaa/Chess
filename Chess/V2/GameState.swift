@@ -18,6 +18,7 @@ struct GameState {
         case illegalMove
         case noValidSourcePieces
         case ambiguousMove
+        case cannotMovePieceOfOppositeSide
     }
     
     let board = Board()

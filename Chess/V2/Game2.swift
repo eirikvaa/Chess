@@ -40,6 +40,8 @@ class Game {
             } catch GameState.GameStateError.ambiguousMove {
                 print("The move \(userInput) was ambiguous, meaning two or more pieces can move to the same cell. Try again.")
                 continue
+            } catch GameState.GameStateError.cannotMovePieceOfOppositeSide {
+                print("\(gameState.currentSide) cannot move pieces of the opposite side. Try again")
             }
         }
     }
