@@ -54,15 +54,14 @@ private extension GameState {
         }
         
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
-        var sourcePieces: [Piece] = []
         
-        for cell in possibleSourceCells {
+        let sourcePieces: [Piece] = possibleSourceCells.compactMap { cell in
             guard let piece = cell.piece else {
-                continue
+                return nil
             }
             
             guard piece.side == currentSide else {
-                continue
+                return nil
             }
             
             // Filter out all illegal move patterns
@@ -89,10 +88,10 @@ private extension GameState {
             }
             
             if movePatterns.isEmpty {
-                continue
+                return nil
             }
             
-            sourcePieces.append(piece)
+            return piece
         }
         
         switch sourcePieces.count {
