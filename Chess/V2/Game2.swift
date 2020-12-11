@@ -19,7 +19,7 @@ class Game {
     func play() throws {
         while true {
             print(gameState.board)
-            print("> ", terminator: "")
+            print("\(gameState.currentSide)> ", terminator: "")
             
             guard let userInput = readLine(strippingNewline: true) else {
                 continue

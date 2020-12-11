@@ -46,7 +46,11 @@ private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
         // If the source coordinate is provided in the raw move, immediately return the corresponding piece
         if let sourceCoordinate = move.source, let piece = board[sourceCoordinate].piece {
-            return piece
+            if piece.side != currentSide {
+                throw GameStateError.cannotMovePieceOfOppositeSide
+            } else {
+                return piece
+            }
         }
         
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
@@ -54,6 +58,10 @@ private extension GameState {
         
         for cell in possibleSourceCells {
             guard let piece = cell.piece else {
+                continue
+            }
+            
+            guard piece.side == currentSide else {
                 continue
             }
             
