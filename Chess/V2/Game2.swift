@@ -45,4 +45,16 @@ class Game {
             }
         }
     }
+    
+    /**
+     Apply a list of moves to advance the board to a certain state.
+     - Parameter moves: The list of moves to apply
+     */
+    func applyMoves(_ moves: [String]) throws {
+        let interpretedMoves = try moves.map { try Move(rawMove: $0) }
+        
+        for move in interpretedMoves {
+            try gameState.executeMove(move: move)
+        }
+    }
 }
