@@ -97,13 +97,9 @@ private extension GameState {
         
         switch sourcePieces.count {
         case 0: throw GameStateError.noValidSourcePieces
-        case 1: break
+        case 1: return sourcePieces.first!
         case 2...: throw GameStateError.ambiguousMove
-        default: break // We break only because the compiler don't understand that it's actually exhaustive.
+        default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }
-        
-        // There should always be only a single move pattern that's allowed.
-        // If there are more, the move is ambiguous and must be fixed.
-        return sourcePieces.first!
     }
 }
