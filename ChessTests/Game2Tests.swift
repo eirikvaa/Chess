@@ -23,12 +23,6 @@ class Game2Tests: XCTestCase {
             "e4"
         ))
     }
-    
-    func testBlackTriesToMoveWhitePiece() throws {
-        XCTAssertThrowsError(try applyMoves(
-            "e4", "d2d4"
-        ))
-    }
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.

@@ -44,15 +44,6 @@ struct GameState {
 
 private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
-        // If the source coordinate is provided in the raw move, immediately return the corresponding piece
-        if let sourceCoordinate = move.source, let piece = board[sourceCoordinate].piece {
-            guard piece.side == currentSide else {
-                throw GameStateError.cannotMovePieceOfOppositeSide
-            }
-            
-            return piece
-        }
-        
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
         
         let sourcePieces: [Piece] = possibleSourceCells.compactMap { cell in
@@ -62,6 +53,10 @@ private extension GameState {
             
             guard piece.side == currentSide else {
                 return nil
+            }
+
+            if cell.coordinate == move.source {
+                return piece
             }
             
             // Filter out all illegal move patterns
