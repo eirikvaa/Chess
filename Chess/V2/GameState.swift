@@ -67,32 +67,22 @@ private extension GameState {
             
             // Filter out all illegal move patterns
             let movePatterns = piece.movePatterns.filter { movePattern in
+                guard let _ = cell.coordinate.getMovePattern(to: move.destination, with: movePattern.moveType)?.directions else {
+                    return false
+                }
+                
                 switch move.pieceType {
                 case .pawn:
-                    if move.isCapture {
-                        
+                    // For now, only allow a pawn to move diagonally if it's attacking a piece of the opposite side
+                    // This disallows en passant, and it also probably allows
+                    if move.isCapture && movePattern.moveType == .diagonal && board[move.destination].piece?.side != currentSide {
+                        return true
                     } else {
                         if movePattern.moveType == .diagonal {
                             return false
                         }
                     }
-                case .rook:
-                    guard let possibleMovePatternDirections = cell.coordinate.getMovePattern(to: move.destination, with: movePattern.moveType)?.directions else {
-                        return false
-                    }
-                    let thisMovePatternDirections = movePattern.directions
-                    
-                    // From `getMovePattern(to:with).directions we get a list of possible directions
-                    // From `movePattern.directions` we get a single direction
-                    // If these two are disjoint, the latter cannot be found in the former list, so reject it.
-                    if Set(thisMovePatternDirections).isDisjoint(with: Set(possibleMovePatternDirections)) {
-                        return false
-                    }
                 default: break
-                }
-                
-                guard board.piece(piece: piece, canMoveTo: move.destination, with: movePattern, move: move) else {
-                    return false
                 }
                 
                 return true
