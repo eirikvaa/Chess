@@ -31,10 +31,10 @@ class Board: CustomStringConvertible {
                 switch (file, rank) {
                 case ("a", 1),
                      ("h", 1):
-                    piece = Rook(side: .white)
+                    break//piece = Rook(side: .white)
                 case ("b", 1),
                      ("g", 1):
-                    break//piece = Knight(side: .white)
+                    piece = Knight(side: .white)
                 case ("c", 1),
                      ("f", 1):
                     break//piece = Bishop(side: .white)
@@ -46,10 +46,10 @@ class Board: CustomStringConvertible {
                     piece = Pawn(side: .white)
                 case ("a", 8),
                      ("h", 8):
-                    piece = Rook(side: .black)
+                    break//piece = Rook(side: .black)
                 case ("b", 8),
                      ("g", 8):
-                    break//piece = Knight(side: .black)
+                    piece = Knight(side: .black)
                 case ("c", 8),
                      ("f", 8):
                     break//piece = Bishop(side: .black)

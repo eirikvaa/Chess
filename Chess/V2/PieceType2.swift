@@ -127,6 +127,7 @@ protocol Piece: AnyObject {
  at which they are in, specifically if they have moved or not from before. If they have not moved yet,
  they can move ahead two cells. If not, they can only move one cell.
  */
+
 class Pawn: Piece, Identifiable {
     let id = UUID()
     var content: String {
@@ -171,7 +172,7 @@ class Pawn: Piece, Identifiable {
     }
 }
 
-
+/*
 class Rook: Piece {
     var id = UUID()
     var content: String {
@@ -191,7 +192,7 @@ class Rook: Piece {
         self.side = side
     }
 }
-/*
+
 class Bishop: Piece {
     var content: String {
         side == .white ? "♗" : "♝"
@@ -210,30 +211,33 @@ class Bishop: Piece {
         self.side = side
     }
 }
-
+*/
 class Knight: Piece {
+    var id = UUID()
     var content: String {
         side == .white ? "♘" : "♞"
     }
     var type: PieceType = .knight
     var side: Side = .white
     var hasMoved: Bool = false
-    var movePatterns = MovePatterns(patterns: [
-        MovePattern((.shape, [.north, .north, .east])),
-        MovePattern((.shape, [.east, .east, .north])),
-        MovePattern((.shape, [.east, .east, .south])),
-        MovePattern((.shape, [.south, .south, .east])),
-        MovePattern((.shape, [.south, .south, .west])),
-        MovePattern((.shape, [.west, .west, .south])),
-        MovePattern((.shape, [.west, .west, .north])),
-        MovePattern((.shape, [.north, .north, .west])),
-    ])
+    var movePatterns: [MovePattern] {
+        [
+            MovePattern(moveType: .shape, directions: .north, .north, .west),
+            MovePattern(moveType: .shape, directions: .north, .north, .east),
+            MovePattern(moveType: .shape, directions: .west, .west, .north),
+            MovePattern(moveType: .shape, directions: .west, .west, .south),
+            MovePattern(moveType: .shape, directions: .south, .south, .west),
+            MovePattern(moveType: .shape, directions: .south, .south, .east),
+            MovePattern(moveType: .shape, directions: .east, .east, .north),
+            MovePattern(moveType: .shape, directions: .east, .east, .south),
+        ]
+    }
     
     required init(side: Side) {
         self.side = side
     }
 }
-
+/*
 class Queen: Piece {
     var content: String {
         side == .white ? "♕" : "♛"
