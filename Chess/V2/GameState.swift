@@ -67,6 +67,7 @@ private extension GameState {
                 switch pattern.moveType {
                 case .shape: // Means only a knight
                     for direction in pattern.directions {
+                        // Handle moving the piece in an invalid direction, like off the board
                         guard let coordinate = currentCoordinate.applyDirection(direction) else {
                             return false
                         }
