@@ -20,6 +20,7 @@ struct GameState {
         case ambiguousMove
         case cannotMovePieceOfOppositeSide
         case destinationIsOccupiedByOwnPiece
+        case cannotPerformCaptureWithoutNotingItInMove
     }
     
     let board = Board()
@@ -65,35 +66,37 @@ private extension GameState {
                 var currentCoordinate = cell.coordinate
                 
                 switch pattern.moveType {
-                case .shape: // Means only a knight
+                case .shape:
+                    // A knight can move over other pieces, so just apply all directions and take it from there
                     for direction in pattern.directions {
-                        // Handle moving the piece in an invalid direction, like off the board
                         guard let coordinate = currentCoordinate.applyDirection(direction) else {
                             return false
                         }
                         
-                        guard coordinate != move.destination else {
-                            // If there is no piece in the destination, you can move there
-                            guard let destinationCoordinatePiece = board[move.destination].piece else {
-                                return true
-                            }
-                            
-                            // You cannot move to a destination in which one of you own pieces occupy
-                            if destinationCoordinatePiece.side == currentSide {
-                                throw GameStateError.destinationIsOccupiedByOwnPiece
-                            }
-                            
-                            return true
-                        }
-                        
-                        // We're allowed to move forward
                         currentCoordinate = coordinate
-                        
-                        // We arrived at the destination in a valid way
-                        if currentCoordinate == move.destination {
-                            return true
-                        }
                     }
+                    
+                    // If we're not in the correct destination, this is not the piece we're looking for
+                    guard currentCoordinate == move.destination else {
+                        return false
+                    }
+                    
+                    // If no piece in destination, move is valid
+                    guard let destinationPiece = board[currentCoordinate].piece else {
+                        return true
+                    }
+                    
+                    // Can only possibly move there if piece is of opposite side
+                    guard destinationPiece.side != currentSide else {
+                        return false
+                    }
+                    
+                    // Cannot try to capture if not marking it in the move
+                    guard move.isCapture else {
+                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                    }
+                    
+                    return true
                 default:
                     break
                 }
