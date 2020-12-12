@@ -60,23 +60,25 @@ struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLitera
      - Parameters direction: The direction to apply
      - Returns: A new coordinate
      */
-    func applyDirection(_ direction: Direction) -> Coordinate {
-        // let file = self.file + direction
-        // let rank = self.rank + direction
-        var file = self.file
-        var rank = self.rank
+    func applyDirection(_ direction: Direction) -> Coordinate? {
+        var _file: File? = self.file
+        var _rank: Rank? = self.rank
         
         switch direction {
         case .north,
-             .south: rank = rank + direction
+             .south: _rank = _rank! + direction
         case .east,
-             .west: file = file + direction
+             .west: _file = _file! + direction
         case .northWest,
              .northEast,
              .southWest,
              .southEast:
-            file = file + direction
-            rank = rank + direction
+            _file = _file! + direction
+            _rank = _rank! + direction
+        }
+        
+        guard let file = _file, let rank = _rank else {
+            return nil
         }
         
         return Coordinate(file: file, rank: rank)

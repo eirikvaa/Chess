@@ -32,7 +32,7 @@ struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
         lhs.value == rhs.value
     }
     
-    static func + (lhs: File, rhs: Direction) -> File {
+    static func + (lhs: File, rhs: Direction) -> File? {
         guard let lhsIndex: Int = validFiles.firstIndex(of: lhs.value) else {
             fatalError("Cannot find index of \(lhs.value), this should be impossible.")
         }
@@ -50,8 +50,8 @@ struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
         }
         
         let newIndex = lhsIndex + deltaX
-        guard newIndex < validFiles.count else {
-            fatalError("Index \(newIndex) is invalid.")
+        guard 0..<validFiles.count ~= newIndex else {
+            return nil
         }
         
         return File(stringLiteral: validFiles[newIndex])

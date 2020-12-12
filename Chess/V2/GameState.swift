@@ -19,6 +19,7 @@ struct GameState {
         case noValidSourcePieces
         case ambiguousMove
         case cannotMovePieceOfOppositeSide
+        case destinationIsOccupiedByOwnPiece
     }
     
     let board = Board()
@@ -46,7 +47,7 @@ private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
         
-        let sourcePieces: [Piece] = possibleSourceCells.compactMap { cell in
+        let sourcePieces: [Piece] = try possibleSourceCells.compactMap { cell in
             guard let piece = cell.piece else {
                 return nil
             }
@@ -59,11 +60,58 @@ private extension GameState {
                 return piece
             }
             
+            // Try to start from the possible source coordinate and move one direction at a time
+            let possibleMovePatterns = try piece.movePatterns.filter { pattern in
+                var currentCoordinate = cell.coordinate
+                
+                switch pattern.moveType {
+                case .shape: // Means only a knight
+                    for direction in pattern.directions {
+                        guard let coordinate = currentCoordinate.applyDirection(direction) else {
+                            return false
+                        }
+                        
+                        guard coordinate != move.destination else {
+                            // If there is no piece in the destination, you can move there
+                            guard let destinationCoordinatePiece = board[move.destination].piece else {
+                                return true
+                            }
+                            
+                            // You cannot move to a destination in which one of you own pieces occupy
+                            if destinationCoordinatePiece.side == currentSide {
+                                throw GameStateError.destinationIsOccupiedByOwnPiece
+                            }
+                            
+                            return true
+                        }
+                        
+                        // We're allowed to move forward
+                        currentCoordinate = coordinate
+                        
+                        // We arrived at the destination in a valid way
+                        if currentCoordinate == move.destination {
+                            return true
+                        }
+                    }
+                default:
+                    break
+                }
+                
+                return false
+            }
+            
+            if possibleMovePatterns.count > 0 {
+                return piece
+            }
+            
+            return nil
+            
+            /*
             // Filter out all illegal move patterns
             let movePatterns = piece.movePatterns.filter { movePattern in
-                guard let _ = cell.coordinate.getMovePattern(to: move.destination, with: movePattern.moveType)?.directions else {
+                /*guard let _ = cell.coordinate.getMovePattern(to: move.destination, with: movePattern.moveType)?.directions else {
                     return false
-                }
+                }*/
                 
                 switch move.pieceType {
                 case .pawn:
@@ -84,9 +132,9 @@ private extension GameState {
             
             if movePatterns.isEmpty {
                 return nil
-            }
+            }*/
             
-            return piece
+            //return piece
         }
         
         switch sourcePieces.count {

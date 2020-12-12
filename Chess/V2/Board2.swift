@@ -123,7 +123,7 @@ class Board: CustomStringConvertible {
         - movePattern: The move pattern with which to move the piece to the coordinate
      - Returns: True if the piece can be moved, false otherwise
      */
-    func piece(piece: Piece, canMoveTo destinationCoordinate: Coordinate, with movePattern: MovePattern, move: Move) -> Bool {
+    /*func piece(piece: Piece, canMoveTo destinationCoordinate: Coordinate, with movePattern: MovePattern, move: Move) -> Bool {
         let oldCoordinate = getCell(of: piece).coordinate
         
         switch movePattern.moveType {
@@ -156,7 +156,7 @@ class Board: CustomStringConvertible {
         }
         
         return currentCoordinate == destinationCoordinate
-    }
+    }*/
     
     var description: String {
         var _description = "    a   b   c   d   e   f   g   h\n"

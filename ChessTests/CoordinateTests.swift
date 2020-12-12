@@ -50,7 +50,7 @@ class CoordinateTests: XCTestCase {
         let source: Coordinate = "e2"
         
         let destination = source
-            .applyDirection(.north)
+            .applyDirection(.north)?
             .applyDirection(.north)
         
         XCTAssertEqual(destination, "e4")

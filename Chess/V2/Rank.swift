@@ -27,7 +27,7 @@ struct Rank: Equatable, CustomStringConvertible, ExpressibleByIntegerLiteral {
         lhs.value == rhs.value
     }
     
-    static func + (lhs: Rank, rhs: Direction) -> Rank {
+    static func + (lhs: Rank, rhs: Direction) -> Rank? {
         let deltaY: Int
         switch rhs {
         case .north,
@@ -42,11 +42,13 @@ struct Rank: Equatable, CustomStringConvertible, ExpressibleByIntegerLiteral {
         let newIndex = lhs.value + deltaY
         
         guard 1...8 ~= newIndex else {
-            fatalError("Rank \(newIndex) is impossible to attain.")
+            return nil
         }
         
         return Rank(value: newIndex)
     }
+    
+    static var validRanks = 1...8
     
     var description: String {
         "\(value)"

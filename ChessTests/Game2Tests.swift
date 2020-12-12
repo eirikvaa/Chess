@@ -23,6 +23,12 @@ class Game2Tests: XCTestCase {
             "e4"
         ))
     }
+    
+    func testKnightToC3() throws {
+        XCTAssertNoThrow(try applyMoves(
+            "Nc3"
+        ))
+    }
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
