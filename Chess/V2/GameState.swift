@@ -102,7 +102,31 @@ private extension GameState {
                     case .pawn:
                         break
                     case .king:
-                        break
+                        guard let direction = pattern.directions.first else {
+                            return false
+                        }
+                        
+                        guard let coordinate = currentCoordinate.applyDirection(direction) else {
+                            return false
+                        }
+                        
+                        guard coordinate == move.destination else {
+                            return false
+                        }
+                        
+                        guard let destinationPiece = board[coordinate].piece else {
+                            return true
+                        }
+                        
+                        guard destinationPiece.side != currentSide else {
+                            return false
+                        }
+                        
+                        guard move.isCapture else {
+                            throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                        }
+                        
+                        return true
                     default: break
                     }
                 default:

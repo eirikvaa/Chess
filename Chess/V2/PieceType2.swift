@@ -260,27 +260,28 @@ class Queen: Piece {
         self.side = side
     }
 }
-
+*/
 class King: Piece {
+    var id = UUID()
     var content: String {
         side == .white ? "♔" : "♚"
     }
     var type: PieceType = .king
     var side: Side = .white
     var hasMoved: Bool = false
-    var movePatterns = MovePatterns(patterns: [
-        MovePattern((.single, [.north])),
-        MovePattern((.single, [.north, .east])),
-        MovePattern((.single, [.east])),
-        MovePattern((.single, [.south, .east])),
-        MovePattern((.single, [.south])),
-        MovePattern((.single, [.south, .west])),
-        MovePattern((.single, [.west])),
-        MovePattern((.single, [.north, .west]))
-    ])
+    var movePatterns: [MovePattern] = [
+        MovePattern(moveType: .single, directions: .north),
+        MovePattern(moveType: .single, directions: .northEast),
+        MovePattern(moveType: .single, directions: .east),
+        MovePattern(moveType: .single, directions: .southEast),
+        MovePattern(moveType: .single, directions: .south),
+        MovePattern(moveType: .single, directions: .southWest),
+        MovePattern(moveType: .single, directions: .west),
+        MovePattern(moveType: .single, directions: .northWest)
+    ]
     
     required init(side: Side) {
         self.side = side
     }
 }
-*/
+

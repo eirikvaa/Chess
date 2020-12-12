@@ -41,7 +41,7 @@ class Board: CustomStringConvertible {
                 case ("d", 1):
                     break//piece = Queen(side: .white)
                 case ("e", 1):
-                    break//piece = King(side: .white)
+                    piece = King(side: .white)
                 case (_, 2):
                     piece = Pawn(side: .white)
                 case ("a", 8),
@@ -56,7 +56,7 @@ class Board: CustomStringConvertible {
                 case ("d", 8):
                     break//piece = Queen(side: .black)
                 case ("e", 8):
-                    break//piece = King(side: .black)
+                    piece = King(side: .black)
                 case (_, 7):
                     piece = Pawn(side: .black)
                 default:
