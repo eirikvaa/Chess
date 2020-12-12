@@ -76,12 +76,12 @@ private extension GameState {
                         currentCoordinate = coordinate
                     }
                     
-                    // If we're not in the correct destination, this is not the piece we're looking for
+                    // If we don't end up in the correct destination, this is not the piece we're looking for
                     guard currentCoordinate == move.destination else {
                         return false
                     }
                     
-                    // If no piece in destination, move is valid
+                    // If the end cell is free, we can move there
                     guard let destinationPiece = board[currentCoordinate].piece else {
                         return true
                     }
@@ -97,6 +97,14 @@ private extension GameState {
                     }
                     
                     return true
+                case .single:
+                    switch move.pieceType {
+                    case .pawn:
+                        break
+                    case .king:
+                        break
+                    default: break
+                    }
                 default:
                     break
                 }
