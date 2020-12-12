@@ -100,7 +100,31 @@ private extension GameState {
                 case .single:
                     switch move.pieceType {
                     case .pawn:
-                        break
+                        guard let direction = pattern.directions.first else {
+                            return false
+                        }
+                        
+                        guard let coordinate = currentCoordinate.applyDirection(direction) else {
+                            return false
+                        }
+                        
+                        guard coordinate == move.destination else {
+                            return false
+                        }
+                        
+                        let validAttackDirectionsForSide: [Direction] = currentSide == .white ?
+                            [.northWest, .northEast] :
+                            [.southWest, .southEast]
+                        
+                        let validMoveDirectionsForSide: Direction = currentSide == .white ? .north : .south
+                        
+                        if move.isCapture && validAttackDirectionsForSide.contains(direction) {
+                            return true
+                        } else if !move.isCapture && validMoveDirectionsForSide == direction {
+                            return true
+                        } else {
+                            return false
+                        }
                     case .king:
                         guard let direction = pattern.directions.first else {
                             return false
