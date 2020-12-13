@@ -7,4 +7,5 @@
 //
 
 let game2 = Game()
+
 try game2.play()
