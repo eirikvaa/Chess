@@ -6,9 +6,5 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
-//try RealGameExecutor(moveFormatValidator: SANMoveFormatValidator()).play()
-//let file = try PGNGameReader.readFile("twic920")
 let game2 = Game()
 try game2.play()
