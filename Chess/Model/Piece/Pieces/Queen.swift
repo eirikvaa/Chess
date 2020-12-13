@@ -31,7 +31,7 @@ class Queen: Piece {
     required init(side: Side) {
         self.side = side
     }
-    
+
     var desc: String {
         "Q" + content
     }
