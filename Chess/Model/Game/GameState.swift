@@ -48,7 +48,7 @@ private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
 
-        let possibleSourcePieces: [PossibleMove] = possibleSourceCells.compactMap {
+        let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
             guard let piece = $0.piece else {
                 return nil
             }
@@ -58,10 +58,44 @@ private extension GameState {
             }
 
             let possibleCoordinateSequences = getCoordinateSequences(move: move, cell: $0, piece: piece)
-                .filter { !$0.isEmpty }
+
+            for seq in possibleCoordinateSequences {
+                switch move.pieceType {
+                case .bishop:
+                    for coordinate in seq {
+                        if coordinate == move.destination {
+                            if move.isCapture {
+                                if let pieceInDestination = board[coordinate].piece {
+                                    if pieceInDestination.side != currentSide {
+                                        return piece
+                                    } else {
+                                        throw GameStateError.cannotCaptureOwnPiece
+                                    }
+                                }
+                            } else {
+                                if let pieceInDestination = board[coordinate].piece {
+                                    if pieceInDestination.side != currentSide {
+                                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                                    } else {
+                                        throw GameStateError.cannotCaptureOwnPiece
+                                    }
+                                } else {
+                                    return piece
+                                }
+                            }
+                        }
+
+                        if board[coordinate].piece == nil {
+                            return piece
+                        }
+                    }
+                default:
+                    break
+                }
+            }
 
             if !possibleCoordinateSequences.isEmpty {
-                return PossibleMove(piece: piece, coordinateSequence: possibleCoordinateSequences[0])
+                return piece
             }
 
             return nil
@@ -69,14 +103,14 @@ private extension GameState {
 
         switch possibleSourcePieces.count {
         case 0: throw GameStateError.noValidSourcePieces
-        case 1: return possibleSourcePieces[0].piece
+        case 1: fatalError()
         case 2...: throw GameStateError.ambiguousMove
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }
     }
 
     func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [[Coordinate]] {
-        return piece.movePatterns.compactMap { pattern -> [Coordinate] in
+        return piece.movePatterns.compactMap { pattern -> [Coordinate]? in
             var currentCoordinate = cell.coordinate
 
             // If there is only one direction in the pattern, let's assume that the move is continuous.
@@ -107,7 +141,7 @@ private extension GameState {
                 }
             }
 
-            return []
+            return nil
         }
     }
 }
