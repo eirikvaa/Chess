@@ -10,50 +10,46 @@ import XCTest
 
 class Game2Tests: XCTestCase {
     func testPawnMoveToE4() throws {
-        XCTAssertNoThrow(try applyMoves(
-            "e4"
-        ))
+        assertMoves("e4", throws: .noThrow)
     }
 
     func testKnightToC3() throws {
-        XCTAssertNoThrow(try applyMoves(
-            "Nc3"
-        ))
+        assertMoves("Nc3", throws: .noThrow)
     }
 
     func testBishopCannotMoveToPieceOccupiedByItsOwnSide() throws {
-        XCTAssertThrowsError(try applyMoves(
-            "Bd2"
-        ))
-    }
-
-    func testPawnE4() throws {
-        XCTAssertNoThrow(try applyMoves(
-            "e4"
-        ))
+        assertMoves("B2d", throws: .doThrow)
     }
 
     func testKnightDoubleMovesAndCapturesPawn() throws {
-        XCTAssertNoThrow(try applyMoves(
-            "Nc3", "d5", "Nxd5"
-        ))
+        assertMoves("Nc3", "d5", "Nxd5", throws: .noThrow)
     }
 
     func testPawnsCannotAttackForward() throws {
-        XCTAssertThrowsError(try applyMoves(
-            "e4", "e5", "xe5"
-        ))
+        assertMoves("e4", "e5", "xe5", throws: .doThrow)
     }
 
     func testPawnLegalAttack() throws {
-        XCTAssertNoThrow(try applyMoves(
-            "e4", "d5", "xd5"
-        ))
+        assertMoves("e4", "d5", "xd5", throws: .noThrow)
+    }
+
+    func testWhitePawnCannotAttackBackwards() throws {
+        assertMoves("e4", "d5", "e5", "d4", "xd3", throws: .doThrow)
     }
 }
 
 private extension Game2Tests {
-    func applyMoves(_ moves: String...) throws {
-        try Game().applyMoves(Array(moves))
+    enum Throw {
+        case doThrow
+        case noThrow
+    }
+
+    func assertMoves(_ moves: String..., throws: Throw) {
+        let game = Game()
+
+        switch `throws` {
+        case .doThrow: XCTAssertThrowsError(try game.applyMoves(moves))
+        case .noThrow: XCTAssertNoThrow(try game.applyMoves(moves))
+        }
     }
 }
