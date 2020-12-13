@@ -6,6 +6,8 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+import XCTest
+
 class Game2Tests: XCTestCase {
 
     override func setUpWithError() throws {

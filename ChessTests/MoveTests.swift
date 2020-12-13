@@ -8,8 +8,6 @@
 
 import XCTest
 
-@testable import Chess
-
 class MoveTests: XCTestCase {
     func testPawnMove() throws {
         let move = try Move(rawMove: "e4")

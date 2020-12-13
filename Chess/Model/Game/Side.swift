@@ -9,7 +9,7 @@
 /**
  The side of the board. A piece belongs to one or the other. Can be either white or black.
  */
-enum Side {
+enum Side: Equatable {
     case white
     case black
 
@@ -20,6 +20,16 @@ enum Side {
         switch self {
         case .white: self = .black
         case .black: self = .white
+        }
+    }
+    
+    static func == (lhs: Side, rhs: Side) -> Bool {
+        switch (lhs, rhs) {
+        case (.white, .white),
+             (.black, .black):
+            return true
+        default:
+            return false
         }
     }
 }

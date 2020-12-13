@@ -6,18 +6,17 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import XCTest
+//import XCTest
 
-@testable import Chess
-
-class PlayerTests: XCTestCase {
-    func testOppositeOfBlackSideShouldBeWhite() {
-        let black = Side.black
-        XCTAssertEqual(black.oppositeSide, .white)
+/*class PlayerTests: XCTestCase {
+    /*func testOppositeOfBlackSideShouldBeWhite() {
+        var black = Side.black
+        XCTAssertEqual(black.toggle(), Side.white)
     }
 
     func testOppositeOfWhiteSideShouldBeBlack() {
-        let white = Side.white
-        XCTAssertEqual(white.oppositeSide, .black)
-    }
+        var white = Side.white
+        XCTAssertEqual(white.toggle(), Side.black)
+    }*/
 }
+*/

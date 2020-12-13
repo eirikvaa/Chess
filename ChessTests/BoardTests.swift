@@ -9,7 +9,7 @@
 import XCTest
 
 @testable import Chess
-
+/*
 class BoardTests: XCTestCase {
     func testWhitePlayerMoveNorth() {
         assertMovement(s: "e2", d: "e3", direction: .north, side: .white)
@@ -35,3 +35,4 @@ extension BoardTests {
         XCTAssertEqual(newCoordinate, destinationCoordinate)
     }
 }
+*/
