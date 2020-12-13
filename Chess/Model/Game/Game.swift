@@ -67,15 +67,6 @@ class Game {
  It is basically a function like board(move) -> board
  */
 struct GameState {
-    enum GameStateError: Error {
-        case illegalMove
-        case noValidSourcePieces
-        case ambiguousMove
-        case cannotMovePieceOfOppositeSide
-        case destinationIsOccupiedByOwnPiece
-        case cannotPerformCaptureWithoutNotingItInMove
-    }
-
     let board = Board()
     var currentSide = Side.white
 
