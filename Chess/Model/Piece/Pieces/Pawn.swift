@@ -12,15 +12,15 @@ extension MovePattern {
     static func n(_ direction: Direction, count: Int) -> MovePattern {
         .init(directions: Array(repeating: direction, count: count))
     }
-    
+
     static func one(_ direction: Direction) -> MovePattern {
         n(direction, count: 1)
     }
-    
+
     static func two(_ direction: Direction) -> MovePattern {
         n(direction, count: 2)
     }
-    
+
     static func eight(_ direction: Direction) -> MovePattern {
         n(direction, count: 8)
     }
@@ -45,7 +45,7 @@ struct Pawn: Piece, Identifiable {
 
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source
-        
+
         switch (delta.x, delta.y) {
         case (0, 1...2): return MovePattern(directions: Array(repeating: Direction.north, count: delta.y))
         case (0, (-2)...(-1)): return MovePattern(directions: Array(repeating: Direction.south, count: abs(delta.y)))

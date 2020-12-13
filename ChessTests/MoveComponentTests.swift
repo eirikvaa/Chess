@@ -50,7 +50,7 @@ class MoveComponentTests: XCTestCase {
         let im = try SANMoveInterpreter().interpret(move)
         assertProperties(move: im, isCheck: false, isCapture: true, destination: "e1", pieceType: .queen, rank: 4, file: "h")
     }
-    
+
     func testHei() throws {
         let move = "Qf6"
         let im = try SANMoveInterpreter().interpret(move)

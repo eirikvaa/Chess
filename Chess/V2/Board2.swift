@@ -14,20 +14,20 @@ import Foundation
  */
 class Board: CustomStringConvertible {
     private let cells: [[Cell]]
-    
+
     init() {
         let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
         let ranks = 1...8
-        
+
         var matrix: [[Cell]] = []
         ranks.forEach { rank in
             var currentRow: [Cell] = []
-            
+
             files.forEach { file in
                 let coordinate = Coordinate(file: File(value: file), rank: Rank(value: rank))
-                
+
                 var piece: Piece?
-                
+
                 switch (file, rank) {
                 case ("a", 1),
                      ("h", 1):
@@ -62,17 +62,17 @@ class Board: CustomStringConvertible {
                 default:
                     break
                 }
-                
+
                 let cell = Cell(coordinate: coordinate, piece: piece)
                 currentRow.append(cell)
             }
-            
+
             matrix.insert(currentRow, at: 0)
         }
-        
+
         self.cells = matrix
     }
-    
+
     /**
      Get the cell from a pair of file and rank.
      */
@@ -82,14 +82,14 @@ class Board: CustomStringConvertible {
             cell.coordinate.file == file && cell.coordinate.rank == rank
         }.first!
     }
-    
+
     /**
      Get the cell from a coordinate.
      */
     subscript(coordinate: Coordinate) -> Cell {
         self[coordinate.file, coordinate.rank]
     }
-    
+
     /**
      Get all pieces of a given piece type and from a given side.
      - Parameters:
@@ -102,7 +102,7 @@ class Board: CustomStringConvertible {
             $0.piece?.type == type && $0.piece?.side == side
         }
     }
-    
+
     /**
      Get the cell of a given piece
      Returns a non-optional because we _must_ find the cell for which a piece resides.
@@ -115,7 +115,7 @@ class Board: CustomStringConvertible {
             $0.piece?.id == piece.id && $0.piece?.type == piece.type
         })!
     }
-    
+
     /**
      Check if the given piece can be moved to the given coordinate with the given move pattern.
      - Parameters:
@@ -158,25 +158,25 @@ class Board: CustomStringConvertible {
         
         return currentCoordinate == destinationCoordinate
     }*/
-    
+
     var description: String {
-        var _description = "    a   b   c   d   e   f   g   h\n"
-        _description += "   ––– ––– ––– ––– ––– ––– ––– ––– \n"
+        var desc = "    a   b   c   d   e   f   g   h\n"
+        desc += "   ––– ––– ––– ––– ––– ––– ––– ––– \n"
 
         for (index, rank) in cells.enumerated() {
-            _description += "\(8 - index) |"
+            desc += "\(8 - index) |"
 
             for cell in rank {
                 let cellContent = cell.piece?.content ?? " "
-                _description += " " + cellContent + " |"
+                desc += " " + cellContent + " |"
             }
 
-            _description += " \(8 - index)\n   ––– ––– ––– ––– ––– ––– ––– ––– \n"
+            desc += " \(8 - index)\n   ––– ––– ––– ––– ––– ––– ––– ––– \n"
         }
 
-        _description += "    a   b   c   d   e   f   g   h\n"
+        desc += "    a   b   c   d   e   f   g   h\n"
 
-        return _description
+        return desc
     }
 }
 

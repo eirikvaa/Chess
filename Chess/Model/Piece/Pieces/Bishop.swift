@@ -27,7 +27,7 @@ struct Bishop: Piece, Identifiable {
 
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source
-        
+
         guard delta.equalMagnitude else {
             return .init(directions: [])
         }

@@ -12,7 +12,7 @@
  */
 class Game {
     private var gameState = GameState()
-    
+
     /**
      Start a new game. Will throw if moves are invalid.
      */
@@ -20,11 +20,11 @@ class Game {
         while true {
             print(gameState.board)
             print("\(gameState.currentSide)> ", terminator: "")
-            
+
             guard let userInput = readLine(strippingNewline: true) else {
                 continue
             }
-            
+
             do {
                 let move = try Move(rawMove: userInput)
                 try gameState.executeMove(move: move)
@@ -45,14 +45,14 @@ class Game {
             }
         }
     }
-    
+
     /**
      Apply a list of moves to advance the board to a certain state.
      - Parameter moves: The list of moves to apply
      */
     func applyMoves(_ moves: [String]) throws {
         let interpretedMoves = try moves.map { try Move(rawMove: $0) }
-        
+
         for move in interpretedMoves {
             try gameState.executeMove(move: move)
         }

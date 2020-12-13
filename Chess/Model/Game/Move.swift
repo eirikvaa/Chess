@@ -49,7 +49,7 @@ struct SANMoveInterpreter: MoveInterpreter {
         let destination: BoardCoordinate
         var isQueenSideCastling = false
         var isKingSideCastling = false
-        
+
         let castlingFormat = #"(O\-O\-O)|(O\-O)"#
         if let match = move.range(of: castlingFormat, options: .regularExpression) {
             switch move[match] {
@@ -58,16 +58,16 @@ struct SANMoveInterpreter: MoveInterpreter {
             default: break
             }
         }
-        
+
         if let promotionIndex = move.firstIndex(of: "=") {
             isPromotion = true
             let promotionToPiece = move[move.index(after: promotionIndex)]
-            
+
             // We avoid creating new pieces, but in this case it's okay as promotion is technically
             // replacing an old piece with a new one.
             promotionDestinationPiece = PieceFabric.create(promotionToPiece)
         }
-        
+
         if isKingSideCastling || isQueenSideCastling {
             // It doesn't really matter what we return here, because a castling move will kind of shortcut its way
             // through the entire validation (as of now). The important thing is that it includes the options
@@ -76,14 +76,14 @@ struct SANMoveInterpreter: MoveInterpreter {
             let option: MoveOption = isKingSideCastling ? .kingCastling : .queenCastling
             return SANMove(rawInput: move, pieceType: .pawn, side: .white, source: nil, destination: "h8", options: [option])
         }
-        
+
         let coreFormat = #"([K|Q|B|N|R]?[a-h]?[1-8]?)?x?[a-h][1-8]([+|#|Q])?"#
         guard let match = move.range(of: coreFormat, options: .regularExpression) else {
             throw GameError.invalidMove(message: "At least the destination coordinate is not specified.")
         }
-        
+
         var matchString = move[match]
-        
+
         if let last = matchString.last {
             switch last {
             case "+":
@@ -99,41 +99,41 @@ struct SANMoveInterpreter: MoveInterpreter {
                 break
             }
         }
-        
+
         // If we came here then the last two characters in the match must be the destination file and rank.
         destination = BoardCoordinate(stringLiteral: String(matchString.suffix(2)))
         matchString.removeLast(2)
-        
+
         if matchString.contains("x") {
             isCapture = true
             matchString.removeLast()
         }
-        
+
         if let first = matchString.first, ["K", "Q", "B", "N", "R"].contains(first) {
             pieceType = PieceTypeFabric.create(first)
             matchString.removeFirst()
         } else {
             pieceType = .pawn
         }
-        
+
         var sourceFile: File?
         if let possibleFile = matchString.first, File.validFiles.contains(String(possibleFile)) {
             sourceFile = File(stringLiteral: String(possibleFile))
             matchString.removeFirst()
         }
-        
+
         var sourceRank: Rank?
         if let possibleRank = matchString.first, let integerValue = Int(String(possibleRank)), Rank.validRanks.contains(integerValue) {
             sourceRank = Rank(integerLiteral: integerValue)
             matchString.removeFirst()
         }
-        
+
         if matchString.isEmpty == false {
             fatalError("We interpreted the raw move wrong! :-(")
         }
-        
+
         source = .init(file: sourceFile, rank: sourceRank)
-        
+
         var options: [MoveOption] = []
         if isCheck { options.append(.check) }
         if isMate { options.append(.mate) }
@@ -141,7 +141,7 @@ struct SANMoveInterpreter: MoveInterpreter {
         if isPromotion { options.append(.promotion) }
         if isQueenSideCastling { options.append(.queenCastling) }
         if isKingSideCastling { options.append(.kingCastling) }
-        
+
         let move = SANMove(rawInput: move,
                            pieceType: pieceType,
                            side: .white,
@@ -149,7 +149,7 @@ struct SANMoveInterpreter: MoveInterpreter {
                            destination: destination,
                            options: options)
         move.promotionPiece = promotionDestinationPiece
-        
+
         return move
     }
 }
@@ -179,11 +179,11 @@ extension Move {
     func isCastling() -> Bool {
         options.contains(.kingCastling) || options.contains(.queenCastling)
     }
-    
+
     func isCapture() -> Bool {
         options.contains(.capture)
     }
-    
+
     func isEnPassant() -> Bool {
         options.contains(.enPassant)
     }
@@ -198,14 +198,14 @@ class SANMove: Move, NSCopying {
     let destination: BoardCoordinate
     var options: [MoveOption]
     var promotionPiece: Piece?
-    
+
     func copy(with zone: NSZone? = nil) -> Any {
         let move = SANMove(rawInput: rawInput, pieceType: pieceType, side: side, source: source, destination: destination, options: options)
         move.source = source
         move.promotionPiece = promotionPiece
         return move
     }
-    
+
     init(rawInput: String, pieceType: PieceType, side: Side, source: BoardCoordinate?, destination: BoardCoordinate, options: [MoveOption]) {
         self.rawInput = rawInput
         self.side = side
@@ -214,7 +214,7 @@ class SANMove: Move, NSCopying {
         self.destination = destination
         self.options = options
     }
-    
+
     var description: String {
         rawInput
     }

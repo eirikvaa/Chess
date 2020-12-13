@@ -16,14 +16,14 @@ extension String {
         guard self.count > count else {
             return (self, "")
         }
-        
+
         var chars: [String] = []
-        
+
         for _ in 0..<count {
             let lastCharacter = removeLast()
             chars.insert(String(lastCharacter), at: 0)
         }
-        
+
         return (chars.joined(), self)
     }
 }

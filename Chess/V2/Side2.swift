@@ -12,7 +12,7 @@
 enum Side {
     case white
     case black
-    
+
     /**
      Mutate the side by setting it to the opposite side.
      */

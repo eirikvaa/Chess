@@ -27,7 +27,7 @@ struct Rook: Piece, Identifiable {
 
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source
-        
+
         switch (delta.x, delta.y) {
         case (1..., 0):
             let direction = Direction.east

@@ -28,10 +28,10 @@ struct King: Piece, Identifiable {
             [.northWest]
         ]
     }
-    
+
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source
-        
+
         switch (delta.x, delta.y) {
         case (0, 1):
             return [.north]

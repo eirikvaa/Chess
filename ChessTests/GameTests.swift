@@ -146,15 +146,15 @@ class GameTests: XCTestCase {
     }
 
     // MARK: Real-life chess games
-    
+
     func testTWIC920PGNFile() {
         XCTAssertNoThrow(try assertNonThrowingPGNFile("twic920"))
     }
-    
+
     func testTWIC921PGNFile() {
         XCTAssertNoThrow(try assertNonThrowingPGNFile("twic921"))
     }
-    
+
     /**
      Fool's Mate is the fastest check mate that cen be performed.
      */
@@ -177,17 +177,17 @@ extension GameTests {
         let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
 
         XCTAssertNoThrow(try game.play(), message)
-        
+
         return game
     }
-    
+
     func assertNonThrowingPGNFile(_ fileName: String) throws {
         let games = try PGNGameReader.readFile(fileName)
-        
+
         var failedGames: [(Int, String)] = []
         for (index, gameString) in games[...10].enumerated() {
             let movesInGame = PGNGameReader.read(textRepresentation: gameString)
-            
+
             let game = TestGameExecutor(moves: movesInGame)
 
             do {
@@ -198,7 +198,7 @@ extension GameTests {
                 failedGames.append((index, gameString))
             }
         }
-        
+
         if failedGames.isEmpty {
             print("\(games.count) chess games were played without (apparent) failure.")
         }

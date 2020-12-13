@@ -24,7 +24,7 @@ class Board: NSCopying {
 
         resetBoard()
     }
-    
+
     private init(cells: [[BoardCell]]) {
         self.cells = cells
     }
@@ -49,7 +49,7 @@ class Board: NSCopying {
             self[lastPawnCoordinate] = nil
             return
         }
-        
+
         if move.options.contains(.promotion) {
             var promotionPiece = move.promotionPiece
             promotionPiece?.side = side
@@ -57,13 +57,13 @@ class Board: NSCopying {
             self[move.source!] = nil
             return
         }
-        
+
         if move.options.contains(.kingCastling) { // King castling: O-O
             let kingSideRookCoordinate: BoardCoordinate = side == .black ? "h8" : "h1"
             let kingCoordinate: BoardCoordinate = side == .black ? "e8" : "e1"
             let kingSideRook = self[kingSideRookCoordinate]
             let king = self[kingCoordinate]
-            
+
             self[side == .black ? "g8" : "g1"] = king
             self[side == .black ? "f8" : "f1"] = kingSideRook
             self[kingSideRookCoordinate] = nil
@@ -74,26 +74,26 @@ class Board: NSCopying {
             let queenSideRook = self[queenSideRookCoordinate]
             let kingCoordinate: BoardCoordinate = side == .black ? "e8" : "e1"
             let king = self[kingCoordinate]
-            
+
             self[side == .black ? "c8" : "c1"] = king
             self[side == .black ? "d8" : "d1"] = queenSideRook
             self[queenSideRookCoordinate] = nil
             self[kingCoordinate] = nil
             return
         }
-        
+
         guard let source = move.source else {
             // TODO: Handle error properly
             return
         }
-        
+
         var sourcePiece = self[source]
 
         sourcePiece?.moved = true
         self[move.destination] = sourcePiece
         self[move.source!] = nil
     }
-    
+
     func copy(with zone: NSZone? = nil) -> Any {
         let currentCells = cells
         let board = Board(cells: currentCells)
@@ -133,32 +133,32 @@ class Board: NSCopying {
         // Will never end up here
         return .init(stringLiteral: "")
     }
-    
+
     func tryMovingToSource(source: BoardCoordinate, destination: BoardCoordinate, movePattern: MovePattern, canMoveOver: Bool, side: Side) -> Bool {
         var current = source
-        
+
         for direction in movePattern.directions {
             current = current.move(by: direction, side: side)
-            
+
             if current == destination {
                 return true
             }
-            
+
             if self[current] != nil && !canMoveOver {
                 return false
             }
         }
-        
+
         return true
     }
-    
+
     /**
      Creates a sandboxed board when trying out new different moves.
      */
     func sandBoxedBoard() -> Board {
         return self.copy() as! Board
     }
-    
+
     /**
      Test if the passed-in move puts the King in check. This will make a copy of the board and try out
      the move in a safe manner before reporting back if the move is illegal or not.
@@ -167,22 +167,22 @@ class Board: NSCopying {
         let sandboxBoard = sandBoxedBoard()
         let sandboxedMove = (move as! SANMove).copy() as! SANMove // TODO: Fix this abomination
         sandboxedMove.source = source
-        
+
         sandboxBoard.performMove(sandboxedMove, side: side, lastMove: lastMove)
-        
+
         // We avoid checking for the King because the King cannot put another King in check.
         let pieceTypes: [PieceType] = [.queen, .knight, .bishop, .rook, .pawn]
         let attackerSide = side.oppositeSide
         let thisSideKing = sandboxBoard.getPieces(of: .king, side: side)[0]
         let thisSideKingCoordinate = sandboxBoard.getCoordinate(of: thisSideKing)
-        
+
         for pieceType in pieceTypes {
             let attackerPieces = sandboxBoard.getPieces(of: pieceType, side: attackerSide)
-            
+
             for piece in attackerPieces {
                 let sourceCoordinate = sandboxBoard.getCoordinate(of: piece)
                 let validPattern = piece.validPattern(source: sourceCoordinate, destination: thisSideKingCoordinate)
-                
+
                 if piece.type == .pawn {
                     if !piece.moved {
                         let blackPredicate = attackerSide == .black && [[.south], [.south, .south], [.southWest], [.southEast]].contains(validPattern)
@@ -198,63 +198,63 @@ class Board: NSCopying {
                         }
                     }
                 }
-                
+
                 guard validPattern.directions.count > 0 else {
                     continue
                 }
-                
+
                 guard sandboxBoard.tryMovingToSource(source: sourceCoordinate, destination: thisSideKingCoordinate, movePattern: validPattern, canMoveOver: false, side: side) else {
                     continue
                 }
-                
+
                 var current = sourceCoordinate
                 for direction in validPattern.directions {
                     if [.north, .south].contains(direction) && piece.type == .pawn {
                         continue
                     }
-                    
+
                     current = current.move(by: direction, side: attackerSide)
-                    
+
                     guard current.isValid else {
                         break
                     }
-                    
+
                     if self[current]?.type == .king {
                         return true
                     }
                 }
             }
         }
-        
+
         return false
     }
-    
+
     func execute(movePattern: MovePattern, for piece: Piece, on side: Side) {
         let source = getCoordinate(of: piece)
         var current = source
-        
+
         movePattern.directions.forEach {
             current = current.move(by: $0, side: side)
         }
-        
+
         self[current] = piece
         self[source] = nil
     }
-    
+
     func isKingInCheck(side: Side) -> Bool {
         // We avoid checking for the King because the King cannot put another King in check.
         let pieceTypes: [PieceType] = [.queen, .knight, .bishop, .rook, .pawn]
         let attackerSide = side.oppositeSide
         let thisSideKing = getPieces(of: .king, side: side)[0]
         let thisSideKingCoordinate = getCoordinate(of: thisSideKing)
-        
+
         for pieceType in pieceTypes {
             let attackerPieces = getPieces(of: pieceType, side: attackerSide)
-            
+
             for piece in attackerPieces {
                 let sourceCoordinate = getCoordinate(of: piece)
                 let validPattern = piece.validPattern(source: sourceCoordinate, destination: thisSideKingCoordinate)
-                
+
                 if piece.type == .pawn {
                     if !piece.moved {
                         let blackPredicate = attackerSide == .black && [[.south], [.south, .south], [.southWest], [.southEast]].contains(validPattern)
@@ -270,73 +270,73 @@ class Board: NSCopying {
                         }
                     }
                 }
-                
+
                 guard validPattern.directions.count > 0 else {
                     continue
                 }
-                
+
                 guard tryMovingToSource(source: sourceCoordinate, destination: thisSideKingCoordinate, movePattern: validPattern, canMoveOver: false, side: side) else {
                     continue
                 }
-                
+
                 var current = sourceCoordinate
                 for direction in validPattern.directions {
                     if [.north, .south].contains(direction) && piece.type == .pawn {
                         continue
                     }
-                    
+
                     current = current.move(by: direction, side: attackerSide)
-                    
+
                     guard current.isValid else {
                         break
                     }
-                    
+
                     if self[current]?.type == .king {
                         return true
                     }
                 }
             }
         }
-        
+
         return false
     }
-    
+
     func isValidDestination(with movePattern: MovePattern, for piece: Piece, on side: Side) -> Bool {
         let sourceCoordinate = getCoordinate(of: piece)
         let destination = getDestination(from: sourceCoordinate, with: movePattern, for: side)
-        
+
         var current = sourceCoordinate
         for direction in movePattern.directions {
             current = current.move(by: direction, side: side)
-            
+
             guard current.isValid else {
                 return false
             }
-            
+
             if current == destination {
                 if self[current] != nil {
                     return false
                 }
             }
         }
-        
+
         return true
     }
-    
+
     func getDestination(from source: BoardCoordinate, with pattern: MovePattern, for side: Side) -> BoardCoordinate {
         var current = source
-        
+
         for direction in pattern.directions {
             current = current.move(by: direction, side: side)
         }
-        
+
         return current
     }
-    
+
     func emptyCell(_ boardCoordinate: BoardCoordinate) -> Bool {
         self[boardCoordinate] == nil
     }
-    
+
     /**
      There are several conditions for performing a valid en passant [1]:
         - the capturing pawn must be on its fifth rank;
@@ -360,9 +360,9 @@ class Board: NSCopying {
 
         for piece in pieces {
             let sourceCoordinate = getCoordinate(of: piece)
-            
+
             let validPattern = piece.validPattern(source: sourceCoordinate, destination: destination)
-            
+
             guard validPattern.directions.count > 0 else {
                 continue
             }
@@ -396,7 +396,7 @@ class Board: NSCopying {
         guard let source = move.source else {
             throw GameError.noPieceInSourcePosition
         }
-        
+
         let destination = move.destination
         var currentCoordinate = source
 

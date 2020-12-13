@@ -20,7 +20,7 @@ extension MovePattern: ExpressibleByArrayLiteral {
     init(arrayLiteral elements: Direction...) {
         directions = elements
     }
-    
+
     static func + (lhs: MovePattern, rhs: MovePattern) -> MovePattern {
         .init(directions: lhs.directions + rhs.directions)
     }

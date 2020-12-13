@@ -11,7 +11,7 @@ import Foundation
 struct Delta {
     let x: Int
     let y: Int
-    
+
     var toDirection: Direction {
         switch (x, y) {
         case (1, 0): return .east
@@ -22,7 +22,7 @@ struct Delta {
         case (1, -1): return .southEast
         case (-1, 1): return .northWest
         case (-1, -1): return .southWest
-        default: fatalError("\((x,y)) is an invalid delta.")
+        default: fatalError("\((x, y)) is an invalid delta.")
         }
     }
 

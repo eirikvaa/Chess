@@ -14,18 +14,18 @@ struct Move {
     enum MoveValidationError: Error {
         case wrongMoveFormat
     }
-    
+
     /// The destination that is encoded in the move.
     let destination: Coordinate
-    
+
     /// The piece type that is encoded in the move.
     let pieceType: PieceType
-    
+
     /// Whether or not the move is a capture, i.e. it captures another piece.
     let isCapture: Bool
-    
+
     var source: Coordinate?
-    
+
     /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
     /// and boards converge to something meaningful.
     init(rawMove: String) throws {
@@ -33,17 +33,17 @@ struct Move {
         /// x?              : Optional capture
         /// [a-h][1-7]      : File and rank.
         let regex = #"[N|R|B|Q|K]?([a-h]?[1-8]?)?x?[a-h][1-8]"#
-        
+
         guard let match = rawMove.range(of: regex, options: .regularExpression) else {
             throw MoveValidationError.wrongMoveFormat
         }
-        
+
         var validRawMove = String(rawMove[match])
-        
+
         var (rawDestination, rest) = validRawMove.removeSuffix(count: 2)
-        
+
         self.destination = try Coordinate(rawCoordinates: rawDestination)
-        
+
         if rest.last == "x" {
             isCapture = true
             rest.removeLast()
@@ -59,7 +59,7 @@ struct Move {
         } else {
             rawPiece = rest
         }
-        
+
         self.pieceType = PieceType(rawPiece: rawPiece)
     }
 }

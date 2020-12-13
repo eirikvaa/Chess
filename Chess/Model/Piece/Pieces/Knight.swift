@@ -25,13 +25,13 @@ struct Knight: Piece, Identifiable {
             .two(.south) + .one(.east),
             .two(.south) + .one(.west),
             .two(.west) + .one(.south),
-            .two(.west) + .one(.north),
+            .two(.west) + .one(.north)
         ]
     }
-    
+
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source
-        
+
         switch (delta.x, delta.y) {
         case (-1, 2):
             return [.north, .north, .west]

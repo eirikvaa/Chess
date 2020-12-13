@@ -19,26 +19,26 @@ struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
         let validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
         return validFiles.firstIndex(of: value)!
     }
-    
+
     init(stringLiteral value: String) {
         self.value = value
     }
-    
+
     init(value: String) {
         self.value = value
     }
-    
+
     static func == (lhs: File, rhs: File) -> Bool {
         lhs.value == rhs.value
     }
-    
+
     static func + (lhs: File, rhs: Direction) -> File? {
         guard let lhsIndex: Int = validFiles.firstIndex(of: lhs.value) else {
             fatalError("Cannot find index of \(lhs.value), this should be impossible.")
         }
-        
+
         let deltaX: Int
-        
+
         switch rhs {
         case .east,
              .northEast,
@@ -48,15 +48,15 @@ struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
              .southWest: deltaX = -1
         default: deltaX = 0
         }
-        
+
         let newIndex = lhsIndex + deltaX
         guard 0..<validFiles.count ~= newIndex else {
             return nil
         }
-        
+
         return File(stringLiteral: validFiles[newIndex])
     }
-    
+
     var description: String {
         value
     }

@@ -27,10 +27,10 @@ struct Queen: Piece, Identifiable {
             .eight(.west),
             .eight(.northWest)        ]
     }
-    
+
     func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
         let delta = destination - source
-        
+
         switch (delta.x, delta.y, delta.equalMagnitude) {
         case (0, 1..., false):
             return .init(directions: .init(repeating: .north, count: delta.magnitude(of: \.y)))

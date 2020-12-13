@@ -18,7 +18,7 @@ enum PieceType {
     case rook
     case queen
     case king
-    
+
     init(rawPiece: String) {
         switch rawPiece {
         case "B": self = .bishop
@@ -44,7 +44,7 @@ enum Direction: CustomStringConvertible {
     case southWest
     case southEast
     case west
-    
+
     var description: String {
         switch self {
         case .north: return "N"
@@ -78,17 +78,17 @@ enum MoveType {
 struct MovePattern: Equatable, CustomStringConvertible {
     let moveType: MoveType
     let directions: [Direction]
-    
+
     init(moveType: MoveType, directions: Direction...) {
         self.moveType = moveType
         self.directions = directions
     }
-    
+
     init(moveType: MoveType, directions: [Direction]) {
         self.moveType = moveType
         self.directions = directions
     }
-    
+
     var description: String {
         directions.map {
             String(describing: $0)
@@ -102,24 +102,24 @@ struct MovePattern: Equatable, CustomStringConvertible {
 protocol Piece: AnyObject {
     /// An ID for the piece. Only used to locate pieces on the board.
     var id: UUID { get }
-    
+
     /// The graphical representation of the piece, Unicode symbols.
     var content: String { get }
-    
+
     /// The type of piece
     var type: PieceType { get }
-    
+
     /// The side that owns the piece
     var side: Side { get set }
-    
+
     /// If the piece has made its first move yet
     var hasMoved: Bool { get set }
-    
+
     /// A list of ways in which the piece can move.
     var movePatterns: [MovePattern] { get }
-    
+
     var canMoveOverOtherPieces: Bool { get }
-    
+
     /// Initialize a piece with the given side. This is really the only information that is not known
     /// at the time it is initialized.
     init(side: Side)
@@ -170,7 +170,7 @@ class Pawn: Piece, Identifiable {
             ]
         }
     }
-    
+
     required init(side: Side) {
         self.side = side
     }
@@ -262,7 +262,7 @@ class Queen: Piece {
         MovePattern(moveType: .continuous, directions: .west),
         MovePattern(moveType: .continuous, directions: .northWest)
     ]
-    
+
     required init(side: Side) {
         self.side = side
     }
