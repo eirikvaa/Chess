@@ -6,7 +6,8 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-/*
+import Foundation
+
 class Knight: Piece {
     var id = UUID()
     var content: String {
@@ -15,6 +16,7 @@ class Knight: Piece {
     var type: PieceType = .knight
     var side: Side = .white
     var hasMoved: Bool = false
+    var canMoveOverOtherPieces = true
     var movePatterns: [MovePattern] {
         [
             MovePattern(moveType: .shape, directions: .north, .north, .west),
@@ -24,12 +26,15 @@ class Knight: Piece {
             MovePattern(moveType: .shape, directions: .south, .south, .west),
             MovePattern(moveType: .shape, directions: .south, .south, .east),
             MovePattern(moveType: .shape, directions: .east, .east, .north),
-            MovePattern(moveType: .shape, directions: .east, .east, .south),
+            MovePattern(moveType: .shape, directions: .east, .east, .south)
         ]
     }
-    
+
     required init(side: Side) {
         self.side = side
     }
+
+    var desc: String {
+        "N" + content
+    }
 }
-*/

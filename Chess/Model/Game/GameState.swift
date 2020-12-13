@@ -35,12 +35,21 @@ struct GameState {
     }
 }
 
+struct PossibleMove: CustomStringConvertible {
+    let piece: Piece
+    let coordinateSequence: [Coordinate]
+
+    var description: String {
+        coordinateSequence.map { String(describing: $0) }.joined(separator: " -> ")
+    }
+}
+
 private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
 
-        let possibleSourcePieces: [(piece: Piece, coordinateSequence: [Coordinate], sourceCorodinate: Coordinate)] = possibleSourceCells.compactMap { cell in
-            guard let piece = cell.piece else {
+        let possibleSourcePieces: [PossibleMove] = possibleSourceCells.compactMap {
+            guard let piece = $0.piece else {
                 return nil
             }
 
@@ -48,43 +57,11 @@ private extension GameState {
                 return nil
             }
 
-            let possibleCoordinateSequences: [[Coordinate]] = piece.movePatterns.compactMap { pattern -> [Coordinate] in
-                var currentCoordinate = cell.coordinate
-
-                var actualDirections: [Coordinate] = []
-
-                // If there is only one direction in the pattern, let's assume that the move is continuous.
-                // If there are two directions, it'll be the pawn's double move.
-                // If there are three directions, it'll be the knight, which we don't treat as continuous.
-                let continuous = pattern.directions.count == 1 && [.queen, .rook, .bishop].contains(move.pieceType)
-
-                guard continuous else {
-                    fatalError("Let's try to implement the general case.")
-                }
-
-                guard let direction = pattern.directions.first else {
-                    fatalError("GENERAL PLZ")
-                }
-
-                while true {
-                    if let nextCoordinate = currentCoordinate.applyDirection(direction) {
-                        actualDirections.append(nextCoordinate)
-
-                        if nextCoordinate == move.destination {
-                            return actualDirections
-                        }
-
-                        currentCoordinate = nextCoordinate
-                    } else {
-                        break
-                    }
-                }
-
-                return actualDirections
-            }
+            let possibleCoordinateSequences = getCoordinateSequences(move: move, cell: $0, piece: piece)
+                .filter { !$0.isEmpty }
 
             if !possibleCoordinateSequences.isEmpty {
-                return (piece, possibleCoordinateSequences[0], cell.coordinate)
+                return PossibleMove(piece: piece, coordinateSequence: possibleCoordinateSequences[0])
             }
 
             return nil
@@ -92,9 +69,45 @@ private extension GameState {
 
         switch possibleSourcePieces.count {
         case 0: throw GameStateError.noValidSourcePieces
-        case 1: return possibleSourcePieces[0].0
+        case 1: return possibleSourcePieces[0].piece
         case 2...: throw GameStateError.ambiguousMove
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
+        }
+    }
+
+    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [[Coordinate]] {
+        return piece.movePatterns.compactMap { pattern -> [Coordinate] in
+            var currentCoordinate = cell.coordinate
+
+            // If there is only one direction in the pattern, let's assume that the move is continuous.
+            // If there are two directions, it'll be the pawn's double move.
+            // If there are three directions, it'll be the knight, which we don't treat as continuous.
+            let continuous = pattern.directions.count == 1 && [.queen, .rook, .bishop].contains(move.pieceType)
+
+            guard continuous else {
+                fatalError("Let's try to implement the general case.")
+            }
+
+            guard let direction = pattern.directions.first else {
+                fatalError("GENERAL PLZ")
+            }
+
+            while true {
+                var possibleCoordinates: [Coordinate] = []
+                if let nextCoordinate = currentCoordinate.applyDirection(direction) {
+                    possibleCoordinates.append(nextCoordinate)
+
+                    if nextCoordinate == move.destination {
+                        return possibleCoordinates
+                    }
+
+                    currentCoordinate = nextCoordinate
+                } else {
+                    break
+                }
+            }
+
+            return []
         }
     }
 }

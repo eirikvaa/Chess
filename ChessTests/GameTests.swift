@@ -29,6 +29,12 @@ class Game2Tests: XCTestCase {
         ))
     }
 
+    func testBishopCannotMoveOverOtherPieces() throws {
+        XCTAssertNoThrow(try applyMoves(
+            "Bd2"
+        ))
+    }
+
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {

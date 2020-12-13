@@ -57,4 +57,8 @@ class Pawn: Piece, Identifiable {
     required init(side: Side) {
         self.side = side
     }
+    
+    var desc: String {
+        "P" + content
+    }
 }

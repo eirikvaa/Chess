@@ -24,6 +24,8 @@ protocol Piece: AnyObject {
     /// The side that owns the piece
     var side: Side { get set }
 
+    var desc: String { get }
+
     /// If the piece has made its first move yet
     var hasMoved: Bool { get set }
 

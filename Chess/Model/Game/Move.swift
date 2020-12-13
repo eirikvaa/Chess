@@ -25,10 +25,12 @@ enum MoveType {
  A move that can be applied to a piece.
  The initializer validates the move and throws if it's not legal based on the regex.
  */
-struct Move {
+struct Move: CustomStringConvertible {
     enum MoveValidationError: Error {
         case wrongMoveFormat
     }
+    
+    let rawMove: String
 
     /// The destination that is encoded in the move.
     let destination: Coordinate
@@ -44,6 +46,8 @@ struct Move {
     /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
     /// and boards converge to something meaningful.
     init(rawMove: String) throws {
+        self.rawMove = rawMove
+        
         /// [N|R|B|Q|K]?    : Optional horthand for type of piece. No shorthand means pawn.
         /// x?              : Optional capture
         /// [a-h][1-7]      : File and rank.
@@ -76,5 +80,9 @@ struct Move {
         }
 
         self.pieceType = PieceType(rawPiece: rawPiece)
+    }
+    
+    var description: String {
+        rawMove
     }
 }
