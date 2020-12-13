@@ -33,8 +33,8 @@ class Game {
             } catch Move.MoveValidationError.wrongMoveFormat {
                 print("The user entered \(userInput), which is a move in the wrong format. Try agai..")
                 continue
-            } catch GameState.GameStateError.illegalMove {
-                print("\(userInput) is an illegal move. Try again.")
+            } catch GameState.GameStateError.illegalMove(let message) {
+                print("\(userInput) is an illegal move: \(message) Try again.")
                 continue
             } catch GameState.GameStateError.noValidSourcePieces {
                 print("There are no valid source pieces that can move to the destination specified by the move \(userInput), try again.")

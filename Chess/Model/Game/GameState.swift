@@ -49,7 +49,7 @@ private extension GameState {
     // swiftlint:disable cyclomatic_complexity
     func getSourcePiece(move: Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
-        
+
         let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
             guard let piece = $0.piece else {
                 return nil
@@ -64,7 +64,7 @@ private extension GameState {
             for seq in possibleCoordinateSequences {
                 switch move.pieceType {
                 case .bishop:
-                    for coordinate in seq {
+                    for coordinate in seq.coordinateSequence {
                         if coordinate == move.destination {
                             if move.isCapture {
                                 if let pieceInDestination = board[coordinate].piece {
@@ -88,7 +88,7 @@ private extension GameState {
                         }
                     }
                 case .knight:
-                    if let endCoordinate = seq.last {
+                    if let endCoordinate = seq.coordinateSequence.last {
                         if move.isCapture {
                             if let pieceInDestination = board[endCoordinate].piece {
                                 if pieceInDestination.side != currentSide {
@@ -110,15 +110,23 @@ private extension GameState {
                         }
                     }
                 case .pawn:
-                    for coordinate in seq {
+                    for coordinate in seq.coordinateSequence {
                         if coordinate == move.destination {
                             if move.isCapture {
-                                if let pieceInDestination = board[coordinate].piece {
-                                    if pieceInDestination.side != currentSide {
-                                        return piece
-                                    } else {
-                                        throw GameStateError.cannotCaptureOwnPiece
+                                if seq.moveType == .diagonal {
+                                    if let pieceInDestination = board[coordinate].piece {
+                                        if pieceInDestination.side != currentSide {
+                                            return piece
+                                        } else {
+                                            throw GameStateError.cannotCaptureOwnPiece
+                                        }
                                     }
+                                } else {
+                                    // TODO: More validation is needed, like restricting white pawns to NW/NE attacks,
+                                    // but that can come later.
+                                    throw GameStateError.illegalMove(
+                                        message: "Pawns cannot attack in any other direction than diagonally."
+                                    )
                                 }
                             } else {
                                 if let pieceInDestination = board[coordinate].piece {
@@ -153,8 +161,8 @@ private extension GameState {
         }
     }
 
-    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [[Coordinate]] {
-        return piece.movePatterns.compactMap { pattern -> [Coordinate]? in
+    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [PossibleMove] {
+        return piece.movePatterns.compactMap { pattern -> PossibleMove? in
             switch move.pieceType {
             case .queen,
                  .rook,
@@ -166,7 +174,7 @@ private extension GameState {
         }
     }
 
-    func handlePawnMove(move: Move, cell: Cell, pattern: MovePattern) -> [Coordinate]? {
+    func handlePawnMove(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
         var currentCoordinate = cell.coordinate
         var possibleCoordinates: [Coordinate] = []
 
@@ -175,7 +183,7 @@ private extension GameState {
                 possibleCoordinates.append(nextCoordinate)
 
                 if nextCoordinate == move.destination {
-                    return possibleCoordinates
+                    return .init(piece: cell.piece!, coordinateSequence: possibleCoordinates, moveType: pattern.moveType)
                 }
 
                 currentCoordinate = nextCoordinate
@@ -185,7 +193,7 @@ private extension GameState {
         return nil
     }
 
-    func handleKnightMove(move: Move, cell: Cell, pattern: MovePattern) -> [Coordinate]? {
+    func handleKnightMove(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
         var currentCoordinate = cell.coordinate
         var possibleCoordinates: [Coordinate] = []
 
@@ -194,7 +202,7 @@ private extension GameState {
                 possibleCoordinates.append(nextCoordinate)
 
                 if nextCoordinate == move.destination {
-                    return possibleCoordinates
+                    return .init(piece: cell.piece!, coordinateSequence: possibleCoordinates, moveType: pattern.moveType)
                 }
 
                 currentCoordinate = nextCoordinate
@@ -204,7 +212,7 @@ private extension GameState {
         return nil
     }
 
-    func handleContinuousMoves(move: Move, cell: Cell, pattern: MovePattern) -> [Coordinate]? {
+    func handleContinuousMoves(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
         var currentCoordinate = cell.coordinate
 
         guard let direction = pattern.directions.first else {
@@ -217,7 +225,7 @@ private extension GameState {
                 possibleCoordinates.append(nextCoordinate)
 
                 if nextCoordinate == move.destination {
-                    return possibleCoordinates
+                    return .init(piece: cell.piece!, coordinateSequence: possibleCoordinates, moveType: pattern.moveType)
                 }
 
                 currentCoordinate = nextCoordinate
