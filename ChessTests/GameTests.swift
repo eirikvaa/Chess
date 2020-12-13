@@ -21,7 +21,7 @@ class Game2Tests: XCTestCase {
         ))
     }
 
-    func testBishopCannotMoveOverOtherPieces() throws {
+    func testBishopCannotMoveToPieceOccupiedByItsOwnSide() throws {
         XCTAssertThrowsError(try applyMoves(
             "Bd2"
         ))
