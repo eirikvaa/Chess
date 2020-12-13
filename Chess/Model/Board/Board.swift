@@ -78,9 +78,9 @@ class Board: CustomStringConvertible {
      */
     // TODO: Delete
     subscript(file: File, rank: Rank) -> Cell {
-        return flattenedBoard().filter { cell in
+        return flattenedBoard().first { cell -> Bool in
             cell.coordinate.file == file && cell.coordinate.rank == rank
-        }.first!
+        }!
     }
 
     /**
