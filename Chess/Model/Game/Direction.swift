@@ -6,48 +6,30 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-enum Direction {
+/**
+ Directions as seen from the perspective of the white player (towards the black player).
+ Avoid adding north-west, et cetera, as those can be composed from these four.
+ */
+enum Direction: CustomStringConvertible {
     case north
+    case northWest
     case northEast
     case east
-    case southEast
     case south
     case southWest
+    case southEast
     case west
-    case northWest
 
-    var oppositeDirection: Direction {
-        switch self {
-        case .north: return .south
-        case .northEast: return .southWest
-        case .east: return .west
-        case .southEast: return .northWest
-        case .south: return .north
-        case .southWest: return .northEast
-        case .west: return .east
-        case .northWest: return .southEast
-        }
-    }
-
-    func sideRelativeDirection(_ side: Side) -> Direction {
-        switch side {
-        case .white: return self
-        case .black: return self.oppositeDirection
-        }
-    }
-}
-
-extension Direction: CustomStringConvertible {
     var description: String {
         switch self {
         case .north: return "N"
+        case .northWest: return "NW"
         case .northEast: return "NE"
         case .east: return "E"
-        case .southEast: return "SE"
         case .south: return "S"
         case .southWest: return "SW"
+        case .southEast: return "SE"
         case .west: return "W"
-        case .northWest: return "NW"
         }
     }
 }

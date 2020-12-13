@@ -6,45 +6,58 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct File: ExpressibleByStringLiteral, Comparable, CustomStringConvertible {
-    var file = "a"
+import Foundation
 
+/**
+ A file is a (vertical) column as seen from white's perspective.
+ Goes from "a" to "h" from left to right.
+ */
+struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
+    let value: String
     static var validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    var index: Int {
+        let validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
+        return validFiles.firstIndex(of: value)!
+    }
 
     init(stringLiteral value: String) {
-        self.file = value
+        self.value = value
     }
 
-    init(fileIndex: Int) {
-        guard 0 ... 7 ~= fileIndex else {
-            self.file = "a"
-            return
-        }
-
-        self.file = File.validFiles[fileIndex]
-    }
-
-    var fileIndex: Int {
-        File.validFiles.firstIndex(of: self.file) ?? 0
+    init(value: String) {
+        self.value = value
     }
 
     static func == (lhs: File, rhs: File) -> Bool {
-        lhs.file == rhs.file
+        lhs.value == rhs.value
     }
 
-    static func < (lhs: File, rhs: File) -> Bool {
-        lhs.file < rhs.file
-    }
+    static func + (lhs: File, rhs: Direction) -> File? {
+        guard let lhsIndex: Int = validFiles.firstIndex(of: lhs.value) else {
+            fatalError("Cannot find index of \(lhs.value), this should be impossible.")
+        }
 
-    static func - (lhs: File, rhs: File) -> File {
-        let validFiles = File.validFiles
-        let difference = rhs.fileIndex - lhs.fileIndex
+        let deltaX: Int
 
-        assert(0 ... 7 ~= difference, "\(difference + 1) is not a valid file index.")
-        return File(stringLiteral: validFiles[difference])
+        switch rhs {
+        case .east,
+             .northEast,
+             .southEast: deltaX = 1
+        case .west,
+             .northWest,
+             .southWest: deltaX = -1
+        default: deltaX = 0
+        }
+
+        let newIndex = lhsIndex + deltaX
+        guard 0..<validFiles.count ~= newIndex else {
+            return nil
+        }
+
+        return File(stringLiteral: validFiles[newIndex])
     }
 
     var description: String {
-        file
+        value
     }
 }

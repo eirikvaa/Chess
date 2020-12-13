@@ -6,7 +6,7 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct PieceFabric {
+/*struct PieceFabric {
     static func create(_ type: PieceType) -> Piece {
         switch type {
         case .king: return King()
@@ -33,3 +33,4 @@ struct PieceFabric {
         }
     }
 }
+*/

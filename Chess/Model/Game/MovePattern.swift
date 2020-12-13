@@ -6,28 +6,26 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct MovePattern {
+/**
+ A move pattern consists of a move type and a list of directions.
+ */
+struct MovePattern: Equatable, CustomStringConvertible {
+    let moveType: MoveType
     let directions: [Direction]
-}
 
-extension MovePattern: CustomStringConvertible {
+    init(moveType: MoveType, directions: Direction...) {
+        self.moveType = moveType
+        self.directions = directions
+    }
+
+    init(moveType: MoveType, directions: [Direction]) {
+        self.moveType = moveType
+        self.directions = directions
+    }
+
     var description: String {
-        String(describing: directions)
-    }
-}
-
-extension MovePattern: ExpressibleByArrayLiteral {
-    init(arrayLiteral elements: Direction...) {
-        directions = elements
-    }
-
-    static func + (lhs: MovePattern, rhs: MovePattern) -> MovePattern {
-        .init(directions: lhs.directions + rhs.directions)
-    }
-}
-
-extension MovePattern: Equatable {
-    static func == (lhs: MovePattern, rhs: MovePattern) -> Bool {
-        lhs.directions == rhs.directions
+        directions.map {
+            String(describing: $0)
+        }.joined(separator: "-")
     }
 }

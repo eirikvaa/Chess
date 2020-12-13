@@ -8,461 +8,182 @@
 
 import Foundation
 
-class Board: NSCopying {
-    private var cells: [[BoardCell]] = []
+/**
+ Representation of the board. Has the responsibility of allowing others to query the board for cells and pieces.
+ It does not modify itself in any way because that is the responsibility of whoever entity uses this class.
+ */
+class Board: CustomStringConvertible {
+    private let cells: [[Cell]]
 
     init() {
-        for rank in Rank.validRanks {
-            var rankCells: [BoardCell] = []
+        let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
+        let ranks = 1...8
 
-            for file in File.validFiles {
-                rankCells.append(.init(coordinate: .init(file: File(stringLiteral: file), rank: Rank(integerLiteral: rank)), piece: nil))
-            }
+        var matrix: [[Cell]] = []
+        ranks.forEach { rank in
+            var currentRow: [Cell] = []
 
-            cells.append(rankCells)
-        }
+            files.forEach { file in
+                let coordinate = Coordinate(file: File(value: file), rank: Rank(value: rank))
 
-        resetBoard()
-    }
+                var piece: Piece?
 
-    private init(cells: [[BoardCell]]) {
-        self.cells = cells
-    }
-
-    subscript(coordinate: BoardCoordinate) -> Piece? {
-        get {
-            assert(BoardCoordinateValidator.validate(coordinate), "Invalid coordinate!")
-            return cells[coordinate.rank!.rank - 1][coordinate.fileIndex].piece
-        }
-        set {
-            assert(BoardCoordinateValidator.validate(coordinate), "Invalid coordinate!")
-            cells[coordinate.rank!.rank - 1][coordinate.fileIndex].piece = newValue
-        }
-    }
-
-    func performMove(_ move: Move, side: Side, lastMove: Move?) {
-        if move.options.contains(.enPassant) {
-            let sourcePiece = self[move.source!]
-            let lastPawnCoordinate = lastMove!.destination
-            self[move.destination] = sourcePiece
-            self[move.source!] = nil
-            self[lastPawnCoordinate] = nil
-            return
-        }
-
-        if move.options.contains(.promotion) {
-            var promotionPiece = move.promotionPiece
-            promotionPiece?.side = side
-            self[move.destination] = promotionPiece
-            self[move.source!] = nil
-            return
-        }
-
-        if move.options.contains(.kingCastling) { // King castling: O-O
-            let kingSideRookCoordinate: BoardCoordinate = side == .black ? "h8" : "h1"
-            let kingCoordinate: BoardCoordinate = side == .black ? "e8" : "e1"
-            let kingSideRook = self[kingSideRookCoordinate]
-            let king = self[kingCoordinate]
-
-            self[side == .black ? "g8" : "g1"] = king
-            self[side == .black ? "f8" : "f1"] = kingSideRook
-            self[kingSideRookCoordinate] = nil
-            self[kingCoordinate] = nil
-            return
-        } else if move.options.contains(.queenCastling) { // Queen castling: O-O-O
-            let queenSideRookCoordinate: BoardCoordinate = side == .black ? "a8" : "a1"
-            let queenSideRook = self[queenSideRookCoordinate]
-            let kingCoordinate: BoardCoordinate = side == .black ? "e8" : "e1"
-            let king = self[kingCoordinate]
-
-            self[side == .black ? "c8" : "c1"] = king
-            self[side == .black ? "d8" : "d1"] = queenSideRook
-            self[queenSideRookCoordinate] = nil
-            self[kingCoordinate] = nil
-            return
-        }
-
-        guard let source = move.source else {
-            // TODO: Handle error properly
-            return
-        }
-
-        var sourcePiece = self[source]
-
-        sourcePiece?.moved = true
-        self[move.destination] = sourcePiece
-        self[move.source!] = nil
-    }
-
-    func copy(with zone: NSZone? = nil) -> Any {
-        let currentCells = cells
-        let board = Board(cells: currentCells)
-        return board
-    }
-
-    func compareCells(cellA: BoardCell, type: PieceType, side: Side) -> Bool {
-        guard let pieceA = cellA.piece else {
-            return false
-        }
-
-        return pieceA.type == type && self[cellA.coordinate]?.side == side
-    }
-
-    func getPieces(of type: PieceType, side: Side) -> [Piece] {
-        var pieces = [Piece]()
-
-        for row in cells {
-            let correctPieces = row
-                .filter { compareCells(cellA: $0, type: type, side: side) }
-                .compactMap { $0.piece }
-            pieces.append(contentsOf: correctPieces)
-        }
-
-        return pieces
-    }
-
-    func getCoordinate(of piece: Piece) -> BoardCoordinate {
-        for row in cells {
-            for cell in row {
-                if cell.piece?.id == piece.id {
-                    return cell.coordinate
+                switch (file, rank) {
+                case ("a", 1),
+                     ("h", 1):
+                    break//piece = Rook(side: .white)
+                case ("b", 1),
+                     ("g", 1):
+                    break//piece = Knight(side: .white)
+                case ("c", 1),
+                     ("f", 1):
+                    break//piece = Bishop(side: .white)
+                case ("d", 1):
+                    piece = Queen(side: .white)
+                case ("e", 1):
+                    break//piece = King(side: .white)
+                case (_, 2):
+                    piece = Pawn(side: .white)
+                case ("a", 8),
+                     ("h", 8):
+                    break//piece = Rook(side: .black)
+                case ("b", 8),
+                     ("g", 8):
+                    break//piece = Knight(side: .black)
+                case ("c", 8),
+                     ("f", 8):
+                    break//piece = Bishop(side: .black)
+                case ("d", 8):
+                    piece = Queen(side: .black)
+                case ("e", 8):
+                    break//piece = King(side: .black)
+                case (_, 7):
+                    piece = Pawn(side: .black)
+                default:
+                    break
                 }
+
+                let cell = Cell(coordinate: coordinate, piece: piece)
+                currentRow.append(cell)
             }
+
+            matrix.insert(currentRow, at: 0)
         }
 
-        // Will never end up here
-        return .init(stringLiteral: "")
-    }
-
-    func tryMovingToSource(source: BoardCoordinate, destination: BoardCoordinate, movePattern: MovePattern, canMoveOver: Bool, side: Side) -> Bool {
-        var current = source
-
-        for direction in movePattern.directions {
-            current = current.move(by: direction, side: side)
-
-            if current == destination {
-                return true
-            }
-
-            if self[current] != nil && !canMoveOver {
-                return false
-            }
-        }
-
-        return true
+        self.cells = matrix
     }
 
     /**
-     Creates a sandboxed board when trying out new different moves.
+     Get the cell from a pair of file and rank.
      */
-    func sandBoxedBoard() -> Board {
-        return self.copy() as! Board
+    // TODO: Delete
+    subscript(file: File, rank: Rank) -> Cell {
+        return flattenedBoard().filter { cell in
+            cell.coordinate.file == file && cell.coordinate.rank == rank
+        }.first!
     }
 
     /**
-     Test if the passed-in move puts the King in check. This will make a copy of the board and try out
-     the move in a safe manner before reporting back if the move is illegal or not.
+     Get the cell from a coordinate.
      */
-    func testIfMovePutsKingInChess(source: BoardCoordinate, move: Move, side: Side, lastMove: Move?) -> Bool {
-        let sandboxBoard = sandBoxedBoard()
-        let sandboxedMove = (move as! SANMove).copy() as! SANMove // TODO: Fix this abomination
-        sandboxedMove.source = source
-
-        sandboxBoard.performMove(sandboxedMove, side: side, lastMove: lastMove)
-
-        // We avoid checking for the King because the King cannot put another King in check.
-        let pieceTypes: [PieceType] = [.queen, .knight, .bishop, .rook, .pawn]
-        let attackerSide = side.oppositeSide
-        let thisSideKing = sandboxBoard.getPieces(of: .king, side: side)[0]
-        let thisSideKingCoordinate = sandboxBoard.getCoordinate(of: thisSideKing)
-
-        for pieceType in pieceTypes {
-            let attackerPieces = sandboxBoard.getPieces(of: pieceType, side: attackerSide)
-
-            for piece in attackerPieces {
-                let sourceCoordinate = sandboxBoard.getCoordinate(of: piece)
-                let validPattern = piece.validPattern(source: sourceCoordinate, destination: thisSideKingCoordinate)
-
-                if piece.type == .pawn {
-                    if !piece.moved {
-                        let blackPredicate = attackerSide == .black && [[.south], [.south, .south], [.southWest], [.southEast]].contains(validPattern)
-                        let whitePredicate = attackerSide == .white && [[.north], [.north, .north], [.northWest], [.northEast]].contains(validPattern)
-                        if !blackPredicate && !whitePredicate {
-                            continue
-                        }
-                    } else if piece.moved {
-                        let blackPredicate = attackerSide == .black && [[.south], [.southWest], [.southEast]].contains(validPattern)
-                        let whitePredicate = attackerSide == .white && [[.north], [.northWest], [.northEast]].contains(validPattern)
-                        if !blackPredicate && !whitePredicate {
-                            continue
-                        }
-                    }
-                }
-
-                guard validPattern.directions.count > 0 else {
-                    continue
-                }
-
-                guard sandboxBoard.tryMovingToSource(source: sourceCoordinate, destination: thisSideKingCoordinate, movePattern: validPattern, canMoveOver: false, side: side) else {
-                    continue
-                }
-
-                var current = sourceCoordinate
-                for direction in validPattern.directions {
-                    if [.north, .south].contains(direction) && piece.type == .pawn {
-                        continue
-                    }
-
-                    current = current.move(by: direction, side: attackerSide)
-
-                    guard current.isValid else {
-                        break
-                    }
-
-                    if self[current]?.type == .king {
-                        return true
-                    }
-                }
-            }
-        }
-
-        return false
+    subscript(coordinate: Coordinate) -> Cell {
+        self[coordinate.file, coordinate.rank]
     }
 
-    func execute(movePattern: MovePattern, for piece: Piece, on side: Side) {
-        let source = getCoordinate(of: piece)
-        var current = source
+    /**
+     Get all pieces of a given piece type and from a given side.
+     - Parameters:
+        - type: The piece type
+        - side: The side, either white or black
+     - Returns: A list of cells at which the pieces where found
+     */
+    func getAllPieces(of type: PieceType, side: Side) -> [Cell] {
+        flattenedBoard().filter {
+            $0.piece?.type == type && $0.piece?.side == side
+        }
+    }
 
+    /**
+     Get the cell of a given piece
+     Returns a non-optional because we _must_ find the cell for which a piece resides.
+     If the piece does not have a cell, it is not on the board, i.e. it must have a cell.
+     - Parameter piece: The piece for which we want to find a cell.
+     - Returns: The cell at which the piece resides.
+     */
+    func getCell(of piece: Piece) -> Cell {
+        return flattenedBoard().first(where: {
+            $0.piece?.id == piece.id && $0.piece?.type == piece.type
+        })!
+    }
+
+    /**
+     Check if the given piece can be moved to the given coordinate with the given move pattern.
+     - Parameters:
+        - piece: The piece to move
+        - destinationCoordinate: The coordinate to move to
+        - movePattern: The move pattern with which to move the piece to the coordinate
+     - Returns: True if the piece can be moved, false otherwise
+     */
+    /*func piece(piece: Piece, canMoveTo destinationCoordinate: Coordinate, with movePattern: MovePattern, move: Move) -> Bool {
+        let oldCoordinate = getCell(of: piece).coordinate
+        
+        switch movePattern.moveType {
+        case .single:
+            let nextCoordinate = oldCoordinate.applyDirection(movePattern.directions[0])
+            return oldCoordinate == nextCoordinate
+        case .double:
+            let direction = movePattern.directions[0]
+            let nextCoordinate = oldCoordinate
+                .applyDirection(direction)
+                .applyDirection(direction)
+            return oldCoordinate == nextCoordinate
+        case .straight:
+            let direction = movePattern.directions[0]
+            var currentCoordinate = oldCoordinate
+            while true {
+                currentCoordinate = currentCoordinate.applyDirection(direction)
+                
+                if oldCoordinate == currentCoordinate {
+                    return true
+                }
+            }
+        default:
+            break
+        }
+        
+        var currentCoordinate = oldCoordinate
         movePattern.directions.forEach {
-            current = current.move(by: $0, side: side)
+            currentCoordinate = currentCoordinate.applyDirection($0)
         }
+        
+        return currentCoordinate == destinationCoordinate
+    }*/
 
-        self[current] = piece
-        self[source] = nil
-    }
+    var description: String {
+        var desc = "    a   b   c   d   e   f   g   h\n"
+        desc += "   ––– ––– ––– ––– ––– ––– ––– ––– \n"
 
-    func isKingInCheck(side: Side) -> Bool {
-        // We avoid checking for the King because the King cannot put another King in check.
-        let pieceTypes: [PieceType] = [.queen, .knight, .bishop, .rook, .pawn]
-        let attackerSide = side.oppositeSide
-        let thisSideKing = getPieces(of: .king, side: side)[0]
-        let thisSideKingCoordinate = getCoordinate(of: thisSideKing)
+        for (index, rank) in cells.enumerated() {
+            desc += "\(8 - index) |"
 
-        for pieceType in pieceTypes {
-            let attackerPieces = getPieces(of: pieceType, side: attackerSide)
-
-            for piece in attackerPieces {
-                let sourceCoordinate = getCoordinate(of: piece)
-                let validPattern = piece.validPattern(source: sourceCoordinate, destination: thisSideKingCoordinate)
-
-                if piece.type == .pawn {
-                    if !piece.moved {
-                        let blackPredicate = attackerSide == .black && [[.south], [.south, .south], [.southWest], [.southEast]].contains(validPattern)
-                        let whitePredicate = attackerSide == .white && [[.north], [.north, .north], [.northWest], [.northEast]].contains(validPattern)
-                        if !blackPredicate && !whitePredicate {
-                            continue
-                        }
-                    } else if piece.moved {
-                        let blackPredicate = attackerSide == .black && [[.south], [.southWest], [.southEast]].contains(validPattern)
-                        let whitePredicate = attackerSide == .white && [[.north], [.northWest], [.northEast]].contains(validPattern)
-                        if !blackPredicate && !whitePredicate {
-                            continue
-                        }
-                    }
-                }
-
-                guard validPattern.directions.count > 0 else {
-                    continue
-                }
-
-                guard tryMovingToSource(source: sourceCoordinate, destination: thisSideKingCoordinate, movePattern: validPattern, canMoveOver: false, side: side) else {
-                    continue
-                }
-
-                var current = sourceCoordinate
-                for direction in validPattern.directions {
-                    if [.north, .south].contains(direction) && piece.type == .pawn {
-                        continue
-                    }
-
-                    current = current.move(by: direction, side: attackerSide)
-
-                    guard current.isValid else {
-                        break
-                    }
-
-                    if self[current]?.type == .king {
-                        return true
-                    }
-                }
-            }
-        }
-
-        return false
-    }
-
-    func isValidDestination(with movePattern: MovePattern, for piece: Piece, on side: Side) -> Bool {
-        let sourceCoordinate = getCoordinate(of: piece)
-        let destination = getDestination(from: sourceCoordinate, with: movePattern, for: side)
-
-        var current = sourceCoordinate
-        for direction in movePattern.directions {
-            current = current.move(by: direction, side: side)
-
-            guard current.isValid else {
-                return false
+            for cell in rank {
+                let cellContent = cell.piece?.content ?? " "
+                desc += " " + cellContent + " |"
             }
 
-            if current == destination {
-                if self[current] != nil {
-                    return false
-                }
-            }
+            desc += " \(8 - index)\n   ––– ––– ––– ––– ––– ––– ––– ––– \n"
         }
 
-        return true
-    }
+        desc += "    a   b   c   d   e   f   g   h\n"
 
-    func getDestination(from source: BoardCoordinate, with pattern: MovePattern, for side: Side) -> BoardCoordinate {
-        var current = source
-
-        for direction in pattern.directions {
-            current = current.move(by: direction, side: side)
-        }
-
-        return current
-    }
-
-    func emptyCell(_ boardCoordinate: BoardCoordinate) -> Bool {
-        self[boardCoordinate] == nil
-    }
-
-    /**
-     There are several conditions for performing a valid en passant [1]:
-        - the capturing pawn must be on its fifth rank;
-        - the captured pawn must be on an adjacent file and must have just moved two squares in a single move (i.e. a double-step move);
-        - the capture can only be made on the move immediately after the enemy pawn makes the double-step move; otherwise, the right to capture it en passant is lost.
-     
-     [1]: https://en.wikipedia.org/wiki/En_passant
-     */
-    func checkIfValidEnPassant(source: BoardCoordinate, move: Move, pieceType: PieceType, side: Side) -> Bool {
-        let isBlackEnPassant = source.rank == 4 && side == .black
-        let isWhiteEnPassant = source.rank == 5 && side == .white
-        let isCapture = move.options.contains(.capture)
-        let destinationIsEmpty = emptyCell(move.destination)
-        let pieceIsPawn = pieceType == .pawn
-        return (isBlackEnPassant || isWhiteEnPassant) && isCapture && destinationIsEmpty && pieceIsPawn
-    }
-
-    func getSourceDestination(side: Side, move: Move) throws -> BoardCoordinate {
-        let destination = move.destination
-        let pieces = getPieces(of: move.pieceType, side: side)
-
-        for piece in pieces {
-            let sourceCoordinate = getCoordinate(of: piece)
-
-            let validPattern = piece.validPattern(source: sourceCoordinate, destination: destination)
-
-            guard validPattern.directions.count > 0 else {
-                continue
-            }
-
-            var currentCoordinate = sourceCoordinate
-            for direction in validPattern.directions {
-                currentCoordinate = currentCoordinate.move(by: direction.sideRelativeDirection(side), side: side)
-
-                if currentCoordinate == destination {
-                    return sourceCoordinate
-                }
-            }
-        }
-
-        throw GameError.invalidMove(message: "No valid source position for destination position \(destination) with move \(move).")
-    }
-
-    func canAttack(at coordinate: BoardCoordinate, side: Side) -> Bool {
-        guard let otherPiece = self[coordinate] else {
-            return false
-        }
-
-        guard otherPiece.side != side else {
-            return false
-        }
-
-        return true
-    }
-
-    func moveMultipleSteps(direction: Direction, moves: Int, side: Side, canCrossOver: Bool = true, move: Move) throws {
-        guard let source = move.source else {
-            throw GameError.noPieceInSourcePosition
-        }
-
-        let destination = move.destination
-        var currentCoordinate = source
-
-        for _ in 0 ..< moves {
-            currentCoordinate = currentCoordinate.move(by: direction.sideRelativeDirection(side), side: side)
-
-            if currentCoordinate == destination {
-                break
-            }
-
-            guard let otherPieceInCurrentPosition = self[currentCoordinate] else {
-                continue
-            }
-
-            if otherPieceInCurrentPosition.side != side, !canCrossOver {
-                throw GameError.invalidMove(message: "Cannot move over opposite piece")
-            }
-        }
-    }
-
-    func resetBoard() {
-        func assignPieceToSide(piece: inout Piece, side: Side) {
-            piece.side = side
-        }
-
-        var whiteBackRank: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        var whiteSecondRank: [Piece] = (0 ..< 8).map { _ in Pawn() }
-
-        var blackBackRank: [Piece] = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        var blackSecondRank: [Piece] = (0 ..< 8).map { _ in Pawn() }
-
-        for i in 0 ..< whiteBackRank.count {
-            assignPieceToSide(piece: &whiteBackRank[i], side: .white)
-            assignPieceToSide(piece: &whiteSecondRank[i], side: .white)
-            assignPieceToSide(piece: &blackBackRank[i], side: .black)
-            assignPieceToSide(piece: &blackSecondRank[i], side: .black)
-        }
-
-        for (index, file) in File.validFiles.enumerated() {
-            self[BoardCoordinate(file: File(stringLiteral: file), rank: 8)] = blackBackRank[index]
-            self[BoardCoordinate(file: File(stringLiteral: file), rank: 7)] = blackSecondRank[index]
-
-            self[BoardCoordinate(file: File(stringLiteral: file), rank: 2)] = whiteSecondRank[index]
-            self[BoardCoordinate(file: File(stringLiteral: file), rank: 1)] = whiteBackRank[index]
-        }
+        return desc
     }
 }
 
-extension Board: CustomStringConvertible {
-    var description: String {
-        var _description = "    a   b   c   d   e   f   g   h\n"
-        _description += "   ––– ––– ––– ––– ––– ––– ––– ––– \n"
-
-        for (index, rank) in cells.reversed().enumerated() {
-            _description += "\(8 - index) |"
-
-            for cell in rank {
-                let cellContent = cell.piece?.graphicalRepresentation ?? " "
-                _description += " " + cellContent + " |"
-            }
-
-            _description += " \(8 - index)\n   ––– ––– ––– ––– ––– ––– ––– ––– \n"
+private extension Board {
+    func flattenedBoard() -> [Cell] {
+        cells.reduce([]) { allCells, currentRow -> [Cell] in
+            allCells + currentRow
         }
-
-        _description += "    a   b   c   d   e   f   g   h\n"
-
-        return _description
     }
 }

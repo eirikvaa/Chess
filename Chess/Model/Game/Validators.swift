@@ -5,7 +5,7 @@
 //  Created by Eirik Vale Aase on 29/05/2020.
 //  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
-
+/*
 import Foundation
 
 protocol Validator {
@@ -163,3 +163,4 @@ struct SANMoveFormatValidator: MoveFormatValidator {
         return move.range(of: format, options: .regularExpression) != nil
     }
 }
+*/

@@ -6,51 +6,30 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
-struct Knight: Piece, Identifiable {
+/*
+class Knight: Piece {
     var id = UUID()
-    var side: Side = .white
-    var type = PieceType.knight
-    var moved = false
-    var graphicalRepresentation: String {
-        side == .white ? "♞" : "♘"
+    var content: String {
+        side == .white ? "♘" : "♞"
     }
-    var validPatterns: [MovePattern] {
+    var type: PieceType = .knight
+    var side: Side = .white
+    var hasMoved: Bool = false
+    var movePatterns: [MovePattern] {
         [
-            .two(.north) + .one(.west),
-            .two(.north) + .one(.east),
-            .two(.east) + .one(.north),
-            .two(.east) + .one(.south),
-            .two(.south) + .one(.east),
-            .two(.south) + .one(.west),
-            .two(.west) + .one(.south),
-            .two(.west) + .one(.north)
+            MovePattern(moveType: .shape, directions: .north, .north, .west),
+            MovePattern(moveType: .shape, directions: .north, .north, .east),
+            MovePattern(moveType: .shape, directions: .west, .west, .north),
+            MovePattern(moveType: .shape, directions: .west, .west, .south),
+            MovePattern(moveType: .shape, directions: .south, .south, .west),
+            MovePattern(moveType: .shape, directions: .south, .south, .east),
+            MovePattern(moveType: .shape, directions: .east, .east, .north),
+            MovePattern(moveType: .shape, directions: .east, .east, .south),
         ]
     }
-
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
-        let delta = destination - source
-
-        switch (delta.x, delta.y) {
-        case (-1, 2):
-            return [.north, .north, .west]
-        case (1, 2):
-            return [.north, .north, .east]
-        case (-2, 1):
-            return [.north, .west, .west]
-        case (2, 1):
-            return [.north, .east, .east]
-        case (-2, -1):
-            return [.south, .west, .west]
-        case (2, -1):
-            return [.south, .east, .east]
-        case (-1, -2):
-            return [.south, .south, .west]
-        case (1, -2):
-            return [.south, .south, .east]
-        default:
-            return []
-        }
+    
+    required init(side: Side) {
+        self.side = side
     }
 }
+*/

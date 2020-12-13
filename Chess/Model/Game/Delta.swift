@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Delta {
+/*struct Delta {
     let x: Int
     let y: Int
 
@@ -65,3 +65,4 @@ struct Delta {
         .init(x: lhs.x * rhs, y: lhs.y * rhs)
     }
 }
+*/

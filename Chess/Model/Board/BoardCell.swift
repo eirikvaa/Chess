@@ -6,13 +6,23 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct BoardCell {
-    let coordinate: BoardCoordinate
-    var piece: Piece?
-}
+/**
+ Represents a cell in the chess board.
+ */
+class Cell: CustomStringConvertible {
+    /// The coordinate of the cell. Cannot be changed, only read.
+    let coordinate: Coordinate
 
-extension BoardCell: CustomStringConvertible {
+    /// An optional piece that can reside in this cell.
+    var piece: Piece?
+
+    init(coordinate: Coordinate, piece: Piece?) {
+        self.coordinate = coordinate
+        self.piece = piece
+    }
+
     var description: String {
-        piece?.graphicalRepresentation ?? " "
+        // TODO: Print piece also
+        String(describing: coordinate)
     }
 }

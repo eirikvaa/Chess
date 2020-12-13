@@ -6,29 +6,51 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct Rank: ExpressibleByIntegerLiteral, Equatable, CustomStringConvertible {
-    var rank = 1
+import Foundation
 
-    static var validRanks = 1 ... 8
+/**
+ A rank is a row as seen from white's perspective.
+ Goes from 1 to 8 from nearest to farthest.
+ */
+struct Rank: Equatable, CustomStringConvertible, ExpressibleByIntegerLiteral {
+    let value: Int
 
     init(integerLiteral value: Int) {
-        self.rank = value
+        self.value = value
     }
 
-    static func +(lhs: Rank, rhs: Int) -> Rank {
-        // TODO: Add error handling
-        .init(integerLiteral: lhs.rank + rhs)
+    init(value: Int) {
+        self.value = value
     }
 
-    static func ==(lhs: Rank, rhs: Rank) -> Bool {
-        lhs.rank == rhs.rank
+    static func == (lhs: Rank, rhs: Rank) -> Bool {
+        lhs.value == rhs.value
     }
 
-    static func - (lhs: Rank, rhs: Rank) -> Rank {
-        .init(integerLiteral: rhs.rank - lhs.rank)
+    static func + (lhs: Rank, rhs: Direction) -> Rank? {
+        let deltaY: Int
+        switch rhs {
+        case .north,
+             .northWest,
+             .northEast: deltaY = 1
+        case .south,
+             .southWest,
+             .southEast: deltaY = -1
+        default: deltaY = 0
+        }
+
+        let newIndex = lhs.value + deltaY
+
+        guard 1...8 ~= newIndex else {
+            return nil
+        }
+
+        return Rank(value: newIndex)
     }
+
+    static var validRanks = 1...8
 
     var description: String {
-        String(rank)
+        "\(value)"
     }
 }

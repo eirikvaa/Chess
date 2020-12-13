@@ -6,51 +6,28 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
-struct King: Piece, Identifiable {
+/*
+class King: Piece {
     var id = UUID()
+    var content: String {
+        side == .white ? "♔" : "♚"
+    }
+    var type: PieceType = .king
     var side: Side = .white
-    var type = PieceType.king
-    var moved = false
-    var graphicalRepresentation: String {
-        side == .white ? "♚" : "♔"
-    }
-    var validPatterns: [MovePattern] {
-        [
-            [.north],
-            [.northEast],
-            [.east],
-            [.southEast],
-            [.south],
-            [.southWest],
-            [.west],
-            [.northWest]
-        ]
-    }
-
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
-        let delta = destination - source
-
-        switch (delta.x, delta.y) {
-        case (0, 1):
-            return [.north]
-        case (1, 1):
-            return [.northEast]
-        case (1, 0):
-            return [.east]
-        case (1, -1):
-            return [.southEast]
-        case (0, -1):
-            return [.south]
-        case (-1, -1):
-            return [.southWest]
-        case (-1, 0):
-            return [.west]
-        case (-1, 1):
-            return [.northWest]
-        default:
-            return []
-        }
+    var hasMoved: Bool = false
+    var movePatterns: [MovePattern] = [
+        MovePattern(moveType: .single, directions: .north),
+        MovePattern(moveType: .single, directions: .northEast),
+        MovePattern(moveType: .single, directions: .east),
+        MovePattern(moveType: .single, directions: .southEast),
+        MovePattern(moveType: .single, directions: .south),
+        MovePattern(moveType: .single, directions: .southWest),
+        MovePattern(moveType: .single, directions: .west),
+        MovePattern(moveType: .single, directions: .northWest)
+    ]
+    
+    required init(side: Side) {
+        self.side = side
     }
 }
+*/
