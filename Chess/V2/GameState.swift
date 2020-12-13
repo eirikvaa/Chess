@@ -48,7 +48,7 @@ private extension GameState {
     func getSourcePiece(move: Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
         
-        let sourcePieces: [Piece] = try possibleSourceCells.compactMap { cell in
+        let possibleSourcePieces: [(piece: Piece, coordinateSequence: [Coordinate], sourceCorodinate: Coordinate)] = possibleSourceCells.compactMap { cell in
             guard let piece = cell.piece else {
                 return nil
             }
@@ -57,149 +57,51 @@ private extension GameState {
                 return nil
             }
 
-            if cell.coordinate == move.source {
-                return piece
-            }
-            
-            // Try to start from the possible source coordinate and move one direction at a time
-            let possibleMovePatterns = try piece.movePatterns.filter { pattern in
+            let possibleCoordinateSequences: [[Coordinate]] = piece.movePatterns.compactMap { pattern -> [Coordinate] in
                 var currentCoordinate = cell.coordinate
                 
-                switch pattern.moveType {
-                case .shape:
-                    // A knight can move over other pieces, so just apply all directions and take it from there
-                    for direction in pattern.directions {
-                        guard let coordinate = currentCoordinate.applyDirection(direction) else {
-                            return false
-                        }
-                        
-                        currentCoordinate = coordinate
-                    }
-                    
-                    // If we don't end up in the correct destination, this is not the piece we're looking for
-                    guard currentCoordinate == move.destination else {
-                        return false
-                    }
-                    
-                    // If the end cell is free, we can move there
-                    guard let destinationPiece = board[currentCoordinate].piece else {
-                        return true
-                    }
-                    
-                    // Can only possibly move there if piece is of opposite side
-                    guard destinationPiece.side != currentSide else {
-                        return false
-                    }
-                    
-                    // Cannot try to capture if not marking it in the move
-                    guard move.isCapture else {
-                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
-                    }
-                    
-                    return true
-                case .single:
-                    switch move.pieceType {
-                    case .pawn:
-                        guard let direction = pattern.directions.first else {
-                            return false
-                        }
-                        
-                        guard let coordinate = currentCoordinate.applyDirection(direction) else {
-                            return false
-                        }
-                        
-                        guard coordinate == move.destination else {
-                            return false
-                        }
-                        
-                        let validAttackDirectionsForSide: [Direction] = currentSide == .white ?
-                            [.northWest, .northEast] :
-                            [.southWest, .southEast]
-                        
-                        let validMoveDirectionsForSide: Direction = currentSide == .white ? .north : .south
-                        
-                        if move.isCapture && validAttackDirectionsForSide.contains(direction) {
-                            return true
-                        } else if !move.isCapture && validMoveDirectionsForSide == direction {
-                            return true
-                        } else {
-                            return false
-                        }
-                    case .king:
-                        guard let direction = pattern.directions.first else {
-                            return false
-                        }
-                        
-                        guard let coordinate = currentCoordinate.applyDirection(direction) else {
-                            return false
-                        }
-                        
-                        guard coordinate == move.destination else {
-                            return false
-                        }
-                        
-                        guard let destinationPiece = board[coordinate].piece else {
-                            return true
-                        }
-                        
-                        guard destinationPiece.side != currentSide else {
-                            return false
-                        }
-                        
-                        guard move.isCapture else {
-                            throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
-                        }
-                        
-                        return true
-                    default: break
-                    }
-                default:
-                    break
+                var actualDirections: [Coordinate] = []
+                
+                // If there is only one direction in the pattern, let's assume that the move is continuous.
+                // If there are two directions, it'll be the pawn's double move.
+                // If there are three directions, it'll be the knight, which we don't treat as continuous.
+                let continuous = pattern.directions.count == 1 && [.queen, .rook, .bishop].contains(move.pieceType)
+                
+                guard continuous else {
+                    fatalError("Let's try to implement the general case.")
                 }
                 
-                return false
+                guard let direction = pattern.directions.first else {
+                    fatalError("GENERAL PLZ")
+                }
+                
+                while true {
+                    if let nextCoordinate = currentCoordinate.applyDirection(direction) {
+                        actualDirections.append(nextCoordinate)
+                        
+                        if nextCoordinate == move.destination {
+                            return actualDirections
+                        }
+                        
+                        currentCoordinate = nextCoordinate
+                    } else {
+                        break
+                    }
+                }
+                
+                return actualDirections
             }
             
-            if possibleMovePatterns.count > 0 {
-                return piece
+            if possibleCoordinateSequences.count > 0 {
+                return (piece, possibleCoordinateSequences[0], cell.coordinate)
             }
             
             return nil
-            
-            /*
-            // Filter out all illegal move patterns
-            let movePatterns = piece.movePatterns.filter { movePattern in
-                /*guard let _ = cell.coordinate.getMovePattern(to: move.destination, with: movePattern.moveType)?.directions else {
-                    return false
-                }*/
-                
-                switch move.pieceType {
-                case .pawn:
-                    // For now, only allow a pawn to move diagonally if it's attacking a piece of the opposite side
-                    // This disallows en passant, and it also probably allows
-                    if move.isCapture && movePattern.moveType == .diagonal && board[move.destination].piece?.side != currentSide {
-                        return true
-                    } else {
-                        if movePattern.moveType == .diagonal {
-                            return false
-                        }
-                    }
-                default: break
-                }
-                
-                return true
-            }
-            
-            if movePatterns.isEmpty {
-                return nil
-            }*/
-            
-            //return piece
         }
         
-        switch sourcePieces.count {
+        switch possibleSourcePieces.count {
         case 0: throw GameStateError.noValidSourcePieces
-        case 1: return sourcePieces.first!
+        case 1: return possibleSourcePieces[0].0
         case 2...: throw GameStateError.ambiguousMove
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }

@@ -69,6 +69,7 @@ enum MoveType {
     case single
     case double
     case shape
+    case continuous
 }
 
 /**
@@ -117,6 +118,8 @@ protocol Piece: AnyObject {
     /// A list of ways in which the piece can move.
     var movePatterns: [MovePattern] { get }
     
+    var canMoveOverOtherPieces: Bool { get }
+    
     /// Initialize a piece with the given side. This is really the only information that is not known
     /// at the time it is initialized.
     init(side: Side)
@@ -136,6 +139,7 @@ class Pawn: Piece, Identifiable {
     var type: PieceType = .pawn
     var side: Side = .white
     var hasMoved: Bool = false
+    var canMoveOverOtherPieces = false
     var movePatterns: [MovePattern] {
         switch (hasMoved, side) {
         case (false, .white):
@@ -212,6 +216,7 @@ class Bishop: Piece {
     }
 }
 */
+/*
 class Knight: Piece {
     var id = UUID()
     var content: String {
@@ -237,30 +242,32 @@ class Knight: Piece {
         self.side = side
     }
 }
-/*
+*/
 class Queen: Piece {
+    var id = UUID()
     var content: String {
         side == .white ? "♕" : "♛"
     }
     var type: PieceType = .queen
     var side: Side = .white
     var hasMoved: Bool = false
-    var movePatterns = MovePatterns(patterns: [
-        MovePattern((.continuous, [.north])),
-        MovePattern((.continuous, [.north, .east])),
-        MovePattern((.continuous, [.east])),
-        MovePattern((.continuous, [.south, .east])),
-        MovePattern((.continuous, [.south])),
-        MovePattern((.continuous, [.south, .west])),
-        MovePattern((.continuous, [.west])),
-        MovePattern((.continuous, [.north, .west]))
-    ])
+    var canMoveOverOtherPieces = false
+    var movePatterns: [MovePattern] = [
+        MovePattern(moveType: .continuous, directions: .north),
+        MovePattern(moveType: .continuous, directions: .northEast),
+        MovePattern(moveType: .continuous, directions: .east),
+        MovePattern(moveType: .continuous, directions: .southEast),
+        MovePattern(moveType: .continuous, directions: .south),
+        MovePattern(moveType: .continuous, directions: .southWest),
+        MovePattern(moveType: .continuous, directions: .west),
+        MovePattern(moveType: .continuous, directions: .northWest)
+    ]
     
     required init(side: Side) {
         self.side = side
     }
 }
-*/
+/*
 class King: Piece {
     var id = UUID()
     var content: String {
@@ -284,4 +291,4 @@ class King: Piece {
         self.side = side
     }
 }
-
+*/

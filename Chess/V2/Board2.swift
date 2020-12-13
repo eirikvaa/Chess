@@ -34,14 +34,14 @@ class Board: CustomStringConvertible {
                     break//piece = Rook(side: .white)
                 case ("b", 1),
                      ("g", 1):
-                    piece = Knight(side: .white)
+                    break//piece = Knight(side: .white)
                 case ("c", 1),
                      ("f", 1):
                     break//piece = Bishop(side: .white)
                 case ("d", 1):
-                    break//piece = Queen(side: .white)
+                    piece = Queen(side: .white)
                 case ("e", 1):
-                    piece = King(side: .white)
+                    break//piece = King(side: .white)
                 case (_, 2):
                     piece = Pawn(side: .white)
                 case ("a", 8),
@@ -49,14 +49,14 @@ class Board: CustomStringConvertible {
                     break//piece = Rook(side: .black)
                 case ("b", 8),
                      ("g", 8):
-                    piece = Knight(side: .black)
+                    break//piece = Knight(side: .black)
                 case ("c", 8),
                      ("f", 8):
                     break//piece = Bishop(side: .black)
                 case ("d", 8):
-                    break//piece = Queen(side: .black)
+                    piece = Queen(side: .black)
                 case ("e", 8):
-                    piece = King(side: .black)
+                    break//piece = King(side: .black)
                 case (_, 7):
                     piece = Pawn(side: .black)
                 default:
@@ -76,6 +76,7 @@ class Board: CustomStringConvertible {
     /**
      Get the cell from a pair of file and rank.
      */
+    // TODO: Delete
     subscript(file: File, rank: Rank) -> Cell {
         return flattenedBoard().filter { cell in
             cell.coordinate.file == file && cell.coordinate.rank == rank
