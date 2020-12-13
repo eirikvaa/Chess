@@ -14,7 +14,7 @@ class MoveTests: XCTestCase {
 
         XCTAssertEqual(move.destination, "e4")
         XCTAssertEqual(move.pieceType, .pawn)
-        XCTAssertEqual(move.isCapture, false)
+        XCTAssertFalse(move.isCapture)
     }
 
     func testRookMove() throws {
@@ -22,7 +22,7 @@ class MoveTests: XCTestCase {
 
         XCTAssertEqual(move.destination, "a8")
         XCTAssertEqual(move.pieceType, .rook)
-        XCTAssertEqual(move.isCapture, false)
+        XCTAssertFalse(move.isCapture)
     }
 
     func testQueenCapture() throws {
@@ -30,7 +30,7 @@ class MoveTests: XCTestCase {
 
         XCTAssertEqual(move.destination, "e3")
         XCTAssertEqual(move.pieceType, .queen)
-        XCTAssertEqual(move.isCapture, true)
+        XCTAssertTrue(move.isCapture)
     }
 
     func testSourceCoordinateInMove() throws {
@@ -39,6 +39,6 @@ class MoveTests: XCTestCase {
         XCTAssertEqual(move.destination, "c1")
         XCTAssertEqual(move.source, "a1")
         XCTAssertEqual(move.pieceType, .rook)
-        XCTAssertEqual(move.isCapture, false)
+        XCTAssertFalse(move.isCapture)
     }
 }

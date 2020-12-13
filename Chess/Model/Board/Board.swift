@@ -182,8 +182,8 @@ class Board: CustomStringConvertible {
 
 private extension Board {
     func flattenedBoard() -> [Cell] {
-        cells.reduce([]) { allCells, currentRow -> [Cell] in
-            allCells + currentRow
+        return cells.reduce(into: []) { result, cells in
+            result += cells
         }
     }
 }
