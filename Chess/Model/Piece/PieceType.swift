@@ -30,16 +30,3 @@ enum PieceType {
         }
     }
 }
-
-/**
- Moves differ between the pieces and the state for which a piece is in.
-  - `.single` and `.double` are used by pawns and kings.
- */
-enum MoveType {
-    case straight
-    case diagonal
-    case single
-    case double
-    case shape
-    case continuous
-}
