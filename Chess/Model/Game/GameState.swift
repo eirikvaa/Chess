@@ -31,7 +31,7 @@ struct GameState {
         destinationCell.piece = sourceCell.piece
         sourceCell.piece = nil
 
-        currentSide.toggle()
+        currentSide = currentSide.opposite
     }
 }
 

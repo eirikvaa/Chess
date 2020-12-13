@@ -14,15 +14,15 @@ enum Side: Equatable {
     case black
 
     /**
-     Mutate the side by setting it to the opposite side.
+     Get the opposite side
      */
-    mutating func toggle() {
+    var opposite: Side {
         switch self {
-        case .white: self = .black
-        case .black: self = .white
+        case .white: return .black
+        case .black: return .white
         }
     }
-    
+
     static func == (lhs: Side, rhs: Side) -> Bool {
         switch (lhs, rhs) {
         case (.white, .white),
