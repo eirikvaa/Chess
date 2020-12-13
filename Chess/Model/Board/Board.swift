@@ -58,7 +58,7 @@ class Board: CustomStringConvertible {
                 case ("e", 8):
                     break//piece = King(side: .black)
                 case (_, 7):
-                    break//piece = Pawn(side: .black)
+                    piece = Pawn(side: .black)
                 default:
                     break
                 }

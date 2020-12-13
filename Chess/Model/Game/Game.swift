@@ -44,6 +44,9 @@ class Game {
                 continue
             } catch GameState.GameStateError.cannotMovePieceOfOppositeSide {
                 print("\(gameState.currentSide) cannot move pieces of the opposite side. Try again")
+            } catch GameState.GameStateError.cannotPerformCaptureWithoutNotingItInMove {
+                print("Tried to capture, but did not note it in the move \(userInput)")
+                continue
             }
         }
     }
@@ -53,7 +56,9 @@ class Game {
      - Parameter moves: The list of moves to apply
      */
     func applyMoves(_ moves: [String]) throws {
-        let interpretedMoves = try moves.map { try Move(rawMove: $0) }
+        let interpretedMoves = try moves.map {
+            try Move(rawMove: $0)
+        }
 
         for move in interpretedMoves {
             try gameState.executeMove(move: move)

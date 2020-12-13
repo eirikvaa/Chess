@@ -26,6 +26,18 @@ class Game2Tests: XCTestCase {
             "Bd2"
         ))
     }
+
+    func testPawnE4() throws {
+        XCTAssertNoThrow(try applyMoves(
+            "e4"
+        ))
+    }
+
+    func testKnightDoubleMovesAndCapturesPawn() throws {
+        XCTAssertNoThrow(try applyMoves(
+            "Nc3", "d5", "Nxd5"
+        ))
+    }
 }
 
 private extension Game2Tests {

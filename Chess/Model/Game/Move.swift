@@ -47,7 +47,7 @@ struct Move: CustomStringConvertible {
     /// and boards converge to something meaningful.
     init(rawMove: String) throws {
         self.rawMove = rawMove
-        
+
         /// [N|R|B|Q|K]?    : Optional horthand for type of piece. No shorthand means pawn.
         /// x?              : Optional capture
         /// [a-h][1-7]      : File and rank.
@@ -81,7 +81,7 @@ struct Move: CustomStringConvertible {
 
         self.pieceType = PieceType(rawPiece: rawPiece)
     }
-    
+
     var description: String {
         rawMove
     }

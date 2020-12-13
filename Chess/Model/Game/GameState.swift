@@ -38,6 +38,7 @@ struct GameState {
 struct PossibleMove: CustomStringConvertible {
     let piece: Piece
     let coordinateSequence: [Coordinate]
+    let moveType: MoveType
 
     var description: String {
         coordinateSequence.map { String(describing: $0) }.joined(separator: " -> ")
@@ -45,9 +46,10 @@ struct PossibleMove: CustomStringConvertible {
 }
 
 private extension GameState {
+    // swiftlint:disable cyclomatic_complexity
     func getSourcePiece(move: Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
-
+        
         let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
             guard let piece = $0.piece else {
                 return nil
@@ -84,6 +86,52 @@ private extension GameState {
                                 }
                             }
                         }
+                    }
+                case .knight:
+                    if let endCoordinate = seq.last {
+                        if move.isCapture {
+                            if let pieceInDestination = board[endCoordinate].piece {
+                                if pieceInDestination.side != currentSide {
+                                    return piece
+                                } else {
+                                    throw GameStateError.cannotCaptureOwnPiece
+                                }
+                            }
+                        } else {
+                            if let pieceInDestination = board[endCoordinate].piece {
+                                if pieceInDestination.side != currentSide {
+                                    throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                                } else {
+                                    throw GameStateError.cannotCaptureOwnPiece
+                                }
+                            } else {
+                                return piece
+                            }
+                        }
+                    }
+                case .pawn:
+                    for coordinate in seq {
+                        if coordinate == move.destination {
+                            if move.isCapture {
+                                if let pieceInDestination = board[coordinate].piece {
+                                    if pieceInDestination.side != currentSide {
+                                        return piece
+                                    } else {
+                                        throw GameStateError.cannotCaptureOwnPiece
+                                    }
+                                }
+                            } else {
+                                if let pieceInDestination = board[coordinate].piece {
+                                    if pieceInDestination.side != currentSide {
+                                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                                    } else {
+                                        throw GameStateError.cannotCaptureOwnPiece
+                                    }
+                                } else {
+                                    return piece
+                                }
+                            }
+                        }
 
                         if board[coordinate].piece == nil {
                             return piece
@@ -94,16 +142,12 @@ private extension GameState {
                 }
             }
 
-            if !possibleCoordinateSequences.isEmpty {
-                return piece
-            }
-
             return nil
         }
 
         switch possibleSourcePieces.count {
         case 0: throw GameStateError.noValidSourcePieces
-        case 1: fatalError()
+        case 1: return possibleSourcePieces[0]
         case 2...: throw GameStateError.ambiguousMove
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }
@@ -111,37 +155,77 @@ private extension GameState {
 
     func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [[Coordinate]] {
         return piece.movePatterns.compactMap { pattern -> [Coordinate]? in
-            var currentCoordinate = cell.coordinate
-
-            // If there is only one direction in the pattern, let's assume that the move is continuous.
-            // If there are two directions, it'll be the pawn's double move.
-            // If there are three directions, it'll be the knight, which we don't treat as continuous.
-            let continuous = pattern.directions.count == 1 && [.queen, .rook, .bishop].contains(move.pieceType)
-
-            guard continuous else {
-                fatalError("Let's try to implement the general case.")
+            switch move.pieceType {
+            case .queen,
+                 .rook,
+                 .bishop: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
+            case .knight: return handleKnightMove(move: move, cell: cell, pattern: pattern)
+            case .pawn: return handlePawnMove(move: move, cell: cell, pattern: pattern)
+            default: return nil
             }
-
-            guard let direction = pattern.directions.first else {
-                fatalError("GENERAL PLZ")
-            }
-
-            while true {
-                var possibleCoordinates: [Coordinate] = []
-                if let nextCoordinate = currentCoordinate.applyDirection(direction) {
-                    possibleCoordinates.append(nextCoordinate)
-
-                    if nextCoordinate == move.destination {
-                        return possibleCoordinates
-                    }
-
-                    currentCoordinate = nextCoordinate
-                } else {
-                    break
-                }
-            }
-
-            return nil
         }
+    }
+
+    func handlePawnMove(move: Move, cell: Cell, pattern: MovePattern) -> [Coordinate]? {
+        var currentCoordinate = cell.coordinate
+        var possibleCoordinates: [Coordinate] = []
+
+        for direction in pattern.directions {
+            if let nextCoordinate = currentCoordinate.applyDirection(direction) {
+                possibleCoordinates.append(nextCoordinate)
+
+                if nextCoordinate == move.destination {
+                    return possibleCoordinates
+                }
+
+                currentCoordinate = nextCoordinate
+            }
+        }
+
+        return nil
+    }
+
+    func handleKnightMove(move: Move, cell: Cell, pattern: MovePattern) -> [Coordinate]? {
+        var currentCoordinate = cell.coordinate
+        var possibleCoordinates: [Coordinate] = []
+
+        for direction in pattern.directions {
+            if let nextCoordinate = currentCoordinate.applyDirection(direction) {
+                possibleCoordinates.append(nextCoordinate)
+
+                if nextCoordinate == move.destination {
+                    return possibleCoordinates
+                }
+
+                currentCoordinate = nextCoordinate
+            }
+        }
+
+        return nil
+    }
+
+    func handleContinuousMoves(move: Move, cell: Cell, pattern: MovePattern) -> [Coordinate]? {
+        var currentCoordinate = cell.coordinate
+
+        guard let direction = pattern.directions.first else {
+            fatalError("Impossible")
+        }
+
+        while true {
+            var possibleCoordinates: [Coordinate] = []
+            if let nextCoordinate = currentCoordinate.applyDirection(direction) {
+                possibleCoordinates.append(nextCoordinate)
+
+                if nextCoordinate == move.destination {
+                    return possibleCoordinates
+                }
+
+                currentCoordinate = nextCoordinate
+            } else {
+                break
+            }
+        }
+
+        return nil
     }
 }
