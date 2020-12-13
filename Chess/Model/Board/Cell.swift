@@ -1,5 +1,5 @@
 //
-//  BoardCell.swift
+//  Cell.swift
 //  Chess
 //
 //  Created by Eirik Vale Aase on 28/12/2019.
