@@ -21,7 +21,7 @@ class Game2Tests: XCTestCase {
         ))
     }
 
-    func testBishopCannotMoveOverOtherPieces() throws {
+    func testBishopToD2() throws {
         XCTAssertNoThrow(try applyMoves(
             "Bd2"
         ))
