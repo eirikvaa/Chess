@@ -9,7 +9,7 @@
 import Foundation
 
 class Queen: Piece {
-    var id = UUID()
+    let id = UUID()
     var content: String {
         side == .white ? "♕" : "♛"
     }
