@@ -62,7 +62,7 @@ struct PGNGameReader: GameReader {
         var currentGame = ""
         for line in contents.split(separator: "\n") {
             if line.first == "[" {
-                if currentGame.count > 0 {
+                if !currentGame.isEmpty {
                     games.append(currentGame)
                     currentGame = ""
                 }

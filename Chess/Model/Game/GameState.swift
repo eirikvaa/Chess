@@ -83,7 +83,7 @@ private extension GameState {
                 return actualDirections
             }
 
-            if possibleCoordinateSequences.count > 0 {
+            if !possibleCoordinateSequences.isEmpty {
                 return (piece, possibleCoordinateSequences[0], cell.coordinate)
             }
 
