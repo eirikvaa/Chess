@@ -43,7 +43,7 @@ class Board: CustomStringConvertible {
                 case ("e", 1):
                     break//piece = King(side: .white)
                 case (_, 2):
-                    break//piece = Pawn(side: .white)
+                    piece = Pawn(side: .white)
                 case ("a", 8),
                      ("h", 8):
                     break//piece = Rook(side: .black)
