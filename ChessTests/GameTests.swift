@@ -44,6 +44,12 @@ class Game2Tests: XCTestCase {
             "e4", "e5", "xe5"
         ))
     }
+
+    func testPawnLegalAttack() throws {
+        XCTAssertNoThrow(try applyMoves(
+            "e4", "d5", "xd5"
+        ))
+    }
 }
 
 private extension Game2Tests {
