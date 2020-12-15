@@ -27,7 +27,7 @@ class King: Piece {
         MovePattern(moveType: .single, directions: .west),
         MovePattern(moveType: .single, directions: .northWest)
     ]
-    
+
     required init(side: Side) {
         self.side = side
     }
