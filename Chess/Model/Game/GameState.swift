@@ -23,15 +23,25 @@ struct GameState {
      - Parameters move: The move to execute
      */
     mutating func executeMove(move: Move) throws {
+        if move.isCastling {
+            try handleCastling(move: move)
+        } else {
+            try handleRegularMove(move: move)
+        }
+
+        currentSide = currentSide.opposite
+    }
+
+    private func handleCastling(move: Move) throws {}
+
+    private mutating func handleRegularMove(move: Move) throws {
         let piece = try getSourcePiece(move: move)
 
         let sourceCell = board.getCell(of: piece)
-        let destinationCell = board[move.destination]
+        let destinationCell = board[move.destination!]
 
         destinationCell.piece = sourceCell.piece
         sourceCell.piece = nil
-
-        currentSide = currentSide.opposite
     }
 }
 

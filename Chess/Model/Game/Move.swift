@@ -29,18 +29,27 @@ struct Move: CustomStringConvertible {
     enum MoveValidationError: Error {
         case wrongMoveFormat
     }
-    
+
+    /// The string representation of the move
     let rawMove: String
 
     /// The destination that is encoded in the move.
-    let destination: Coordinate
+    let destination: Coordinate?
 
     /// The piece type that is encoded in the move.
+    /// In castling, this is the king
     let pieceType: PieceType
+
+    /// In castling, this is the rook
+    var secondaryPieceType: PieceType?
 
     /// Whether or not the move is a capture, i.e. it captures another piece.
     let isCapture: Bool
 
+    /// Castling, either king-side or queen-side
+    let isCastling: Bool
+
+    /// Might be a partial source coordinate if used for disambiguation
     var source: Coordinate?
 
     /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
@@ -48,10 +57,21 @@ struct Move: CustomStringConvertible {
     init(rawMove: String) throws {
         self.rawMove = rawMove
 
+        if rawMove == "O-O-O" || rawMove == "O-O" {
+            destination = nil
+            isCapture = false
+            isCastling = true
+            pieceType = .king
+            secondaryPieceType = .rook
+            return
+        }
+
+        self.isCastling = false
+
         /// [N|R|B|Q|K]?    : Optional horthand for type of piece. No shorthand means pawn.
         /// x?              : Optional capture
         /// [a-h][1-7]      : File and rank.
-        let regex = #"[N|R|B|Q|K]?([a-h]?[1-8]?)?x?[a-h][1-8]"#
+        let regex = #"([N|R|B|Q|K]?([a-h]?[1-8]?)?x?[a-h][1-8])||(O-O-O)||(O-O)"#
 
         guard let match = rawMove.range(of: regex, options: .regularExpression) else {
             throw MoveValidationError.wrongMoveFormat

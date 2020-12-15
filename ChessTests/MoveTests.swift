@@ -41,4 +41,11 @@ class MoveTests: XCTestCase {
         XCTAssertEqual(move.pieceType, .rook)
         XCTAssertFalse(move.isCapture)
     }
+
+    func testKingSideCastling() throws {
+        let move = try Move(rawMove: "O-O")
+
+        XCTAssertTrue(move.isCastling)
+        XCTAssertFalse(move.isCapture)
+    }
 }
