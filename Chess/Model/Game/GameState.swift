@@ -89,7 +89,9 @@ private extension GameState {
                                 }
                             }
                         } else {
-                            if let oppositeSidePiece = board[coordinate].piece {
+                            // Stop if we find a piece in this position and the piece we're moving cannot
+                            // move over other pieces
+                            if let oppositeSidePiece = board[coordinate].piece, !piece.canMoveOverOtherPieces {
                                 return nil
                             }
                         }
@@ -115,6 +117,12 @@ private extension GameState {
                                 } else {
                                     return piece
                                 }
+                            }
+                        } else {
+                            // Stop if we find a piece in this position and the piece we're moving cannot
+                            // move over other pieces
+                            if let oppositeSidePiece = board[coordinate].piece, !piece.canMoveOverOtherPieces {
+                                return nil
                             }
                         }
                     }
