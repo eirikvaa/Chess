@@ -58,6 +58,7 @@ struct PossibleMove: CustomStringConvertible {
 private extension GameState {
     // swiftlint:disable cyclomatic_complexity
     func getSourcePiece(move: Move) throws -> Piece {
+        print(move.rawMove, terminator: ", ")
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
 
         let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
