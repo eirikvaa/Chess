@@ -48,11 +48,11 @@ class Game2Tests: XCTestCase {
     func testShouldPickCorrectRookToH3() throws {
         assertMoves("a4", "a5", "Ra3", "Ra6", "Rh3", throws: .noThrow)
     }
-    
+
     func testRookCannotCaptureOwnPieces() throws {
         assertMoves("Rxb1", throws: .doThrow)
     }
-    
+
     func testLegalKingMove() throws {
         assertMoves("e4", "e5", "Ke2", throws: .noThrow)
     }
