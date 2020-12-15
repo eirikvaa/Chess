@@ -6,7 +6,8 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-/*
+import Foundation
+
 class King: Piece {
     var id = UUID()
     var content: String {
@@ -15,6 +16,7 @@ class King: Piece {
     var type: PieceType = .king
     var side: Side = .white
     var hasMoved: Bool = false
+    var canMoveOverOtherPieces = false
     var movePatterns: [MovePattern] = [
         MovePattern(moveType: .single, directions: .north),
         MovePattern(moveType: .single, directions: .northEast),
@@ -29,5 +31,8 @@ class King: Piece {
     required init(side: Side) {
         self.side = side
     }
+
+    var desc: String {
+        "K" + content
+    }
 }
-*/
