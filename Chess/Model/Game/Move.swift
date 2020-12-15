@@ -71,22 +71,40 @@ struct Move: CustomStringConvertible {
         }
 
         var rawPiece = ""
+        var file: String?
+        var rank: String?
         if rest.count == 3 {
             let (suffix, rest) = rest.removeSuffix(count: 2)
             rawPiece = rest
-            self.source = Coordinate(stringLiteral: suffix)
+
+            file = String(suffix.first!)
+            rank = String(suffix.last!)
         } else if rest.count == 2 {
             if rest.last?.isLetter == true {
                 // TODO: Implement partial coordinates
-                let file = String(rest.removeLast())
+                file = String(rest.removeLast())
             } else if rest.last?.isNumber == true {
                 // TODO: Implement partial coordinates
-                let rank = Int(String(rest.removeLast()))!
+                rank = String(rest.removeLast())
             } else {
                 throw MoveValidationError.wrongMoveFormat
             }
         } else {
             rawPiece = rest
+        }
+
+        if let file = file, let rank = rank, let rInt = Int(rank) {
+            let ff = File(stringLiteral: file)
+            let rr = Rank(integerLiteral: rInt)
+            self.source = Coordinate(file: ff, rank: rr)
+        } else if let file = file {
+            let ff = File(stringLiteral: file)
+            self.source = Coordinate(file: ff, rank: nil)
+        } else if let rank = rank, let rInt = Int(rank) {
+            let rr = Rank(integerLiteral: rInt)
+            self.source = Coordinate(file: nil, rank: rr)
+        } else {
+            self.source = Coordinate(file: nil, rank: nil)
         }
 
         self.pieceType = PieceType(rawPiece: rawPiece)

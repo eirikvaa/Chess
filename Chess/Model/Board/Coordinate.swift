@@ -38,7 +38,7 @@ struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLitera
         self.rank = Rank(value: rank)
     }
 
-    init(file: File, rank: Rank) {
+    init(file: File?, rank: Rank?) {
         self.file = file
         self.rank = rank
     }
