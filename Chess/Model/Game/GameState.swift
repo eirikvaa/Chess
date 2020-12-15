@@ -125,7 +125,7 @@ private extension GameState {
                                         if pieceInDestination.side != currentSide {
                                             return piece
                                         } else {
-                                            throw GameStateError.cannotCaptureOwnPiece
+                                            return nil
                                         }
                                     }
                                 } else {
@@ -140,7 +140,7 @@ private extension GameState {
                                     if pieceInDestination.side != currentSide {
                                         throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
                                     } else {
-                                        throw GameStateError.cannotCaptureOwnPiece
+                                        return nil
                                     }
                                 } else {
                                     return piece
