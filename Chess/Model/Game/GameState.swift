@@ -95,24 +95,26 @@ private extension GameState {
                         }
                     }
                 case .knight:
-                    if let endCoordinate = seq.coordinateSequence.last {
-                        if move.isCapture {
-                            if let pieceInDestination = board[endCoordinate].piece {
-                                if pieceInDestination.side != currentSide {
-                                    return piece
-                                } else {
-                                    return nil
-                                }
-                            }
-                        } else {
-                            if let pieceInDestination = board[endCoordinate].piece {
-                                if pieceInDestination.side != currentSide {
-                                    throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
-                                } else {
-                                    return nil
+                    for coordinate in seq.coordinateSequence {
+                        if coordinate == move.destination {
+                            if move.isCapture {
+                                if let pieceInDestination = board[coordinate].piece {
+                                    if pieceInDestination.side != currentSide {
+                                        return piece
+                                    } else {
+                                        return nil
+                                    }
                                 }
                             } else {
-                                return piece
+                                if let pieceInDestination = board[coordinate].piece {
+                                    if pieceInDestination.side != currentSide {
+                                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                                    } else {
+                                        return nil
+                                    }
+                                } else {
+                                    return piece
+                                }
                             }
                         }
                     }
