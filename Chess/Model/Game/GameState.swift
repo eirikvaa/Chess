@@ -65,7 +65,8 @@ private extension GameState {
                 switch move.pieceType {
                 case .bishop,
                      .queen,
-                     .rook:
+                     .rook,
+                     .king:
                     for coordinate in seq.coordinateSequence {
                         if coordinate == move.destination {
                             if move.isCapture {
@@ -172,10 +173,10 @@ private extension GameState {
             switch move.pieceType {
             case .queen,
                  .rook,
-                 .bishop: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
+                 .bishop,
+                 .king: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
             case .knight: return handleKnightMove(move: move, cell: cell, pattern: pattern)
             case .pawn: return handlePawnMove(move: move, cell: cell, pattern: pattern)
-            default: return nil
             }
         }
     }

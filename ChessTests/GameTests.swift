@@ -52,6 +52,10 @@ class Game2Tests: XCTestCase {
     func testRookCannotCaptureOwnPieces() throws {
         assertMoves("Rxb1", throws: .doThrow)
     }
+    
+    func testLegalKingMove() throws {
+        assertMoves("e4", "e5", "Ke2", throws: .noThrow)
+    }
 }
 
 private extension Game2Tests {
