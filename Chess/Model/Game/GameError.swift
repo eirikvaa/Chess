@@ -9,7 +9,7 @@
 extension GameState {
     enum GameStateError: Error {
         case illegalMove(message: String)
-        case noValidSourcePieces
+        case noValidSourcePieces(message: String)
         case ambiguousMove
         case cannotMovePieceOfOppositeSide
         case destinationIsOccupiedByOwnPiece

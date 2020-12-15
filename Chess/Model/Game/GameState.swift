@@ -146,7 +146,7 @@ private extension GameState {
         }
 
         switch possibleSourcePieces.count {
-        case 0: throw GameStateError.noValidSourcePieces
+        case 0: throw GameStateError.noValidSourcePieces(message: move.rawMove)
         case 1: return possibleSourcePieces[0]
         case 2...: throw GameStateError.ambiguousMove
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
