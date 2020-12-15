@@ -24,6 +24,7 @@ protocol Piece: AnyObject {
     /// The side that owns the piece
     var side: Side { get set }
 
+    /// Description of the piece, something like N for Knight and the graphical representation
     var desc: String { get }
 
     /// If the piece has made its first move yet
