@@ -66,7 +66,8 @@ private extension GameState {
                 case .bishop,
                      .queen,
                      .rook,
-                     .king:
+                     .king,
+                     .knight:
                     for coordinate in seq.coordinateSequence {
                         if coordinate == move.destination {
                             if move.isCapture {
@@ -91,37 +92,7 @@ private extension GameState {
                         } else {
                             // Stop if we find a piece in this position and the piece we're moving cannot
                             // move over other pieces
-                            if let oppositeSidePiece = board[coordinate].piece, !piece.canMoveOverOtherPieces {
-                                return nil
-                            }
-                        }
-                    }
-                case .knight:
-                    for coordinate in seq.coordinateSequence {
-                        if coordinate == move.destination {
-                            if move.isCapture {
-                                if let pieceInDestination = board[coordinate].piece {
-                                    if pieceInDestination.side != currentSide {
-                                        return piece
-                                    } else {
-                                        return nil
-                                    }
-                                }
-                            } else {
-                                if let pieceInDestination = board[coordinate].piece {
-                                    if pieceInDestination.side != currentSide {
-                                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
-                                    } else {
-                                        return nil
-                                    }
-                                } else {
-                                    return piece
-                                }
-                            }
-                        } else {
-                            // Stop if we find a piece in this position and the piece we're moving cannot
-                            // move over other pieces
-                            if let oppositeSidePiece = board[coordinate].piece, !piece.canMoveOverOtherPieces {
+                            if board[coordinate].piece != nil, !piece.canMoveOverOtherPieces {
                                 return nil
                             }
                         }
