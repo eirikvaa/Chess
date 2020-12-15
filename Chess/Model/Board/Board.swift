@@ -31,7 +31,7 @@ class Board: CustomStringConvertible {
                 switch (file, rank) {
                 case ("a", 1),
                      ("h", 1):
-                    break//piece = Rook(side: .white)
+                    piece = Rook(side: .white)
                 case ("b", 1),
                      ("g", 1):
                     piece = Knight(side: .white)
@@ -46,7 +46,7 @@ class Board: CustomStringConvertible {
                     piece = Pawn(side: .white)
                 case ("a", 8),
                      ("h", 8):
-                    break//piece = Rook(side: .black)
+                    piece = Rook(side: .black)
                 case ("b", 8),
                      ("g", 8):
                     piece = Knight(side: .black)
