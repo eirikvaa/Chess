@@ -152,8 +152,6 @@ private extension GameState {
                             return piece
                         }
                     }
-                default:
-                    break
                 }
             }
 
