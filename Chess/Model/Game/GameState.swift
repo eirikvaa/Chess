@@ -64,7 +64,8 @@ private extension GameState {
             for seq in possibleCoordinateSequences {
                 switch move.pieceType {
                 case .bishop,
-                     .queen:
+                     .queen,
+                     .rook:
                     for coordinate in seq.coordinateSequence {
                         if coordinate == move.destination {
                             if move.isCapture {
@@ -88,7 +89,7 @@ private extension GameState {
                             }
                         } else {
                             if let oppositeSidePiece = board[coordinate].piece {
-                                throw GameStateError.cannotMoveOverOtherPieces
+                                return nil
                             }
                         }
                     }
@@ -223,9 +224,10 @@ private extension GameState {
         guard let direction = pattern.directions.first else {
             fatalError("Impossible")
         }
+        
+        var possibleCoordinates: [Coordinate] = []
 
         while true {
-            var possibleCoordinates: [Coordinate] = []
             if let nextCoordinate = currentCoordinate.applyDirection(direction) {
                 possibleCoordinates.append(nextCoordinate)
 

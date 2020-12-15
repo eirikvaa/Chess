@@ -36,9 +36,17 @@ class Game2Tests: XCTestCase {
     func testWhitePawnCannotAttackBackwards() throws {
         assertMoves("e4", "d5", "e5", "d4", "xd3", throws: .doThrow)
     }
-    
+
     func testBlackQueenTakesWhiteKnight() throws {
         assertMoves("Nc3", "d5", "Nxd5", "Qxd5", throws: .noThrow)
+    }
+
+    func testRookCanMoveNorth() throws {
+        assertMoves("a4", "a5", "Ra3", throws: .noThrow)
+    }
+
+    func testShouldPickCorrectRookToH3() throws {
+        assertMoves("a4", "a5", "Ra3", "Ra6", "Rh3", throws: .noThrow)
     }
 }
 
