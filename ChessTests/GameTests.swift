@@ -56,6 +56,10 @@ class Game2Tests: XCTestCase {
     func testLegalKingMove() throws {
         assertMoves("e4", "e5", "Ke2", throws: .noThrow)
     }
+    
+    func testPawnsCannotMoveDiagonallyUnlessItCapturesLegally() throws {
+        assertMoves("Nf3", "g6", throws: .noThrow)
+    }
 }
 
 private extension Game2Tests {

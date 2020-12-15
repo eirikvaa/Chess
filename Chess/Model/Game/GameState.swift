@@ -117,14 +117,20 @@ private extension GameState {
                                     )
                                 }
                             } else {
-                                if let pieceInDestination = board[coordinate].piece {
-                                    if pieceInDestination.side != currentSide {
-                                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
-                                    } else {
-                                        return nil
-                                    }
+                                // If the pawn doesn't capture, it cannot move diagonally
+                                // TODO: En passant
+                                if seq.moveType == .diagonal {
+                                    return nil
                                 } else {
-                                    return piece
+                                    if let pieceInDestination = board[coordinate].piece {
+                                        if pieceInDestination.side != currentSide {
+                                            throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                                        } else {
+                                            return nil
+                                        }
+                                    } else {
+                                        return piece
+                                    }
                                 }
                             }
                         }
