@@ -91,7 +91,7 @@ private extension GameState {
                             } else {
                                 if let pieceInDestination = board[coordinate].piece {
                                     if pieceInDestination.side != currentSide {
-                                        throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                                        throw GameStateError.mustMarkCaptureInMove
                                     } else {
                                         return nil
                                     }
@@ -134,7 +134,7 @@ private extension GameState {
                                 } else {
                                     if let pieceInDestination = board[coordinate].piece {
                                         if pieceInDestination.side != currentSide {
-                                            throw GameStateError.cannotPerformCaptureWithoutNotingItInMove
+                                            throw GameStateError.mustMarkCaptureInMove
                                         } else {
                                             return nil
                                         }

@@ -13,7 +13,7 @@ extension GameState {
         case ambiguousMove
         case cannotMovePieceOfOppositeSide
         case destinationIsOccupiedByOwnPiece
-        case cannotPerformCaptureWithoutNotingItInMove
+        case mustMarkCaptureInMove
         case cannotCaptureOwnPiece
         case cannotMoveOverOtherPieces
     }
