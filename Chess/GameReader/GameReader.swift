@@ -14,16 +14,16 @@ enum GameReaderError: Error {
 }
 
 protocol GameReader {
-    static func read(textRepresentation: String) -> [Move]
+    static func read(textRepresentation: String) -> [String]
 }
 
 struct PGNGameReader: GameReader {
-    static func read(textRepresentation: String) -> [Move] {
+    static func read(textRepresentation: String) -> [String] {
         let moves = textRepresentation
             .replacingOccurrences(of: "\n", with: " ")
             .split(separator: " ")
-            .filter { SANMoveFormatValidator().validate(String($0)) }
-            .compactMap { try? SANMoveInterpreter().interpret(String($0)) }
+            .compactMap { try? Move(rawMove: String($0)) }
+            .map { $0.rawMove }
 
         return moves
     }
