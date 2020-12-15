@@ -17,11 +17,11 @@ struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLitera
 
     /// A column on the board as seen from white's perspective.
     /// Goes from "a" to "h" from left to right.
-    let file: File
+    let file: File?
 
     /// A row on the board as seen from white's perspective.
     /// Goes from 1 - 8 from nearest to farthest.
-    let rank: Rank
+    let rank: Rank?
 
     init(rawCoordinates: String) throws {
         let file = String(rawCoordinates.dropLast())
@@ -52,7 +52,7 @@ struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLitera
     }
 
     var description: String {
-        "\(file)\(rank)"
+        "\(file ?? "")\(rank ?? 0)"
     }
 
     /**
@@ -82,39 +82,5 @@ struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLitera
         }
 
         return Coordinate(file: file, rank: rank)
-    }
-
-    /**
-     Get the move pattern between this coordinate to another coordinate given the type of move that is to be performed.
-     - Parameters:
-        - coordinate: Destination coordinate
-        - moveType: Type of move (straight, diagonal, et cetera)
-     - Returns: The possible move pattern
-     */
-    func getMovePattern(to coordinate: Coordinate, with moveType: MoveType) -> MovePattern? {
-        let sourceFileIndex = self.file.index
-        let sourceRankIndex = self.rank.value - 1 // to make it zero-indexed
-
-        let destinationFileIndex = coordinate.file.index
-        let destinationRankIndex = coordinate.rank.value - 1
-
-        let deltaX = destinationFileIndex - sourceFileIndex
-        let deltaY = destinationRankIndex - sourceRankIndex
-
-        let direction: Direction
-
-        switch (deltaX, deltaY) {
-        case (1..., 0): direction = .east
-        case (...(-1), 0): direction = .west
-        case (0, 1...): direction = .north
-        case (0, ...(-1)): direction = .south
-        default: return nil
-        }
-
-        let count = max(abs(deltaX), abs(deltaY))
-
-        let directions = Array(repeating: direction, count: count)
-
-        return .init(moveType: moveType, directions: directions)
     }
 }

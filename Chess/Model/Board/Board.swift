@@ -87,7 +87,7 @@ class Board: CustomStringConvertible {
      Get the cell from a coordinate.
      */
     subscript(coordinate: Coordinate) -> Cell {
-        self[coordinate.file, coordinate.rank]
+        self[coordinate.file!, coordinate.rank!]
     }
 
     func getPieceInBoardDescription(piece: Piece) -> String {
