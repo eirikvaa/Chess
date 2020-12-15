@@ -15,5 +15,6 @@ extension GameState {
         case destinationIsOccupiedByOwnPiece
         case cannotPerformCaptureWithoutNotingItInMove
         case cannotCaptureOwnPiece
+        case cannotMoveOverOtherPieces
     }
 }

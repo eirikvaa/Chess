@@ -47,6 +47,9 @@ class Game {
             } catch GameState.GameStateError.cannotPerformCaptureWithoutNotingItInMove {
                 print("Tried to capture, but did not note it in the move \(userInput)")
                 continue
+            } catch GameState.GameStateError.cannotMoveOverOtherPieces {
+                print("Tried to move over other pieces with the move \(userInput). Try again.")
+                continue
             }
         }
     }
