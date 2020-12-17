@@ -16,6 +16,10 @@ import Foundation
 struct GameState {
     let board = Board()
     var currentSide = Side.white
+    
+    init() {
+        print(board)
+    }
 
     /**
      Execute a move and transition the game state to a new state.
@@ -23,16 +27,42 @@ struct GameState {
      - Parameters move: The move to execute
      */
     mutating func executeMove(move: Move) throws {
-        if move.isCastling {
+        print(move.rawMove)
+
+        if move.isKingSideCastling || move.isQueenSideCastling {
             try handleCastling(move: move)
         } else {
             try handleRegularMove(move: move)
         }
+        
+        print(board)
 
         currentSide = currentSide.opposite
     }
 
-    private func handleCastling(move: Move) throws {}
+    private func handleCastling(move: Move) throws {
+        let oldKingCoordinate: Coordinate
+        let oldRookCoordinate: Coordinate
+        let newKingCoordinate: Coordinate
+        let newRookCoordinate: Coordinate
+
+        if move.isKingSideCastling { // O-O
+            oldKingCoordinate = Coordinate(stringLiteral: currentSide == .white ? "e1" : "e8")
+            oldRookCoordinate = Coordinate(stringLiteral: currentSide == .white ? "h1" : "h8")
+            newKingCoordinate = Coordinate(stringLiteral: currentSide == .white ? "g1" : "g8")
+            newRookCoordinate = Coordinate(stringLiteral: currentSide == .white ? "f1" : "f8")
+        } else { // O-O-O, queen side castling
+            oldKingCoordinate = Coordinate(stringLiteral: currentSide == .white ? "e1" : "e8")
+            oldRookCoordinate = Coordinate(stringLiteral: currentSide == .white ? "a1" : "a8")
+            newKingCoordinate = Coordinate(stringLiteral: currentSide == .white ? "c1" : "c8")
+            newRookCoordinate = Coordinate(stringLiteral: currentSide == .white ? "d1" : "d8")
+        }
+
+        board[newKingCoordinate].piece = board[oldKingCoordinate].piece
+        board[newRookCoordinate].piece = board[oldRookCoordinate].piece
+        board[oldKingCoordinate].piece = nil
+        board[oldRookCoordinate].piece = nil
+    }
 
     private mutating func handleRegularMove(move: Move) throws {
         let piece = try getSourcePiece(move: move)
@@ -58,7 +88,7 @@ struct PossibleMove: CustomStringConvertible {
 private extension GameState {
     // swiftlint:disable cyclomatic_complexity
     func getSourcePiece(move: Move) throws -> Piece {
-        print(move.rawMove, terminator: ", ")
+        print(board)
         let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
 
         let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
@@ -221,7 +251,7 @@ private extension GameState {
         guard let direction = pattern.directions.first else {
             fatalError("Impossible")
         }
-        
+
         var possibleCoordinates: [Coordinate] = []
 
         while true {

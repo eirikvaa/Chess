@@ -46,8 +46,11 @@ struct Move: CustomStringConvertible {
     /// Whether or not the move is a capture, i.e. it captures another piece.
     let isCapture: Bool
 
-    /// Castling, either king-side or queen-side
-    let isCastling: Bool
+    /// O-O-O, the longest
+    let isQueenSideCastling: Bool
+    
+    /// O-O, the shortest
+    let isKingSideCastling: Bool
 
     /// Might be a partial source coordinate if used for disambiguation
     var source: Coordinate?
@@ -60,13 +63,15 @@ struct Move: CustomStringConvertible {
         if rawMove == "O-O-O" || rawMove == "O-O" {
             destination = nil
             isCapture = false
-            isCastling = true
+            isQueenSideCastling = rawMove == "O-O-O"
+            isKingSideCastling = rawMove == "O-O"
             pieceType = .king
             secondaryPieceType = .rook
             return
         }
 
-        self.isCastling = false
+        self.isQueenSideCastling = false
+        self.isKingSideCastling = false
 
         /// [N|R|B|Q|K]?    : Optional horthand for type of piece. No shorthand means pawn.
         /// x?              : Optional capture
@@ -114,15 +119,15 @@ struct Move: CustomStringConvertible {
         }
 
         if let file = file, let rank = rank, let rInt = Int(rank) {
-            let ff = File(stringLiteral: file)
-            let rr = Rank(integerLiteral: rInt)
-            self.source = Coordinate(file: ff, rank: rr)
+            let ffile = File(stringLiteral: file)
+            let rrank = Rank(integerLiteral: rInt)
+            self.source = Coordinate(file: ffile, rank: rrank)
         } else if let file = file {
-            let ff = File(stringLiteral: file)
-            self.source = Coordinate(file: ff, rank: nil)
+            let ffile = File(stringLiteral: file)
+            self.source = Coordinate(file: ffile, rank: nil)
         } else if let rank = rank, let rInt = Int(rank) {
-            let rr = Rank(integerLiteral: rInt)
-            self.source = Coordinate(file: nil, rank: rr)
+            let rrank = Rank(integerLiteral: rInt)
+            self.source = Coordinate(file: nil, rank: rrank)
         } else {
             self.source = Coordinate(file: nil, rank: nil)
         }

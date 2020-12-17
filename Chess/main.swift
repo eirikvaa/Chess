@@ -12,7 +12,7 @@
 
 let games = try PGNGameReader.readFile("twic920")
 let moves = PGNGameReader.read(textRepresentation: games[0])
-
+print(moves)
 let game = Game()
 
 try game.applyMoves(moves)

@@ -56,14 +56,25 @@ class Game2Tests: XCTestCase {
     func testLegalKingMove() throws {
         assertMoves("e4", "e5", "Ke2", throws: .noThrow)
     }
-    
+
     func testPawnsCannotMoveDiagonallyUnlessItCapturesLegally() throws {
         assertMoves("Nf3", "g6", throws: .noThrow)
     }
-    
-    func testSomething() throws {
+
+    func testCanHandleKingSideCastlingCorrectly() throws {
         assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4", "Nc6", "Be3",
-                    "Nf6", "Nc3", "O-O", "Be2", throws: .noThrow)
+                    "Nf6", "Nc3", "O-O", throws: .noThrow)
+    }
+    
+    func testWhiteCanKingSideCastle() throws {
+        assertMoves("e4", "e5", "Nf3", "d5", "Bc4", "c5", "O-O", throws: .noThrow)
+    }
+
+    func testSomething() throws {
+        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
+                    "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
+                    "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
+                    "Rab1", throws: .noThrow)
     }
 }
 
