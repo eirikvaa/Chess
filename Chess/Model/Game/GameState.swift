@@ -90,8 +90,11 @@ struct PossibleMove: CustomStringConvertible {
 private extension GameState {
     // swiftlint:disable cyclomatic_complexity
     func getSourcePiece(move: Move) throws -> Piece {
-        print(board)
-        let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide, sourceCoordinate: move.source)
+        let possibleSourceCells = board.getAllPieces(
+            of: move.pieceType,
+            side: currentSide,
+            sourceCoordinate: move.source
+        )
 
         let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
             guard let piece = $0.piece else {
@@ -147,46 +150,44 @@ private extension GameState {
                         }
                     }
                 case .pawn:
-                    for coordinate in seq.coordinateSequence {
-                        if coordinate == move.destination {
-                            if move.isCapture {
-                                if seq.moveType == .diagonal {
-                                    if let pieceInDestination = board[coordinate].piece {
-                                        if pieceInDestination.side != currentSide {
-                                            return piece
-                                        } else {
-                                            return nil
-                                        }
-                                    }
-                                } else {
-                                    // TODO: More validation is needed, like restricting white pawns to NW/NE attacks,
-                                    // but that can come later.
-                                    throw GameStateError.illegalMove(
-                                            message: "Pawns cannot attack in any other direction than diagonally."
-                                    )
-                                }
-                            } else {
-                                // If the pawn doesn't capture, it cannot move diagonally
-                                // TODO: En passant
-                                if seq.moveType == .diagonal {
-                                    return nil
-                                } else {
-                                    if let pieceInDestination = board[coordinate].piece {
-                                        if pieceInDestination.side != currentSide {
-                                            throw GameStateError.mustMarkCaptureInMove
-                                        } else {
-                                            return nil
-                                        }
-                                    } else {
-                                        return piece
-                                    }
-                                }
-                            }
+                    switch seq.moveType {
+                    case .single:
+                        if move.isCapture {
+                            return nil
                         }
 
-                        if board[coordinate].piece == nil {
+                        let destination = seq.coordinateSequence[0]
+                        if board[destination].piece == nil {
                             return piece
+                        } else {
+                            return nil
                         }
+                    case .double:
+                        if move.isCapture {
+                            return nil
+                        }
+
+                        guard !piece.hasMoved else {
+                            return nil
+                        }
+
+                        return seq.coordinateSequence.allSatisfy {
+                            board[$0].piece == nil
+                        } ? piece : nil
+                    case .diagonal:
+                        guard move.isCapture else {
+                            return nil
+                        }
+
+                        let destination = seq.coordinateSequence[0]
+
+                        if let destinationPiece = board[destination].piece, destinationPiece.side != currentSide {
+                            return piece
+                        } else {
+                            return nil
+                        }
+                    default:
+                        return nil
                     }
                 }
             }
