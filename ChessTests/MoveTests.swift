@@ -49,4 +49,11 @@ class MoveTests: XCTestCase {
         XCTAssertFalse(move.isQueenSideCastling)
         XCTAssertFalse(move.isCapture)
     }
+
+    func testRookMovePartialSourceCoordinate() throws {
+        let move = try Move(rawMove: "Rab1")
+
+        XCTAssertFalse(move.isKingSideCastling || move.isQueenSideCastling)
+        XCTAssertEqual(move.pieceType, .rook)
+    }
 }

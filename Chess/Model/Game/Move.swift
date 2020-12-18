@@ -106,14 +106,13 @@ struct Move: CustomStringConvertible {
             rank = String(suffix.last!)
         } else if rest.count == 2 {
             if rest.last?.isLetter == true {
-                // TODO: Implement partial coordinates
                 file = String(rest.removeLast())
             } else if rest.last?.isNumber == true {
-                // TODO: Implement partial coordinates
                 rank = String(rest.removeLast())
             } else {
                 throw MoveValidationError.wrongMoveFormat
             }
+            rawPiece = rest
         } else {
             rawPiece = rest
         }
