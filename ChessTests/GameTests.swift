@@ -88,6 +88,16 @@ class Game2Tests: XCTestCase {
                     "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
                     "Rab1", throws: .noThrow)
     }
+
+    func testSomething() throws {
+        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
+                    "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
+                    "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
+                    "Rab1", "Qb6", "Rfc1", "Rfc8", "Rc2", "h5", "Bf1", "Kh7", "g3", "Qd8",
+                    "Bh3", "e6", "Rd1", "Be5", "Nb5", "Qf8", "Qe2", "Rd8", "Bg5", "Rd7", "Nd4",
+                    "f5", "Nxc6", "bxc6", "Be3", "Qe7", "Bg2", "Bg7", "Rcd2",
+                    "Rad8", "Bxc5", "dxc5", throws: .noThrow)
+    }
 }
 
 private extension Game2Tests {
