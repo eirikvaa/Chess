@@ -11,10 +11,10 @@
 // try game2.play()
 
 let games = try PGNGameReader.readFile("twic920")
-let moves = PGNGameReader.read(textRepresentation: games[1])
 
-print(moves)
+for (index, game) in games.enumerated() {
+    print("STARTING GAME \(index)")
 
-let game = Game()
-
-try game.applyMoves(moves)
+    let moves = PGNGameReader.read(textRepresentation: game)
+    try Game().applyMoves(moves)
+}
