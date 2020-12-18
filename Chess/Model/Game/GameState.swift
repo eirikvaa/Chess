@@ -91,7 +91,7 @@ private extension GameState {
     // swiftlint:disable cyclomatic_complexity
     func getSourcePiece(move: Move) throws -> Piece {
         print(board)
-        let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide)
+        let possibleSourceCells = board.getAllPieces(of: move.pieceType, side: currentSide, sourceCoordinate: move.source)
 
         let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
             guard let piece = $0.piece else {

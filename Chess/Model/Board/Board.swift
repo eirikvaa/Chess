@@ -104,9 +104,17 @@ class Board: CustomStringConvertible {
         - side: The side, either white or black
      - Returns: A list of cells at which the pieces where found
      */
-    func getAllPieces(of type: PieceType, side: Side) -> [Cell] {
-        flattenedBoard().filter {
+    func getAllPieces(of type: PieceType, side: Side, sourceCoordinate: Coordinate) -> [Cell] {
+        let cells = flattenedBoard().filter {
             $0.piece?.type == type && $0.piece?.side == side
+        }
+
+        guard sourceCoordinate.rank != nil || sourceCoordinate.file != nil else {
+            return cells
+        }
+
+        return cells.filter {
+            $0.coordinate.rank == sourceCoordinate.rank || $0.coordinate.file == sourceCoordinate.file
         }
     }
 

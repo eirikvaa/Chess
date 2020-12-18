@@ -53,7 +53,7 @@ struct Move: CustomStringConvertible {
     let isKingSideCastling: Bool
 
     /// Might be a partial source coordinate if used for disambiguation
-    var source: Coordinate?
+    var source: Coordinate
 
     /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
     /// and boards converge to something meaningful.
@@ -67,6 +67,7 @@ struct Move: CustomStringConvertible {
             isKingSideCastling = rawMove == "O-O"
             pieceType = .king
             secondaryPieceType = .rook
+            source = Coordinate(file: nil, rank: nil)
             return
         }
 
