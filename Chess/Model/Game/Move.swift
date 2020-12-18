@@ -48,7 +48,7 @@ struct Move: CustomStringConvertible {
 
     /// O-O-O, the longest
     let isQueenSideCastling: Bool
-    
+
     /// O-O, the shortest
     let isKingSideCastling: Bool
 

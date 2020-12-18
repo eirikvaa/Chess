@@ -17,17 +17,17 @@ class Rook: Piece {
     var side: Side = .white
     var hasMoved: Bool = false
     var canMoveOverOtherPieces = false
-    var movePatterns: [MovePattern] { [
+    var movePatterns: [MovePattern] = [
         MovePattern(moveType: .straight, directions: .north),
         MovePattern(moveType: .straight, directions: .east),
         MovePattern(moveType: .straight, directions: .south),
         MovePattern(moveType: .straight, directions: .west)
-    ]}
-    
+    ]
+
     required init(side: Side) {
         self.side = side
     }
-    
+
     var desc: String {
         "R" + content
     }

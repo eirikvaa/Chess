@@ -16,7 +16,7 @@ import Foundation
 struct GameState {
     let board = Board()
     var currentSide = Side.white
-    
+
     init() {
         print(board)
     }
@@ -34,7 +34,7 @@ struct GameState {
         } else {
             try handleRegularMove(move: move)
         }
-        
+
         print(board)
 
         currentSide = currentSide.opposite
@@ -81,7 +81,9 @@ struct PossibleMove: CustomStringConvertible {
     let moveType: MoveType
 
     var description: String {
-        coordinateSequence.map { String(describing: $0) }.joined(separator: " -> ")
+        coordinateSequence.map {
+            String(describing: $0)
+        }.joined(separator: " -> ")
     }
 }
 
@@ -154,7 +156,7 @@ private extension GameState {
                                     // TODO: More validation is needed, like restricting white pawns to NW/NE attacks,
                                     // but that can come later.
                                     throw GameStateError.illegalMove(
-                                        message: "Pawns cannot attack in any other direction than diagonally."
+                                            message: "Pawns cannot attack in any other direction than diagonally."
                                     )
                                 }
                             } else {

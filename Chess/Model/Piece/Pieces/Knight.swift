@@ -17,18 +17,16 @@ class Knight: Piece {
     var side: Side = .white
     var hasMoved: Bool = false
     var canMoveOverOtherPieces = true
-    var movePatterns: [MovePattern] {
-        [
-            MovePattern(moveType: .shape, directions: .north, .north, .west),
-            MovePattern(moveType: .shape, directions: .north, .north, .east),
-            MovePattern(moveType: .shape, directions: .west, .west, .north),
-            MovePattern(moveType: .shape, directions: .west, .west, .south),
-            MovePattern(moveType: .shape, directions: .south, .south, .west),
-            MovePattern(moveType: .shape, directions: .south, .south, .east),
-            MovePattern(moveType: .shape, directions: .east, .east, .north),
-            MovePattern(moveType: .shape, directions: .east, .east, .south)
-        ]
-    }
+    var movePatterns: [MovePattern] = [
+        MovePattern(moveType: .shape, directions: .north, .north, .west),
+        MovePattern(moveType: .shape, directions: .north, .north, .east),
+        MovePattern(moveType: .shape, directions: .west, .west, .north),
+        MovePattern(moveType: .shape, directions: .west, .west, .south),
+        MovePattern(moveType: .shape, directions: .south, .south, .west),
+        MovePattern(moveType: .shape, directions: .south, .south, .east),
+        MovePattern(moveType: .shape, directions: .east, .east, .north),
+        MovePattern(moveType: .shape, directions: .east, .east, .south)
+    ]
 
     required init(side: Side) {
         self.side = side
