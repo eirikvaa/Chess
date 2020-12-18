@@ -11,7 +11,7 @@
 // try game2.play()
 
 let games = try PGNGameReader.readFile("twic920")
-let moves = PGNGameReader.read(textRepresentation: games[0])
+let moves = PGNGameReader.read(textRepresentation: games[1])
 
 print(moves)
 

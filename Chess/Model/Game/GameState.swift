@@ -112,6 +112,12 @@ private extension GameState {
                      .king,
                      .knight:
                     for coordinate in seq.coordinateSequence {
+                        if move.pieceType == .knight {
+                            if coordinate != seq.coordinateSequence.last {
+                                continue
+                            }
+                        }
+
                         if coordinate == move.destination {
                             if move.isCapture {
                                 if let pieceInDestination = board[coordinate].piece {
@@ -218,7 +224,11 @@ private extension GameState {
                 possibleCoordinates.append(nextCoordinate)
 
                 if nextCoordinate == move.destination {
-                    return .init(piece: cell.piece!, coordinateSequence: possibleCoordinates, moveType: pattern.moveType)
+                    return .init(
+                        piece: cell.piece!,
+                        coordinateSequence: possibleCoordinates,
+                        moveType: pattern.moveType
+                    )
                 }
 
                 currentCoordinate = nextCoordinate
@@ -229,19 +239,25 @@ private extension GameState {
     }
 
     func handleKnightMove(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
-        var currentCoordinate = cell.coordinate
+        var currentCoordinate: Coordinate? = cell.coordinate
         var possibleCoordinates: [Coordinate] = []
 
         for direction in pattern.directions {
-            if let nextCoordinate = currentCoordinate.applyDirection(direction) {
-                possibleCoordinates.append(nextCoordinate)
+            currentCoordinate = currentCoordinate?.applyDirection(direction)
 
-                if nextCoordinate == move.destination {
-                    return .init(piece: cell.piece!, coordinateSequence: possibleCoordinates, moveType: pattern.moveType)
-                }
-
-                currentCoordinate = nextCoordinate
+            if let currentCoordinate = currentCoordinate {
+                possibleCoordinates.append(currentCoordinate)
+            } else {
+                return nil
             }
+        }
+
+        if currentCoordinate == move.destination {
+            return .init(
+                piece: cell.piece!,
+                coordinateSequence: possibleCoordinates,
+                moveType: pattern.moveType
+            )
         }
 
         return nil
@@ -261,7 +277,11 @@ private extension GameState {
                 possibleCoordinates.append(nextCoordinate)
 
                 if nextCoordinate == move.destination {
-                    return .init(piece: cell.piece!, coordinateSequence: possibleCoordinates, moveType: pattern.moveType)
+                    return .init(
+                        piece: cell.piece!,
+                        coordinateSequence: possibleCoordinates,
+                        moveType: pattern.moveType
+                    )
                 }
 
                 currentCoordinate = nextCoordinate

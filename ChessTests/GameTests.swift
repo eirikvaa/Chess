@@ -89,7 +89,7 @@ class Game2Tests: XCTestCase {
                     "Rab1", throws: .noThrow)
     }
 
-    func testSomething() throws {
+    func testPawnCannotCaptureForwards() throws {
         assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
                     "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
                     "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
@@ -97,6 +97,11 @@ class Game2Tests: XCTestCase {
                     "Bh3", "e6", "Rd1", "Be5", "Nb5", "Qf8", "Qe2", "Rd8", "Bg5", "Rd7", "Nd4",
                     "f5", "Nxc6", "bxc6", "Be3", "Qe7", "Bg2", "Bg7", "Rcd2",
                     "Rad8", "Bxc5", "dxc5", throws: .noThrow)
+    }
+
+    func testThatKnightOnlyConsidersFinalCoordinateInMovePatternCoordinateSequence() throws {
+        assertMoves("e4", "e5", "Nf3", "Nc6", "Bb5", "Nf6", "d3", "Bc5", "c3", "O-O",
+                    "O-O", "d6", "Nbd2", "a6", "Bxc6", "bxc6", "Re1", "Re8", "h3", "Bb6", "Nf1", throws: .noThrow)
     }
 }
 

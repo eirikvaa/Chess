@@ -57,7 +57,7 @@ class MoveTests: XCTestCase {
         XCTAssertEqual(move.pieceType, .rook)
     }
 
-    func testSomething() throws {
+    func testCorrectParsingOfPawnMoveWithPartialSourceDisambiguation() throws {
         let move = try Move(rawMove: "dxc5")
 
         XCTAssertEqual(move.pieceType, .pawn)
