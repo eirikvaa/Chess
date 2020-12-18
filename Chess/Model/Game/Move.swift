@@ -99,23 +99,24 @@ struct Move: CustomStringConvertible {
         var rawPiece = ""
         var file: String?
         var rank: String?
-        if rest.count == 3 {
-            let (suffix, rest) = rest.removeSuffix(count: 2)
-            rawPiece = rest
 
-            file = String(suffix.first!)
-            rank = String(suffix.last!)
-        } else if rest.count == 2 {
-            if rest.last?.isLetter == true {
-                file = String(rest.removeLast())
-            } else if rest.last?.isNumber == true {
-                rank = String(rest.removeLast())
-            } else {
-                throw MoveValidationError.wrongMoveFormat
+        if rest.first?.isUppercase == true {
+            rawPiece = String(rest.removeFirst())
+        }
+
+        self.pieceType = PieceType(rawPiece: rawPiece)
+
+        if rest.count == 2 { // [letter][number]
+            if let letter = rest.first, let number = rest.last {
+                file = String(letter)
+                rank = String(number)
             }
-            rawPiece = rest
-        } else {
-            rawPiece = rest
+        } else { // [letter] or [number]
+            if let letter = rest.first {
+                file = String(letter)
+            } else if let number = rest.first {
+                rank = String(number)
+            }
         }
 
         if let file = file, let rank = rank, let rInt = Int(rank) {
@@ -131,8 +132,6 @@ struct Move: CustomStringConvertible {
         } else {
             self.source = Coordinate(file: nil, rank: nil)
         }
-
-        self.pieceType = PieceType(rawPiece: rawPiece)
     }
 
     var description: String {

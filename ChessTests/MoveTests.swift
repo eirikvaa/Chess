@@ -56,4 +56,12 @@ class MoveTests: XCTestCase {
         XCTAssertFalse(move.isKingSideCastling || move.isQueenSideCastling)
         XCTAssertEqual(move.pieceType, .rook)
     }
+
+    func testSomething() throws {
+        let move = try Move(rawMove: "dxc5")
+
+        XCTAssertEqual(move.pieceType, .pawn)
+        XCTAssertEqual(move.source.file, .init(stringLiteral: "d"))
+        XCTAssertNil(move.source.rank)
+    }
 }
