@@ -16,6 +16,7 @@ import Foundation
 struct GameState {
     let board = Board()
     var currentSide = Side.white
+    var previousMove: Move?
 
     init() {
         print(board)
@@ -26,13 +27,13 @@ struct GameState {
      This method can throw by a variety of reasons, see `GameStateError`.
      - Parameters move: The move to execute
      */
-    mutating func executeMove(move: Move) throws {
+    mutating func executeMove(move: inout Move) throws {
         print(move.rawMove)
 
         if move.isKingSideCastling || move.isQueenSideCastling {
             try handleCastling(move: move)
         } else {
-            try handleRegularMove(move: move)
+            try handleRegularMove(move: &move)
         }
 
         print(board)
@@ -64,8 +65,14 @@ struct GameState {
         board[oldRookCoordinate].piece = nil
     }
 
-    private mutating func handleRegularMove(move: Move) throws {
-        let piece = try getSourcePiece(move: move)
+    private mutating func handleRegularMove(move: inout Move) throws {
+        let piece = try getSourcePiece(move: &move)
+
+        if move.isEnPassant {
+            if let previousPieceDestination = previousMove?.destination {
+                board[previousPieceDestination].piece = nil
+            }
+        }
 
         let sourceCell = board.getCell(of: piece)
         let destinationCell = board[move.destination!]
@@ -89,7 +96,7 @@ struct PossibleMove: CustomStringConvertible {
 
 private extension GameState {
     // swiftlint:disable cyclomatic_complexity
-    func getSourcePiece(move: Move) throws -> Piece {
+    func getSourcePiece(move: inout Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(
             of: move.pieceType,
             side: currentSide,
@@ -184,6 +191,18 @@ private extension GameState {
                         if let destinationPiece = board[destination].piece, destinationPiece.side != currentSide {
                             return piece
                         } else {
+                            // If the previous move was made by a pawn that moved double side-by-side with this pawn
+                            // that captures towards a cell that has
+                            if let previousMove = self.previousMove {
+                                // We're capturing towards a cell that another pawn just left
+                                // This is not a bullet-proof way of checking for an en passant, but it'll do
+                                if previousMove.source.file == destination.file && previousMove.pieceType == .pawn {
+                                    move.isEnPassant = true
+                                    return piece
+                                } else {
+                                    return nil
+                                }
+                            }
                             return nil
                         }
                     default:
@@ -197,7 +216,12 @@ private extension GameState {
 
         switch possibleSourcePieces.count {
         case 0: throw GameStateError.noValidSourcePieces(message: move.rawMove)
-        case 1: return possibleSourcePieces[0]
+        case 1:
+            // Now that we know the source coordinate, remember it
+            let piece = possibleSourcePieces[0]
+            let coordinateOfPiece = board.getCell(of: piece).coordinate
+            move.source = coordinateOfPiece
+            return piece
         case 2...: throw GameStateError.ambiguousMove
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }

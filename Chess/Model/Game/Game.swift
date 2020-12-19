@@ -27,8 +27,9 @@ class Game {
             }
 
             do {
-                let move = try Move(rawMove: userInput)
-                try gameState.executeMove(move: move)
+                var move = try Move(rawMove: userInput)
+                try gameState.executeMove(move: &move)
+                gameState.previousMove = move
             } catch Move.MoveValidationError.wrongMoveFormat {
                 print("The user entered \(userInput), which is a move in the wrong format. Try agai..")
                 continue
@@ -62,8 +63,9 @@ class Game {
             try Move(rawMove: $0)
         }
 
-        for move in interpretedMoves {
-            try gameState.executeMove(move: move)
+        for var move in interpretedMoves {
+            try gameState.executeMove(move: &move)
+            gameState.previousMove = move
         }
     }
 }

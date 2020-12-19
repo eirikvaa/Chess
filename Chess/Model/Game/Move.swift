@@ -55,6 +55,11 @@ struct Move: CustomStringConvertible {
     /// Might be a partial source coordinate if used for disambiguation
     var source: Coordinate
 
+    /// We don't know if a move is an en passant merely by the raw move, but we'll know it later
+    /// when the pawn captures an empty cell and an opposite pawn that hasn't moved yet moves
+    /// a double move and is side-by-side with the first pawn.
+    var isEnPassant = false
+
     /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
     /// and boards converge to something meaningful.
     init(rawMove: String) throws {
