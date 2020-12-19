@@ -19,7 +19,7 @@ struct GameState {
     var previousMove: Move?
 
     init() {
-        print(board)
+        //3print(board)
     }
 
     /**
@@ -28,7 +28,7 @@ struct GameState {
      - Parameters move: The move to execute
      */
     mutating func executeMove(move: inout Move) throws {
-        print(move.rawMove)
+        //print(move.rawMove)
 
         if move.isKingSideCastling || move.isQueenSideCastling {
             try handleCastling(move: move)
@@ -36,7 +36,7 @@ struct GameState {
             try handleRegularMove(move: &move)
         }
 
-        print(board)
+        //print(board)
 
         currentSide = currentSide.opposite
     }
@@ -86,6 +86,7 @@ struct PossibleMove: CustomStringConvertible {
     let piece: Piece
     let coordinateSequence: [Coordinate]
     let moveType: MoveType
+    let pattern: MovePattern
 
     var description: String {
         coordinateSequence.map {
@@ -186,6 +187,20 @@ private extension GameState {
                             return nil
                         }
 
+                        let validWhiteMovePatterns: [MovePattern] = [
+                            MovePattern(moveType: .diagonal, directions: .northEast),
+                            MovePattern(moveType: .diagonal, directions: .northWest)
+                        ]
+                        let validBlackMovePatterns: [MovePattern] = [
+                            MovePattern(moveType: .diagonal, directions: .southWest),
+                            MovePattern(moveType: .diagonal, directions: .southEast)
+                        ]
+
+                        guard currentSide == .white && validWhiteMovePatterns.contains(seq.pattern) ||
+                                currentSide == .black && validBlackMovePatterns.contains(seq.pattern) else {
+                            return nil
+                        }
+
                         let destination = seq.coordinateSequence[0]
 
                         if let destinationPiece = board[destination].piece, destinationPiece.side != currentSide {
@@ -222,7 +237,11 @@ private extension GameState {
             let coordinateOfPiece = board.getCell(of: piece).coordinate
             move.source = coordinateOfPiece
             return piece
-        case 2...: throw GameStateError.ambiguousMove
+        case 2...:
+            let cellsDesc = possibleSourcePieces
+                .map { board.getCell(of: $0) }
+                .map { $0.coordinate }
+            throw GameStateError.ambiguousMove(message: "\(move.rawMove) is ambiguous. Considered \(cellsDesc)")
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }
     }
@@ -245,6 +264,14 @@ private extension GameState {
         var possibleCoordinates: [Coordinate] = []
 
         for direction in pattern.directions {
+            if currentSide == .white && ![.north, .northWest, .northEast].contains(direction) {
+                return nil
+            }
+
+            if currentSide == .black && ![.south, .southWest, .southEast].contains(direction) {
+                return nil
+            }
+
             if let nextCoordinate = currentCoordinate.applyDirection(direction) {
                 possibleCoordinates.append(nextCoordinate)
 
@@ -252,7 +279,8 @@ private extension GameState {
                     return .init(
                         piece: cell.piece!,
                         coordinateSequence: possibleCoordinates,
-                        moveType: pattern.moveType
+                        moveType: pattern.moveType,
+                        pattern: pattern
                     )
                 }
 
@@ -281,7 +309,8 @@ private extension GameState {
             return .init(
                 piece: cell.piece!,
                 coordinateSequence: possibleCoordinates,
-                moveType: pattern.moveType
+                moveType: pattern.moveType,
+                pattern: pattern
             )
         }
 
@@ -305,7 +334,8 @@ private extension GameState {
                     return .init(
                         piece: cell.piece!,
                         coordinateSequence: possibleCoordinates,
-                        moveType: pattern.moveType
+                        moveType: pattern.moveType,
+                        pattern: pattern
                     )
                 }
 

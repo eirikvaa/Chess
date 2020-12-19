@@ -12,9 +12,15 @@
 
 let games = try PGNGameReader.readFile("twic920")
 
-for (index, game) in games.enumerated() {
-    print("STARTING GAME \(index)")
+for (index, game) in games[27...].enumerated() {
+    print("STARTING GAME \(index + 27)")
 
     let moves = PGNGameReader.read(textRepresentation: game)
-    try Game().applyMoves(moves)
+    do {
+        try Game().applyMoves(moves)
+    } catch let error as GameState.GameStateError {
+        print(error)
+        print(game)
+        break
+    }
 }

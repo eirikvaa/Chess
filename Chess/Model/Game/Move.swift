@@ -117,9 +117,9 @@ struct Move: CustomStringConvertible {
                 rank = String(number)
             }
         } else { // [letter] or [number]
-            if let letter = rest.first {
+            if let letter = rest.first, letter.isLetter {
                 file = String(letter)
-            } else if let number = rest.first {
+            } else if let number = rest.first, number.isNumber {
                 rank = String(number)
             }
         }

@@ -28,4 +28,16 @@ struct MovePattern: Equatable, CustomStringConvertible {
             String(describing: $0)
         }.joined(separator: "-")
     }
+
+    static func == (lhs: MovePattern, rhs: MovePattern) -> Bool {
+        guard lhs.moveType == rhs.moveType else {
+            return false
+        }
+
+        for (lhsDirection, rhsDirection) in zip(lhs.directions, rhs.directions) where lhsDirection != rhsDirection {
+            return false
+        }
+
+        return true
+    }
 }

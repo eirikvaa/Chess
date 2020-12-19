@@ -64,4 +64,13 @@ class MoveTests: XCTestCase {
         XCTAssertEqual(move.source.file, .init(stringLiteral: "d"))
         XCTAssertNil(move.source.rank)
     }
+
+    func testRookMoveWithPartialLSourceCoordinateThatCaptures() throws {
+        let move = try Move(rawMove: "R1xa7")
+
+        XCTAssertEqual(move.pieceType, .rook)
+        XCTAssertEqual(move.source.rank, 1)
+        XCTAssertEqual(move.isCapture, true)
+        XCTAssertEqual(move.destination, "a7")
+    }
 }
