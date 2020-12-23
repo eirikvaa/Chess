@@ -19,6 +19,8 @@ class Game {
      Start a new game. Will throw if moves are invalid.
      */
     func play() throws {
+        print(gameState.board)
+
         while true {
             print("\(gameState.currentSide)> ", terminator: "")
 
@@ -51,6 +53,8 @@ class Game {
                 print("Tried to move over other pieces with the move \(userInput). Try again.")
                 continue
             }
+            
+            print(gameState.board)
         }
     }
 

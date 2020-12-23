@@ -63,6 +63,7 @@ struct Move: CustomStringConvertible {
     /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
     /// and boards converge to something meaningful.
     init(rawMove: String) throws {
+        let rawMove = rawMove.trimmingCharacters(in: .whitespacesAndNewlines)
         self.rawMove = rawMove
 
         if rawMove == "O-O-O" || rawMove == "O-O" {

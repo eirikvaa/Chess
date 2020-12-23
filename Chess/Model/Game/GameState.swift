@@ -209,9 +209,12 @@ private extension GameState {
                             // If the previous move was made by a pawn that moved double side-by-side with this pawn
                             // that captures towards a cell that has
                             if let previousMove = self.previousMove {
+                                let enPassantOffset = currentSide == .white ? -1 : -1
+                                let actualEnPassantDestination = (previousMove.source.rank?.value ?? 0) + 1 * enPassantOffset
+
                                 // We're capturing towards a cell that another pawn just left
                                 // This is not a bullet-proof way of checking for an en passant, but it'll do
-                                if previousMove.source.file == destination.file && previousMove.pieceType == .pawn {
+                                if actualEnPassantDestination == destination.rank?.value && previousMove.pieceType == .pawn {
                                     move.isEnPassant = true
                                     return piece
                                 } else {
