@@ -82,8 +82,12 @@ class Game2Tests: XCTestCase {
         assertMoves("e4", "d62", "d4", "Bg4", "c4", "Nc64", "b4", "Qd7", "a4", "O-O-O", throws: .noThrow)
     }
 
-    func testValidEnPassant() throws {
+    func testValidEnPassantByWhite() throws {
         assertMoves("e3", "a6", "e4", "a5", "e5", "f5", "xf6", throws: .noThrow)
+    }
+
+    func testValidEnPassantByBlack() throws {
+        assertMoves("a3", "e5", "a4", "e4", "d4", "exd3", throws: .noThrow)
     }
 
     func testInvalidEnPassantPawnMustMoveDoubleAtFirstMove() throws {

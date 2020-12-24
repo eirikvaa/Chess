@@ -260,22 +260,36 @@ private extension GameState {
     func handlePossibleEnPassant(seq: PossibleMove, piece: Piece, destination: Coordinate, move: inout Move) -> Piece? {
         // If the previous move was made by a pawn that moved double side-by-side with this pawn
         // that captures towards a cell that has
-        if let previousMove = self.previousMove {
+        if let previousMove = self.previousMove, previousMove.pieceType == .pawn {
             // We cannot use the source position of the previous move directly, because that's
             // not where our current piece is moving now, which is actually the cell between
             // the source position and the position the previous piece actually moved to.
             // So we need to move the rank towards the center, basically.
-            let enPassantOffset = currentSide == .white ? -1 : -1
-            let previousRank = previousMove.source.rank?.value ?? 0
-            let actualEnPassantDestination = previousRank + 1 * enPassantOffset
 
-            let destRank = destination.rank?.value
-            if actualEnPassantDestination == destRank && previousMove.pieceType == .pawn {
-                move.isEnPassant = true
-                return piece
-            } else {
+            // Get the side of the opposite piece
+            let previousSide = currentSide.opposite
+
+            // Get new rank offset. For previous white, it's +1. For previous black, it's -1.
+            let enPassantRankOffset = previousSide == .white ? 1 : -1
+
+            // Get the previous source rank
+            let previousRank = previousMove.source.rank?.value ?? 0
+
+            // Calculate new rank
+            // If previous rank was 2 (white), next en passant rank should be 3 (4 - 1)
+            // If previous rank was 7 (black), next en passant rank should be 6 (7 - 1)
+            let enPassantRank = previousRank + 1 * enPassantRankOffset
+
+            // Get the destination rank of current piece, the en passant capture
+            let currentDestinationRank = move.destination?.rank?.value ?? 0
+
+            // Check if the current piece is capturing on the en passant rank we calculated
+            guard currentDestinationRank == enPassantRank else {
                 return nil
             }
+
+            move.isEnPassant = true
+            return piece
         }
         return nil
     }
