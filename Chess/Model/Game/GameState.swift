@@ -146,6 +146,19 @@ private extension GameState {
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }
     }
+
+    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [PossibleMove] {
+        return piece.movePatterns.compactMap { pattern -> PossibleMove? in
+            switch move.pieceType {
+            case .queen,
+                 .rook,
+                 .bishop,
+                 .king: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
+            case .knight: return handleKnightMove(move: move, cell: cell, pattern: pattern)
+            case .pawn: return handlePawnMove(move: move, cell: cell, pattern: pattern)
+            }
+        }
+    }
     
     // swiftlint:disable cyclomatic_complexity
     func getPossibleContinuousPiece(seq: PossibleMove, piece: Piece, move: Move) throws -> Piece? {
@@ -186,19 +199,6 @@ private extension GameState {
         }
 
         return nil
-    }
-    
-    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [PossibleMove] {
-        return piece.movePatterns.compactMap { pattern -> PossibleMove? in
-            switch move.pieceType {
-            case .queen,
-                 .rook,
-                 .bishop,
-                 .king: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
-            case .knight: return handleKnightMove(move: move, cell: cell, pattern: pattern)
-            case .pawn: return handlePawnMove(move: move, cell: cell, pattern: pattern)
-            }
-        }
     }
 
     func getPossiblePawnPiece(seq: PossibleMove, piece: Piece, move: inout Move) -> Piece? {
