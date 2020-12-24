@@ -281,14 +281,6 @@ private extension GameState {
         var possibleCoordinates: [Coordinate] = []
 
         for direction in pattern.directions {
-            if currentSide == .white && ![.north, .northWest, .northEast].contains(direction) {
-                return nil
-            }
-
-            if currentSide == .black && ![.south, .southWest, .southEast].contains(direction) {
-                return nil
-            }
-
             if let nextCoordinate = currentCoordinate.applyDirection(direction) {
                 possibleCoordinates.append(nextCoordinate)
 
