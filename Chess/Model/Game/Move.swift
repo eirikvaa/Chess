@@ -23,24 +23,24 @@ enum MoveType {
 
 extension MovePattern {
     static func straight(_ directions: Direction...) -> MovePattern {
-        .init(moveType: .diagonal, directions: directions)
+        .init(moveType: .straight, directions: directions)
     }
     static func diagonal(_ directions: Direction...) -> MovePattern {
         .init(moveType: .diagonal, directions: directions)
     }
-    
+
     static func single(_ direction: Direction...) -> MovePattern {
-        .init(moveType: .diagonal, directions: direction)
+        .init(moveType: .single, directions: direction)
     }
-    
+
     static func double(_ direction: Direction) -> MovePattern {
-        .init(moveType: .diagonal, directions: Array(repeating: direction, count: 2))
+        .init(moveType: .double, directions: Array(repeating: direction, count: 2))
     }
-    
+
     static func shape(_ directions: [Direction]) -> MovePattern {
         .init(moveType: .shape, directions: directions)
     }
-    
+
     static func continuous(_ direction: Direction) -> MovePattern {
         .init(moveType: .continuous, directions: direction)
     }
