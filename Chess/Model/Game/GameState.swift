@@ -19,7 +19,7 @@ struct GameState {
     var previousMove: Move?
 
     init() {
-        //3print(board)
+        // print(board)
     }
 
     /**
@@ -28,7 +28,7 @@ struct GameState {
      - Parameters move: The move to execute
      */
     mutating func executeMove(move: inout Move) throws {
-        //print(move.rawMove)
+        // print(move.rawMove)
 
         if move.isKingSideCastling || move.isQueenSideCastling {
             try handleCastling(move: move)
@@ -36,7 +36,7 @@ struct GameState {
             try handleRegularMove(move: &move)
         }
 
-        //print(board)
+        // print(board)
 
         currentSide = currentSide.opposite
     }
