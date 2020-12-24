@@ -97,6 +97,46 @@ struct PossibleMove: CustomStringConvertible {
 
 private extension GameState {
     // swiftlint:disable cyclomatic_complexity
+    func getPossibleContinuousPiece(_ seq: PossibleMove, _ piece: Piece, move: Move) throws -> Piece? {
+        for coordinate in seq.coordinateSequence {
+            if move.pieceType == .knight {
+                if coordinate != seq.coordinateSequence.last {
+                    continue
+                }
+            }
+
+            if coordinate == move.destination {
+                if move.isCapture {
+                    if let pieceInDestination = board[coordinate].piece {
+                        if pieceInDestination.side != currentSide {
+                            return piece
+                        } else {
+                            return nil
+                        }
+                    }
+                } else {
+                    if let pieceInDestination = board[coordinate].piece {
+                        if pieceInDestination.side != currentSide {
+                            throw GameStateError.mustMarkCaptureInMove
+                        } else {
+                            return nil
+                        }
+                    } else {
+                        return piece
+                    }
+                }
+            } else {
+                // Stop if we find a piece in this position and the piece we're moving cannot
+                // move over other pieces
+                if board[coordinate].piece != nil, !piece.canMoveOverOtherPieces {
+                    return nil
+                }
+            }
+        }
+
+        return nil
+    }
+
     func getSourcePiece(move: inout Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(
             of: move.pieceType,
@@ -122,41 +162,7 @@ private extension GameState {
                      .rook,
                      .king,
                      .knight:
-                    for coordinate in seq.coordinateSequence {
-                        if move.pieceType == .knight {
-                            if coordinate != seq.coordinateSequence.last {
-                                continue
-                            }
-                        }
-
-                        if coordinate == move.destination {
-                            if move.isCapture {
-                                if let pieceInDestination = board[coordinate].piece {
-                                    if pieceInDestination.side != currentSide {
-                                        return piece
-                                    } else {
-                                        return nil
-                                    }
-                                }
-                            } else {
-                                if let pieceInDestination = board[coordinate].piece {
-                                    if pieceInDestination.side != currentSide {
-                                        throw GameStateError.mustMarkCaptureInMove
-                                    } else {
-                                        return nil
-                                    }
-                                } else {
-                                    return piece
-                                }
-                            }
-                        } else {
-                            // Stop if we find a piece in this position and the piece we're moving cannot
-                            // move over other pieces
-                            if board[coordinate].piece != nil, !piece.canMoveOverOtherPieces {
-                                return nil
-                            }
-                        }
-                    }
+                    return try getPossibleContinuousPiece(seq, piece, move: move)
                 case .pawn:
                     switch seq.moveType {
                     case .single:
