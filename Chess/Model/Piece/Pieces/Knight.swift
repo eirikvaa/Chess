@@ -18,14 +18,14 @@ class Knight: Piece {
     var hasMoved: Bool = false
     var canMoveOverOtherPieces = true
     var movePatterns: [MovePattern] = [
-        MovePattern(moveType: .shape, directions: .north, .north, .west),
-        MovePattern(moveType: .shape, directions: .north, .north, .east),
-        MovePattern(moveType: .shape, directions: .west, .west, .north),
-        MovePattern(moveType: .shape, directions: .west, .west, .south),
-        MovePattern(moveType: .shape, directions: .south, .south, .west),
-        MovePattern(moveType: .shape, directions: .south, .south, .east),
-        MovePattern(moveType: .shape, directions: .east, .east, .north),
-        MovePattern(moveType: .shape, directions: .east, .east, .south)
+        .shape([.north, .north, .west]),
+        .shape([.north, .north, .east]),
+        .shape([.west, .west, .north]),
+        .shape([.west, .west, .south]),
+        .shape([.south, .south, .west]),
+        .shape([.south, .south, .east]),
+        .shape([.east, .east, .north]),
+        .shape([.east, .east, .south])
     ]
 
     required init(side: Side) {

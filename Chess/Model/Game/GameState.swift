@@ -232,12 +232,12 @@ private extension GameState {
             }
 
             let validWhiteMovePatterns: [MovePattern] = [
-                MovePattern(moveType: .diagonal, directions: .northEast),
-                MovePattern(moveType: .diagonal, directions: .northWest)
+                .diagonal(.northEast),
+                .diagonal(.northWest)
             ]
             let validBlackMovePatterns: [MovePattern] = [
-                MovePattern(moveType: .diagonal, directions: .southWest),
-                MovePattern(moveType: .diagonal, directions: .southEast)
+                .diagonal(.southWest),
+                .diagonal(.southEast)
             ]
 
             guard currentSide == .white && validWhiteMovePatterns.contains(seq.pattern) ||

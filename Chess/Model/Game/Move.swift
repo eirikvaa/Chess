@@ -21,6 +21,31 @@ enum MoveType {
     case continuous
 }
 
+extension MovePattern {
+    static func straight(_ directions: Direction...) -> MovePattern {
+        .init(moveType: .diagonal, directions: directions)
+    }
+    static func diagonal(_ directions: Direction...) -> MovePattern {
+        .init(moveType: .diagonal, directions: directions)
+    }
+    
+    static func single(_ direction: Direction...) -> MovePattern {
+        .init(moveType: .diagonal, directions: direction)
+    }
+    
+    static func double(_ direction: Direction) -> MovePattern {
+        .init(moveType: .diagonal, directions: Array(repeating: direction, count: 2))
+    }
+    
+    static func shape(_ directions: [Direction]) -> MovePattern {
+        .init(moveType: .shape, directions: directions)
+    }
+    
+    static func continuous(_ direction: Direction) -> MovePattern {
+        .init(moveType: .continuous, directions: direction)
+    }
+}
+
 /**
  A move that can be applied to a piece.
  The initializer validates the move and throws if it's not legal based on the regex.

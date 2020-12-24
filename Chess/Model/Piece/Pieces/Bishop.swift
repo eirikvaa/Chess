@@ -18,10 +18,10 @@ class Bishop: Piece {
     var hasMoved: Bool = false
     var canMoveOverOtherPieces = false
     var movePatterns: [MovePattern] = [
-        MovePattern(moveType: .continuous, directions: .northWest),
-        MovePattern(moveType: .continuous, directions: .northEast),
-        MovePattern(moveType: .continuous, directions: .southWest),
-        MovePattern(moveType: .continuous, directions: .southEast)
+        .continuous(.northWest),
+        .continuous(.northEast),
+        .continuous(.southWest),
+        .continuous(.southEast)
     ]
 
     required init(side: Side) {

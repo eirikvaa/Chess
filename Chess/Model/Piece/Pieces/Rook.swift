@@ -18,10 +18,10 @@ class Rook: Piece {
     var hasMoved: Bool = false
     var canMoveOverOtherPieces = false
     var movePatterns: [MovePattern] = [
-        MovePattern(moveType: .straight, directions: .north),
-        MovePattern(moveType: .straight, directions: .east),
-        MovePattern(moveType: .straight, directions: .south),
-        MovePattern(moveType: .straight, directions: .west)
+        .continuous(.north),
+        .continuous(.east),
+        .continuous(.south),
+        .continuous(.west)
     ]
 
     required init(side: Side) {

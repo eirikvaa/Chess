@@ -18,14 +18,14 @@ class King: Piece {
     var hasMoved: Bool = false
     var canMoveOverOtherPieces = false
     var movePatterns: [MovePattern] = [
-        MovePattern(moveType: .single, directions: .north),
-        MovePattern(moveType: .single, directions: .northEast),
-        MovePattern(moveType: .single, directions: .east),
-        MovePattern(moveType: .single, directions: .southEast),
-        MovePattern(moveType: .single, directions: .south),
-        MovePattern(moveType: .single, directions: .southWest),
-        MovePattern(moveType: .single, directions: .west),
-        MovePattern(moveType: .single, directions: .northWest)
+        .single(.north),
+        .single(.northEast),
+        .single(.east),
+        .single(.southEast),
+        .single(.south),
+        .single(.southWest),
+        .single(.west),
+        .single(.northWest)
     ]
 
     required init(side: Side) {
