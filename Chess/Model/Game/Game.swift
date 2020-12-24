@@ -53,7 +53,7 @@ class Game {
                 print("Tried to move over other pieces with the move \(userInput). Try again.")
                 continue
             }
-            
+
             print(gameState.board)
         }
     }
