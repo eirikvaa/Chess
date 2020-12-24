@@ -97,7 +97,7 @@ struct PossibleMove: CustomStringConvertible {
 
 private extension GameState {
     // swiftlint:disable cyclomatic_complexity
-    func getPossibleContinuousPiece(_ seq: PossibleMove, _ piece: Piece, move: Move) throws -> Piece? {
+    func getPossibleContinuousPiece(seq: PossibleMove, piece: Piece, move: Move) throws -> Piece? {
         for coordinate in seq.coordinateSequence {
             if move.pieceType == .knight {
                 if coordinate != seq.coordinateSequence.last {
@@ -137,6 +137,81 @@ private extension GameState {
         return nil
     }
 
+    func getPossiblePawnPiece(seq: PossibleMove, piece: Piece, move: inout Move) -> Piece? {
+        switch seq.moveType {
+        case .single:
+            if move.isCapture {
+                return nil
+            }
+
+            let destination = seq.coordinateSequence[0]
+            if board[destination].piece == nil {
+                return piece
+            } else {
+                return nil
+            }
+        case .double:
+            if move.isCapture {
+                return nil
+            }
+
+            guard !piece.hasMoved else {
+                return nil
+            }
+
+            return seq.coordinateSequence.allSatisfy {
+                board[$0].piece == nil
+            } ? piece : nil
+        case .diagonal:
+            guard move.isCapture else {
+                return nil
+            }
+
+            let validWhiteMovePatterns: [MovePattern] = [
+                MovePattern(moveType: .diagonal, directions: .northEast),
+                MovePattern(moveType: .diagonal, directions: .northWest)
+            ]
+            let validBlackMovePatterns: [MovePattern] = [
+                MovePattern(moveType: .diagonal, directions: .southWest),
+                MovePattern(moveType: .diagonal, directions: .southEast)
+            ]
+
+            guard currentSide == .white && validWhiteMovePatterns.contains(seq.pattern) ||
+                    currentSide == .black && validBlackMovePatterns.contains(seq.pattern) else {
+                return nil
+            }
+
+            let destination = seq.coordinateSequence[0]
+
+            if let destinationPiece = board[destination].piece, destinationPiece.side != currentSide {
+                return piece
+            } else {
+                // If the previous move was made by a pawn that moved double side-by-side with this pawn
+                // that captures towards a cell that has
+                if let previousMove = self.previousMove {
+                    // We cannot use the source position of the previous move directly, because that's
+                    // not where our current piece is moving now, which is actually the cell between
+                    // the source position and the position the previous piece actually moved to.
+                    // So we need to move the rank towards the center, basically.
+                    let enPassantOffset = currentSide == .white ? -1 : -1
+                    let previousRank = previousMove.source.rank?.value ?? 0
+                    let actualEnPassantDestination = previousRank + 1 * enPassantOffset
+
+                    let destRank = destination.rank?.value
+                    if actualEnPassantDestination == destRank && previousMove.pieceType == .pawn {
+                        move.isEnPassant = true
+                        return piece
+                    } else {
+                        return nil
+                    }
+                }
+                return nil
+            }
+        default:
+            return nil
+        }
+    }
+
     func getSourcePiece(move: inout Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(
             of: move.pieceType,
@@ -162,80 +237,9 @@ private extension GameState {
                      .rook,
                      .king,
                      .knight:
-                    return try getPossibleContinuousPiece(seq, piece, move: move)
+                    return try getPossibleContinuousPiece(seq: seq, piece: piece, move: move)
                 case .pawn:
-                    switch seq.moveType {
-                    case .single:
-                        if move.isCapture {
-                            return nil
-                        }
-
-                        let destination = seq.coordinateSequence[0]
-                        if board[destination].piece == nil {
-                            return piece
-                        } else {
-                            return nil
-                        }
-                    case .double:
-                        if move.isCapture {
-                            return nil
-                        }
-
-                        guard !piece.hasMoved else {
-                            return nil
-                        }
-
-                        return seq.coordinateSequence.allSatisfy {
-                            board[$0].piece == nil
-                        } ? piece : nil
-                    case .diagonal:
-                        guard move.isCapture else {
-                            return nil
-                        }
-
-                        let validWhiteMovePatterns: [MovePattern] = [
-                            MovePattern(moveType: .diagonal, directions: .northEast),
-                            MovePattern(moveType: .diagonal, directions: .northWest)
-                        ]
-                        let validBlackMovePatterns: [MovePattern] = [
-                            MovePattern(moveType: .diagonal, directions: .southWest),
-                            MovePattern(moveType: .diagonal, directions: .southEast)
-                        ]
-
-                        guard currentSide == .white && validWhiteMovePatterns.contains(seq.pattern) ||
-                                currentSide == .black && validBlackMovePatterns.contains(seq.pattern) else {
-                            return nil
-                        }
-
-                        let destination = seq.coordinateSequence[0]
-
-                        if let destinationPiece = board[destination].piece, destinationPiece.side != currentSide {
-                            return piece
-                        } else {
-                            // If the previous move was made by a pawn that moved double side-by-side with this pawn
-                            // that captures towards a cell that has
-                            if let previousMove = self.previousMove {
-                                // We cannot use the source position of the previous move directly, because that's
-                                // not where our current piece is moving now, which is actually the cell between
-                                // the source position and the position the previous piece actually moved to.
-                                // So we need to move the rank towards the center, basically.
-                                let enPassantOffset = currentSide == .white ? -1 : -1
-                                let previousRank = previousMove.source.rank?.value ?? 0
-                                let actualEnPassantDestination = previousRank + 1 * enPassantOffset
-
-                                let destRank = destination.rank?.value
-                                if actualEnPassantDestination == destRank && previousMove.pieceType == .pawn {
-                                    move.isEnPassant = true
-                                    return piece
-                                } else {
-                                    return nil
-                                }
-                            }
-                            return nil
-                        }
-                    default:
-                        return nil
-                    }
+                    return getPossiblePawnPiece(seq: seq, piece: piece, move: &move)
                 }
             }
 
