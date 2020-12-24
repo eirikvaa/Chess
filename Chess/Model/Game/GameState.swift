@@ -250,30 +250,34 @@ private extension GameState {
             if let destinationPiece = board[destination].piece, destinationPiece.side != currentSide {
                 return piece
             } else {
-                // If the previous move was made by a pawn that moved double side-by-side with this pawn
-                // that captures towards a cell that has
-                if let previousMove = self.previousMove {
-                    // We cannot use the source position of the previous move directly, because that's
-                    // not where our current piece is moving now, which is actually the cell between
-                    // the source position and the position the previous piece actually moved to.
-                    // So we need to move the rank towards the center, basically.
-                    let enPassantOffset = currentSide == .white ? -1 : -1
-                    let previousRank = previousMove.source.rank?.value ?? 0
-                    let actualEnPassantDestination = previousRank + 1 * enPassantOffset
-
-                    let destRank = destination.rank?.value
-                    if actualEnPassantDestination == destRank && previousMove.pieceType == .pawn {
-                        move.isEnPassant = true
-                        return piece
-                    } else {
-                        return nil
-                    }
-                }
-                return nil
+                return handlePossibleEnPassant(seq: seq, piece: piece, destination: destination, move: &move)
             }
         default:
             return nil
         }
+    }
+
+    func handlePossibleEnPassant(seq: PossibleMove, piece: Piece, destination: Coordinate, move: inout Move) -> Piece? {
+        // If the previous move was made by a pawn that moved double side-by-side with this pawn
+        // that captures towards a cell that has
+        if let previousMove = self.previousMove {
+            // We cannot use the source position of the previous move directly, because that's
+            // not where our current piece is moving now, which is actually the cell between
+            // the source position and the position the previous piece actually moved to.
+            // So we need to move the rank towards the center, basically.
+            let enPassantOffset = currentSide == .white ? -1 : -1
+            let previousRank = previousMove.source.rank?.value ?? 0
+            let actualEnPassantDestination = previousRank + 1 * enPassantOffset
+
+            let destRank = destination.rank?.value
+            if actualEnPassantDestination == destRank && previousMove.pieceType == .pawn {
+                move.isEnPassant = true
+                return piece
+            } else {
+                return nil
+            }
+        }
+        return nil
     }
 
     func handlePawnMove(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
