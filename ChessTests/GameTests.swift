@@ -86,6 +86,10 @@ class Game2Tests: XCTestCase {
         assertMoves("e3", "a6", "e4", "a5", "e5", "f5", "xf6", throws: .noThrow)
     }
 
+    func testInvalidEnPassantPawnMustMoveDoubleAtFirstMove() throws {
+        assertMoves("e3", "a6", "e4", "a5", "f6", "b3", "f5", "xf6", throws: .doThrow)
+    }
+
     func testTwoRooksOnSameFileWithPartialSourceCoordinateShouldNotEndWithAmbiguousMove() throws {
         assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
                     "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
