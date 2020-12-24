@@ -159,7 +159,7 @@ private extension GameState {
             }
         }
     }
-    
+
     // swiftlint:disable cyclomatic_complexity
     func getPossibleContinuousPiece(seq: PossibleMove, piece: Piece, move: Move) throws -> Piece? {
         for coordinate in seq.coordinateSequence {
