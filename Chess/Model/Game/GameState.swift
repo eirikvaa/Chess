@@ -96,6 +96,57 @@ struct PossibleMove: CustomStringConvertible {
 }
 
 private extension GameState {
+    func getSourcePiece(move: inout Move) throws -> Piece {
+        let possibleSourceCells = board.getAllPieces(
+            of: move.pieceType,
+            side: currentSide,
+            sourceCoordinate: move.source
+        )
+
+        let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
+            guard let piece = $0.piece else {
+                return nil
+            }
+
+            guard piece.side == currentSide else {
+                return nil
+            }
+
+            let possibleCoordinateSequences = getCoordinateSequences(move: move, cell: $0, piece: piece)
+
+            for seq in possibleCoordinateSequences {
+                switch move.pieceType {
+                case .bishop,
+                     .queen,
+                     .rook,
+                     .king,
+                     .knight:
+                    return try getPossibleContinuousPiece(seq: seq, piece: piece, move: move)
+                case .pawn:
+                    return getPossiblePawnPiece(seq: seq, piece: piece, move: &move)
+                }
+            }
+
+            return nil
+        }
+
+        switch possibleSourcePieces.count {
+        case 0: throw GameStateError.noValidSourcePieces(message: move.rawMove)
+        case 1:
+            // Now that we know the source coordinate, remember it
+            let piece = possibleSourcePieces[0]
+            let coordinateOfPiece = board.getCell(of: piece).coordinate
+            move.source = coordinateOfPiece
+            return piece
+        case 2...:
+            let cellsDesc = possibleSourcePieces
+                .map { board.getCell(of: $0) }
+                .map { $0.coordinate }
+            throw GameStateError.ambiguousMove(message: "\(move.rawMove) is ambiguous. Considered \(cellsDesc)")
+        default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
+        }
+    }
+    
     // swiftlint:disable cyclomatic_complexity
     func getPossibleContinuousPiece(seq: PossibleMove, piece: Piece, move: Move) throws -> Piece? {
         for coordinate in seq.coordinateSequence {
@@ -135,6 +186,19 @@ private extension GameState {
         }
 
         return nil
+    }
+    
+    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [PossibleMove] {
+        return piece.movePatterns.compactMap { pattern -> PossibleMove? in
+            switch move.pieceType {
+            case .queen,
+                 .rook,
+                 .bishop,
+                 .king: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
+            case .knight: return handleKnightMove(move: move, cell: cell, pattern: pattern)
+            case .pawn: return handlePawnMove(move: move, cell: cell, pattern: pattern)
+            }
+        }
     }
 
     func getPossiblePawnPiece(seq: PossibleMove, piece: Piece, move: inout Move) -> Piece? {
@@ -209,70 +273,6 @@ private extension GameState {
             }
         default:
             return nil
-        }
-    }
-
-    func getSourcePiece(move: inout Move) throws -> Piece {
-        let possibleSourceCells = board.getAllPieces(
-            of: move.pieceType,
-            side: currentSide,
-            sourceCoordinate: move.source
-        )
-
-        let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
-            guard let piece = $0.piece else {
-                return nil
-            }
-
-            guard piece.side == currentSide else {
-                return nil
-            }
-
-            let possibleCoordinateSequences = getCoordinateSequences(move: move, cell: $0, piece: piece)
-
-            for seq in possibleCoordinateSequences {
-                switch move.pieceType {
-                case .bishop,
-                     .queen,
-                     .rook,
-                     .king,
-                     .knight:
-                    return try getPossibleContinuousPiece(seq: seq, piece: piece, move: move)
-                case .pawn:
-                    return getPossiblePawnPiece(seq: seq, piece: piece, move: &move)
-                }
-            }
-
-            return nil
-        }
-
-        switch possibleSourcePieces.count {
-        case 0: throw GameStateError.noValidSourcePieces(message: move.rawMove)
-        case 1:
-            // Now that we know the source coordinate, remember it
-            let piece = possibleSourcePieces[0]
-            let coordinateOfPiece = board.getCell(of: piece).coordinate
-            move.source = coordinateOfPiece
-            return piece
-        case 2...:
-            let cellsDesc = possibleSourcePieces
-                .map { board.getCell(of: $0) }
-                .map { $0.coordinate }
-            throw GameStateError.ambiguousMove(message: "\(move.rawMove) is ambiguous. Considered \(cellsDesc)")
-        default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
-        }
-    }
-
-    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [PossibleMove] {
-        return piece.movePatterns.compactMap { pattern -> PossibleMove? in
-            switch move.pieceType {
-            case .queen,
-                 .rook,
-                 .bishop,
-                 .king: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
-            case .knight: return handleKnightMove(move: move, cell: cell, pattern: pattern)
-            case .pawn: return handlePawnMove(move: move, cell: cell, pattern: pattern)
-            }
         }
     }
 
