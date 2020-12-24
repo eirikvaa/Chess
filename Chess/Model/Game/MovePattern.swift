@@ -6,6 +6,15 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+// TODO: Experiment with this instead of the current types
+enum MoveP {
+    case single(Direction)
+    case double(Direction, Direction)
+    case shape(Direction, Direction, Direction)
+    case diagonal(Direction)
+    case continuous(Direction)
+}
+
 /**
  A move pattern consists of a move type and a list of directions.
  */
