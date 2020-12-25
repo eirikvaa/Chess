@@ -27,6 +27,7 @@ class King: Piece {
         .single(.west),
         .single(.northWest)
     ]
+
     required init(side: Side) {
         self.side = side
     }
