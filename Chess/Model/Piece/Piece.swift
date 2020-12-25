@@ -33,6 +33,7 @@ protocol Piece: AnyObject {
     /// A list of ways in which the piece can move.
     var movePatterns: [MovePattern] { get }
 
+    /// Only the knight can move over other pieces
     var canMoveOverOtherPieces: Bool { get }
 
     /// Initialize a piece with the given side. This is really the only information that is not known
