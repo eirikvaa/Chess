@@ -9,23 +9,23 @@
 import Foundation
 
 class Knight: Piece {
-    var id = UUID()
+    let id = UUID()
     var content: String {
         side == .white ? "♘" : "♞"
     }
-    var type: PieceType = .knight
-    var side: Side = .white
+    let type: PieceType = .knight
+    let side: Side
     var hasMoved: Bool = false
-    var canMoveOverOtherPieces = true
+    let canMoveOverOtherPieces = true
     var movePatterns: [MovePattern] = [
-        .shape([.north, .north, .west]),
-        .shape([.north, .north, .east]),
-        .shape([.west, .west, .north]),
-        .shape([.west, .west, .south]),
-        .shape([.south, .south, .west]),
-        .shape([.south, .south, .east]),
-        .shape([.east, .east, .north]),
-        .shape([.east, .east, .south])
+        .shape(.north, .north, .west),
+        .shape(.north, .north, .east),
+        .shape(.west, .west, .south),
+        .shape(.west, .west, .north),
+        .shape(.south, .south, .west),
+        .shape(.south, .south, .east),
+        .shape(.east, .east, .north),
+        .shape(.east, .east, .south)
     ]
 
     required init(side: Side) {

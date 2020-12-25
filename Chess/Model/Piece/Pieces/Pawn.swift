@@ -19,38 +19,52 @@ class Pawn: Piece, Identifiable {
     var content: String {
         side == .white ? "♙" : "♟"
     }
-    var type: PieceType = .pawn
-    var side: Side = .white
+    let type: PieceType = .pawn
+    let side: Side
     var hasMoved: Bool = false
-    var canMoveOverOtherPieces = false
+    let canMoveOverOtherPieces = false
     var movePatterns: [MovePattern] {
         switch (hasMoved, side) {
         case (false, .white):
             return [
                 .single(.north),
-                .double(.north),
-                .diagonal(.northWest),
-                .diagonal(.northEast)
+                .double(.north, .north),
+                .single(.northWest),
+                .single(.northEast)
             ]
         case (true, .white):
             return [
                 .single(.north),
-                .diagonal(.northWest),
-                .diagonal(.northEast)
+                .single(.northWest),
+                .single(.northEast)
             ]
         case (false, .black):
             return [
                 .single(.south),
-                .double(.south),
-                .diagonal(.southWest),
-                .diagonal(.southEast)
+                .double(.south, .south),
+                .single(.southWest),
+                .single(.southEast)
             ]
         case (true, .black):
             return [
                 .single(.south),
-                .diagonal(.southWest),
-                .diagonal(.southEast)
+                .single(.southWest),
+                .single(.southEast)
             ]
+        }
+    }
+
+    var validCaptureDirections: [Direction] {
+        switch side {
+        case .white: return [.northWest, .northEast]
+        case .black: return [.southWest, .southEast]
+        }
+    }
+
+    var validNonCaptureDirections: [Direction] {
+        switch side {
+        case .white: return [.north]
+        case .black: return [.south]
         }
     }
 

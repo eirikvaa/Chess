@@ -18,30 +18,174 @@ struct GameState {
     var currentSide = Side.white
     var previousMove: Move?
 
-    init() {
-        // print(board)
-    }
-
     /**
      Execute a move and transition the game state to a new state.
      This method can throw by a variety of reasons, see `GameStateError`.
      - Parameters move: The move to execute
      */
     mutating func executeMove(move: inout Move) throws {
-        // print(move.rawMove)
-
-        if move.isKingSideCastling || move.isQueenSideCastling {
-            try handleCastling(move: move)
+        if move.isCastling {
+            handleCastling(move: move)
         } else {
-            try handleRegularMove(move: &move)
-        }
+            let piece = try getSourcePiece(move: move)
 
-        // print(board)
+            if move.isEnPassant {
+                if let previousPieceDestination = previousMove?.destination {
+                    board[previousPieceDestination].piece = nil
+                }
+            }
+
+            let sourceCell = board.getCell(of: piece)
+            let destinationCell = board[move.destination]
+
+            destinationCell.piece = sourceCell.piece
+            sourceCell.piece = nil
+        }
 
         currentSide = currentSide.opposite
     }
+}
 
-    private func handleCastling(move: Move) throws {
+private extension GameState {
+    /**
+     When the source coordinate of a piece is not immediately given, we must locate the source cell.
+     This method should only return a single piece. If there are none, something's wrong. If there are multiple,
+     something's wrong or the move is ambiguous.
+     */
+    func getSourcePiece(move: Move) throws -> Piece {
+        let possibleSourceCells = board.getAllPieces(
+            of: move.pieceType,
+            side: currentSide,
+            sourceCoordinate: move.source
+        )
+
+        let possibleSourcePieces = possibleSourceCells.filter {
+            guard let piece = $0.piece else {
+                return false
+            }
+
+            guard piece.side == currentSide else {
+                return false
+            }
+
+            switch piece.type {
+            case .pawn: return validatePawnMove(move: move, cell: $0)
+            case .knight: return validateKnightMove(move: move, cell: $0)
+            case .king: return validateKingMove(move: move, cell: $0)
+            case .rook: return validateRookMove(move: move, cell: $0)
+            case .queen: return validateQueenMove(move: move, cell: $0)
+            case .bishop: return validateBishopMove(move: move, cell: $0)
+            }
+        }.compactMap { $0.piece }
+
+        let prunedSourcePieces = pruneAmbiguity(move: move, possibleSourcePieces: possibleSourcePieces)
+
+        switch prunedSourcePieces.count {
+        case 0:
+            print(board)
+            throw GameStateError.noValidSourcePieces(message: move.rawMove)
+        case 1:
+            // Now that we know the source coordinate, remember it
+            let piece = prunedSourcePieces[0]
+            let coordinateOfPiece = board.getCell(of: piece).coordinate
+            move.source = coordinateOfPiece
+            return piece
+        case 2...:
+            let cellsDesc = prunedSourcePieces
+                .map { board.getCell(of: $0) }
+                .map { $0.coordinate }
+            print(board)
+            throw GameStateError.ambiguousMove(message: "\(move.rawMove) is ambiguous. Considered \(cellsDesc)")
+        default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
+        }
+    }
+
+    func pruneAmbiguity(move: Move, possibleSourcePieces: [Piece]) -> [Piece] {
+        return possibleSourcePieces.filter {
+            let coordinate = board.getCell(of: $0).coordinate
+
+            if let disambiguatedSourceRank = move.source.rank, disambiguatedSourceRank != coordinate.rank {
+                return false
+            }
+
+            if let disambiguatedSourceFile = move.source.file, disambiguatedSourceFile != coordinate.file {
+                return false
+            }
+
+            return true
+        }
+    }
+
+    func validateBishopMove(move: Move, cell: Cell) -> Bool {
+        guard let bishop = cell.piece as? Bishop else {
+            return false
+        }
+
+        return bishop.movePatterns.filter {
+            let coordinates = board.getCoordinates(from: cell.coordinate, to: move.destination, given: $0)
+            let destinationPiece = board[move.destination].piece
+
+            guard coordinates.last == move.destination else {
+                return false
+            }
+
+            if move.isCapture {
+                let allButLastAreEmpty = coordinates.dropLast().allSatisfy { board.isEmptyCell(at: $0) }
+
+                return allButLastAreEmpty && destinationPiece?.side != currentSide
+            } else {
+                return coordinates.allSatisfy { board.isEmptyCell(at: $0) }
+            }
+        }.count == 1
+    }
+
+    func validateQueenMove(move: Move, cell: Cell) -> Bool {
+        guard let queen = cell.piece as? Queen else {
+            return false
+        }
+
+        return queen.movePatterns.filter {
+            let coordinates = board.getCoordinates(from: cell.coordinate, to: move.destination, given: $0)
+            let destinationPiece = board[move.destination].piece
+
+            guard coordinates.last == move.destination else {
+                return false
+            }
+
+            if move.isCapture {
+                let allButLastAreEmpty = coordinates.dropLast().allSatisfy { board.isEmptyCell(at: $0) }
+
+                return allButLastAreEmpty && destinationPiece?.side != currentSide
+            } else {
+                return coordinates.allSatisfy { board.isEmptyCell(at: $0) }
+            }
+        }.count == 1
+    }
+
+    func validateRookMove(move: Move, cell: Cell) -> Bool {
+        guard let rook = cell.piece as? Rook else {
+            return false
+        }
+
+        return rook.movePatterns.filter {
+            let coordinates = board.getCoordinates(from: cell.coordinate, to: move.destination, given: $0)
+            let destinationPiece = board[move.destination].piece
+
+            guard coordinates.last == move.destination else {
+                return false
+            }
+
+            if move.isCapture {
+                let allButLastAreEmpty = coordinates.dropLast().allSatisfy { board.isEmptyCell(at: $0) }
+
+                return allButLastAreEmpty && destinationPiece?.side != currentSide
+            } else {
+                return coordinates.allSatisfy { board.isEmptyCell(at: $0) }
+            }
+        }.count == 1
+    }
+
+    func handleCastling(move: Move) {
         let oldKingCoordinate: Coordinate
         let oldRookCoordinate: Coordinate
         let newKingCoordinate: Coordinate
@@ -65,313 +209,133 @@ struct GameState {
         board[oldRookCoordinate].piece = nil
     }
 
-    private mutating func handleRegularMove(move: inout Move) throws {
-        let piece = try getSourcePiece(move: &move)
-
-        if move.isEnPassant {
-            if let previousPieceDestination = previousMove?.destination {
-                board[previousPieceDestination].piece = nil
-            }
+    func validatePawnMove(move: Move, cell: Cell) -> Bool {
+        guard let pawn = cell.piece as? Pawn else {
+            return false
         }
 
-        let sourceCell = board.getCell(of: piece)
-        let destinationCell = board[move.destination!]
+        return pawn.movePatterns.filter {
+            let coordinates = board.getCoordinates(from: cell.coordinate, to: move.destination, given: $0)
+            let allEmpty = coordinates.allSatisfy { board[$0].piece == nil }
+            let destinationPiece = board[move.destination].piece
 
-        destinationCell.piece = sourceCell.piece
-        sourceCell.piece = nil
-    }
-}
-
-struct PossibleMove: CustomStringConvertible {
-    let piece: Piece
-    let coordinateSequence: [Coordinate]
-    let moveType: MoveType
-    let pattern: MovePattern
-
-    var description: String {
-        coordinateSequence.map {
-            String(describing: $0)
-        }.joined(separator: " -> ")
-    }
-}
-
-private extension GameState {
-    func getSourcePiece(move: inout Move) throws -> Piece {
-        let possibleSourceCells = board.getAllPieces(
-            of: move.pieceType,
-            side: currentSide,
-            sourceCoordinate: move.source
-        )
-
-        let possibleSourcePieces: [Piece] = try possibleSourceCells.compactMap {
-            guard let piece = $0.piece else {
-                return nil
+            guard coordinates.last == move.destination else {
+                return false
             }
 
-            guard piece.side == currentSide else {
-                return nil
-            }
-
-            let possibleCoordinateSequences = getCoordinateSequences(move: move, cell: $0, piece: piece)
-
-            for seq in possibleCoordinateSequences {
-                switch move.pieceType {
-                case .bishop,
-                     .queen,
-                     .rook,
-                     .king,
-                     .knight:
-                    return try getPossibleContinuousPiece(seq: seq, piece: piece, move: move)
-                case .pawn:
-                    return getPossiblePawnPiece(seq: seq, piece: piece, move: &move)
-                }
-            }
-
-            return nil
-        }
-
-        switch possibleSourcePieces.count {
-        case 0: throw GameStateError.noValidSourcePieces(message: move.rawMove)
-        case 1:
-            // Now that we know the source coordinate, remember it
-            let piece = possibleSourcePieces[0]
-            let coordinateOfPiece = board.getCell(of: piece).coordinate
-            move.source = coordinateOfPiece
-            return piece
-        case 2...:
-            let cellsDesc = possibleSourcePieces
-                .map { board.getCell(of: $0) }
-                .map { $0.coordinate }
-            throw GameStateError.ambiguousMove(message: "\(move.rawMove) is ambiguous. Considered \(cellsDesc)")
-        default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
-        }
-    }
-
-    func getCoordinateSequences(move: Move, cell: Cell, piece: Piece) -> [PossibleMove] {
-        return piece.movePatterns.compactMap { pattern -> PossibleMove? in
-            switch move.pieceType {
-            case .queen,
-                 .rook,
-                 .bishop,
-                 .king: return handleContinuousMoves(move: move, cell: cell, pattern: pattern)
-            case .knight: return handleKnightMove(move: move, cell: cell, pattern: pattern)
-            case .pawn: return handlePawnMove(move: move, cell: cell, pattern: pattern)
-            }
-        }
-    }
-
-    // swiftlint:disable cyclomatic_complexity
-    func getPossibleContinuousPiece(seq: PossibleMove, piece: Piece, move: Move) throws -> Piece? {
-        for coordinate in seq.coordinateSequence {
-            if move.pieceType == .knight {
-                if coordinate != seq.coordinateSequence.last {
-                    continue
-                }
-            }
-
-            if coordinate == move.destination {
-                if move.isCapture {
-                    if let pieceInDestination = board[coordinate].piece {
-                        if pieceInDestination.side != currentSide {
-                            return piece
-                        } else {
-                            return nil
-                        }
-                    }
-                } else {
-                    if let pieceInDestination = board[coordinate].piece {
-                        if pieceInDestination.side != currentSide {
-                            throw GameStateError.mustMarkCaptureInMove
-                        } else {
-                            return nil
-                        }
+            switch $0 {
+            case .single(let direction):
+                if move.isCapture && pawn.validCaptureDirections.contains(direction) {
+                    if destinationPiece != nil {
+                        return true
                     } else {
-                        return piece
+                        return isMoveEnPassant(piece: pawn, move: move)
                     }
+                } else if !move.isCapture && allEmpty && pawn.validNonCaptureDirections.contains(direction) {
+                    return true
+                } else {
+                    return false
                 }
-            } else {
-                // Stop if we find a piece in this position and the piece we're moving cannot
-                // move over other pieces
-                if board[coordinate].piece != nil, !piece.canMoveOverOtherPieces {
-                    return nil
-                }
+            case .double:
+                let lastIsDestination = coordinates.last == move.destination
+                return allEmpty && lastIsDestination
+            default:
+                return false
             }
-        }
-
-        return nil
+        }.count == 1
     }
 
-    func getPossiblePawnPiece(seq: PossibleMove, piece: Piece, move: inout Move) -> Piece? {
-        switch seq.moveType {
-        case .single:
-            if move.isCapture {
-                return nil
-            }
-
-            let destination = seq.coordinateSequence[0]
-            if board[destination].piece == nil {
-                return piece
-            } else {
-                return nil
-            }
-        case .double:
-            if move.isCapture {
-                return nil
-            }
-
-            guard !piece.hasMoved else {
-                return nil
-            }
-
-            return seq.coordinateSequence.allSatisfy {
-                board[$0].piece == nil
-            } ? piece : nil
-        case .diagonal:
-            guard move.isCapture else {
-                return nil
-            }
-
-            let validWhiteMovePatterns: [MovePattern] = [
-                .diagonal(.northEast),
-                .diagonal(.northWest)
-            ]
-            let validBlackMovePatterns: [MovePattern] = [
-                .diagonal(.southWest),
-                .diagonal(.southEast)
-            ]
-
-            guard currentSide == .white && validWhiteMovePatterns.contains(seq.pattern) ||
-                    currentSide == .black && validBlackMovePatterns.contains(seq.pattern) else {
-                return nil
-            }
-
-            let destination = seq.coordinateSequence[0]
-
-            if let destinationPiece = board[destination].piece, destinationPiece.side != currentSide {
-                return piece
-            } else {
-                return handlePossibleEnPassant(seq: seq, piece: piece, destination: destination, move: &move)
-            }
-        default:
-            return nil
-        }
-    }
-
-    func handlePossibleEnPassant(seq: PossibleMove, piece: Piece, destination: Coordinate, move: inout Move) -> Piece? {
+    func isMoveEnPassant(piece: Piece, move: Move) -> Bool {
         // If the previous move was made by a pawn that moved double side-by-side with this pawn
         // that captures towards a cell that has
-        if let previousMove = self.previousMove, previousMove.pieceType == .pawn {
-            // We cannot use the source position of the previous move directly, because that's
-            // not where our current piece is moving now, which is actually the cell between
-            // the source position and the position the previous piece actually moved to.
-            // So we need to move the rank towards the center, basically.
-
-            // Get the side of the opposite piece
-            let previousSide = currentSide.opposite
-
-            // Get new rank offset. For previous white, it's +1. For previous black, it's -1.
-            let enPassantRankOffset = previousSide == .white ? 1 : -1
-
-            // Get the previous source rank
-            let previousRank = previousMove.source.rank?.value ?? 0
-
-            // Calculate new rank
-            // If previous rank was 2 (white), next en passant rank should be 3 (4 - 1)
-            // If previous rank was 7 (black), next en passant rank should be 6 (7 - 1)
-            let enPassantRank = previousRank + 1 * enPassantRankOffset
-
-            // Get the destination rank of current piece, the en passant capture
-            let currentDestinationRank = move.destination?.rank?.value ?? 0
-
-            // Check if the current piece is capturing on the en passant rank we calculated
-            guard currentDestinationRank == enPassantRank else {
-                return nil
-            }
-
-            move.isEnPassant = true
-            return piece
+        guard let previousMove = self.previousMove, previousMove.pieceType == .pawn else {
+            return false
         }
-        return nil
+
+        // Get the side of the opposite piece
+        let previousSide = currentSide.opposite
+
+        // Get new rank offset. For previous white, it's +1. For previous black, it's -1.
+        let enPassantRankOffset = previousSide == .white ? 1 : -1
+
+        // Get the previous source rank
+        let previousRank = previousMove.source.rank?.value ?? 0
+
+        // Calculate new rank
+        // If previous rank was 2 (white), next en passant rank should be 3 (4 - 1)
+        // If previous rank was 7 (black), next en passant rank should be 6 (7 - 1)
+        let enPassantRank = previousRank + 1 * enPassantRankOffset
+
+        // Get the destination rank of current piece, the en passant capture
+        let currentDestinationRank = move.destination.rank?.value ?? 0
+
+        // Check if the current piece is capturing on the en passant rank we calculated
+        guard currentDestinationRank == enPassantRank else {
+            return false
+        }
+
+        move.isEnPassant = true
+
+        return true
     }
 
-    func handlePawnMove(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
-        var currentCoordinate = cell.coordinate
-        var possibleCoordinates: [Coordinate] = []
+    func validateKnightMove(move: Move, cell: Cell) -> Bool {
+        guard let piece = cell.piece else {
+            return false
+        }
 
-        for direction in pattern.directions {
-            if let nextCoordinate = currentCoordinate.applyDirection(direction) {
-                possibleCoordinates.append(nextCoordinate)
+        return piece.movePatterns.filter {
+            guard let lastCoordinate = board.getCoordinates(
+                    from: cell.coordinate,
+                    to: move.destination,
+                    given: $0
+            ).last, lastCoordinate == move.destination else {
+                return false
+            }
 
-                if nextCoordinate == move.destination {
-                    return .init(
-                        piece: cell.piece!,
-                        coordinateSequence: possibleCoordinates,
-                        moveType: pattern.moveType,
-                        pattern: pattern
-                    )
+            switch $0 {
+            case .shape:
+                let possibleOppositePiece = board[lastCoordinate].piece
+
+                if move.isCapture {
+                    return possibleOppositePiece?.side != currentSide
+                } else {
+                    return possibleOppositePiece == nil
+                }
+            default:
+                return false
+            }
+        }.count == 1
+    }
+
+    func validateKingMove(move: Move, cell: Cell) -> Bool {
+        guard let piece = cell.piece else {
+            return false
+        }
+
+        return piece.movePatterns.filter {
+            switch $0 {
+            case .single:
+                guard let lastCoordinate = board.getCoordinates(
+                        from: cell.coordinate,
+                        to: move.destination,
+                        given: $0
+                ).last else {
+                    return false
                 }
 
-                currentCoordinate = nextCoordinate
-            }
-        }
-
-        return nil
-    }
-
-    func handleKnightMove(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
-        var currentCoordinate: Coordinate? = cell.coordinate
-        var possibleCoordinates: [Coordinate] = []
-
-        for direction in pattern.directions {
-            currentCoordinate = currentCoordinate?.applyDirection(direction)
-
-            if let currentCoordinate = currentCoordinate {
-                possibleCoordinates.append(currentCoordinate)
-            } else {
-                return nil
-            }
-        }
-
-        if currentCoordinate == move.destination {
-            return .init(
-                piece: cell.piece!,
-                coordinateSequence: possibleCoordinates,
-                moveType: pattern.moveType,
-                pattern: pattern
-            )
-        }
-
-        return nil
-    }
-
-    func handleContinuousMoves(move: Move, cell: Cell, pattern: MovePattern) -> PossibleMove? {
-        var currentCoordinate = cell.coordinate
-
-        guard let direction = pattern.directions.first else {
-            fatalError("Impossible")
-        }
-
-        var possibleCoordinates: [Coordinate] = []
-
-        while true {
-            if let nextCoordinate = currentCoordinate.applyDirection(direction) {
-                possibleCoordinates.append(nextCoordinate)
-
-                if nextCoordinate == move.destination {
-                    return .init(
-                        piece: cell.piece!,
-                        coordinateSequence: possibleCoordinates,
-                        moveType: pattern.moveType,
-                        pattern: pattern
-                    )
+                guard lastCoordinate == move.destination else {
+                    return false
                 }
 
-                currentCoordinate = nextCoordinate
-            } else {
-                break
-            }
-        }
+                let possibleOppositePiece = board[lastCoordinate].piece
 
-        return nil
+                return
+                    (move.isCapture && possibleOppositePiece?.side != currentSide) ||
+                    (move.isCapture == false && possibleOppositePiece == nil)
+            default:
+                return false
+            }
+        }.count == 1
     }
 }

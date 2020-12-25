@@ -9,48 +9,10 @@
 import Foundation
 
 /**
- Moves differ between the pieces and the state for which a piece is in.
-  - `.single` and `.double` are used by pawns and kings.
- */
-enum MoveType {
-    case straight
-    case diagonal
-    case single
-    case double
-    case shape
-    case continuous
-}
-
-extension MovePattern {
-    static func straight(_ directions: Direction...) -> MovePattern {
-        .init(moveType: .straight, directions: directions)
-    }
-    static func diagonal(_ directions: Direction...) -> MovePattern {
-        .init(moveType: .diagonal, directions: directions)
-    }
-
-    static func single(_ direction: Direction...) -> MovePattern {
-        .init(moveType: .single, directions: direction)
-    }
-
-    static func double(_ direction: Direction) -> MovePattern {
-        .init(moveType: .double, directions: Array(repeating: direction, count: 2))
-    }
-
-    static func shape(_ directions: [Direction]) -> MovePattern {
-        .init(moveType: .shape, directions: directions)
-    }
-
-    static func continuous(_ direction: Direction) -> MovePattern {
-        .init(moveType: .continuous, directions: direction)
-    }
-}
-
-/**
  A move that can be applied to a piece.
  The initializer validates the move and throws if it's not legal based on the regex.
  */
-struct Move: CustomStringConvertible {
+class Move: CustomStringConvertible {
     enum MoveValidationError: Error {
         case wrongMoveFormat
     }
@@ -59,14 +21,11 @@ struct Move: CustomStringConvertible {
     let rawMove: String
 
     /// The destination that is encoded in the move.
-    let destination: Coordinate?
+    let destination: Coordinate
 
     /// The piece type that is encoded in the move.
     /// In castling, this is the king
     let pieceType: PieceType
-
-    /// In castling, this is the rook
-    var secondaryPieceType: PieceType?
 
     /// Whether or not the move is a capture, i.e. it captures another piece.
     let isCapture: Bool
@@ -76,6 +35,10 @@ struct Move: CustomStringConvertible {
 
     /// O-O, the shortest
     let isKingSideCastling: Bool
+
+    var isCastling: Bool {
+        isQueenSideCastling || isKingSideCastling
+    }
 
     /// Might be a partial source coordinate if used for disambiguation
     var source: Coordinate
@@ -92,12 +55,11 @@ struct Move: CustomStringConvertible {
         self.rawMove = rawMove
 
         if rawMove == "O-O-O" || rawMove == "O-O" {
-            destination = nil
+            destination = Coordinate(file: nil, rank: nil)
             isCapture = false
             isQueenSideCastling = rawMove == "O-O-O"
             isKingSideCastling = rawMove == "O-O"
             pieceType = .king
-            secondaryPieceType = .rook
             source = Coordinate(file: nil, rank: nil)
             return
         }

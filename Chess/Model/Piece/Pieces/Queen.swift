@@ -13,11 +13,11 @@ class Queen: Piece {
     var content: String {
         side == .white ? "♕" : "♛"
     }
-    var type: PieceType = .queen
-    var side: Side = .white
+    let type: PieceType = .queen
+    let side: Side
     var hasMoved: Bool = false
-    var canMoveOverOtherPieces = false
-    var movePatterns: [MovePattern] = [
+    let canMoveOverOtherPieces = false
+    let movePatterns: [MovePattern] = [
         .continuous(.north),
         .continuous(.northEast),
         .continuous(.east),

@@ -90,11 +90,65 @@ class Board: CustomStringConvertible {
         self[coordinate.file!, coordinate.rank!]
     }
 
-    func getPieceInBoardDescription(piece: Piece) -> String {
-        let coordinate = getCell(of: piece).coordinate
-        let pieceDescription = piece.desc
+    func isEmptyCell(at coordinate: Coordinate) -> Bool {
+        self[coordinate].piece == nil
+    }
 
-        return "\(pieceDescription) (\(coordinate.description))"
+    func getCoordinates(from sourceCoordinate: Coordinate, to destinationCoordinate: Coordinate, given pattern: MovePattern) -> [Coordinate] {
+        switch pattern {
+        case let .single(direction):
+            guard let firstC = sourceCoordinate.applyDirection(direction) else {
+                return []
+            }
+
+            guard firstC == destinationCoordinate else {
+                return []
+            }
+
+            return [firstC]
+        case let .double(first, second):
+            guard let firstC = sourceCoordinate.applyDirection(first) else {
+                return []
+            }
+
+            guard let secondC = firstC.applyDirection(second) else {
+                return []
+            }
+
+            guard secondC == destinationCoordinate else {
+                return []
+            }
+
+            return [firstC, secondC]
+        case let .shape(first, second, third):
+            guard let firstC = sourceCoordinate.applyDirection(first) else {
+                return []
+            }
+
+            guard let secondC = firstC.applyDirection(second) else {
+                return []
+            }
+
+            guard let thirdC = secondC.applyDirection(third) else {
+                return []
+            }
+
+            return [firstC, secondC, thirdC]
+        case let .continuous(direction):
+            var currentCoordinate = sourceCoordinate
+            var coordinates = [Coordinate]()
+
+            while let nextCoordinate = currentCoordinate.applyDirection(direction) {
+                coordinates.append(nextCoordinate)
+                currentCoordinate = nextCoordinate
+
+                if currentCoordinate == destinationCoordinate {
+                    break
+                }
+            }
+
+            return coordinates
+        }
     }
 
     /**
@@ -130,49 +184,6 @@ class Board: CustomStringConvertible {
             $0.piece?.id == piece.id && $0.piece?.type == piece.type
         })!
     }
-
-    /**
-     Check if the given piece can be moved to the given coordinate with the given move pattern.
-     - Parameters:
-        - piece: The piece to move
-        - destinationCoordinate: The coordinate to move to
-        - movePattern: The move pattern with which to move the piece to the coordinate
-     - Returns: True if the piece can be moved, false otherwise
-     */
-    /*func piece(piece: Piece, canMoveTo destinationCoordinate: Coordinate, with movePattern: MovePattern, move: Move) -> Bool {
-        let oldCoordinate = getCell(of: piece).coordinate
-        
-        switch movePattern.moveType {
-        case .single:
-            let nextCoordinate = oldCoordinate.applyDirection(movePattern.directions[0])
-            return oldCoordinate == nextCoordinate
-        case .double:
-            let direction = movePattern.directions[0]
-            let nextCoordinate = oldCoordinate
-                .applyDirection(direction)
-                .applyDirection(direction)
-            return oldCoordinate == nextCoordinate
-        case .straight:
-            let direction = movePattern.directions[0]
-            var currentCoordinate = oldCoordinate
-            while true {
-                currentCoordinate = currentCoordinate.applyDirection(direction)
-                
-                if oldCoordinate == currentCoordinate {
-                    return true
-                }
-            }
-        default:
-            break
-        }
-        
-        var currentCoordinate = oldCoordinate
-        movePattern.directions.forEach {
-            currentCoordinate = currentCoordinate.applyDirection($0)
-        }
-        
-        return currentCoordinate == destinationCoordinate
-    }*/
 
     var description: String {
         var desc = "    a   b   c   d   e   f   g   h\n"

@@ -9,15 +9,15 @@
 import Foundation
 
 class Bishop: Piece {
-    var id = UUID()
+    let id = UUID()
     var content: String {
         side == .white ? "♗" : "♝"
     }
-    var type: PieceType = .bishop
-    var side: Side = .white
+    let type: PieceType = .bishop
+    let side: Side
     var hasMoved: Bool = false
-    var canMoveOverOtherPieces = false
-    var movePatterns: [MovePattern] = [
+    let canMoveOverOtherPieces = false
+    let movePatterns: [MovePattern] = [
         .continuous(.northWest),
         .continuous(.northEast),
         .continuous(.southWest),

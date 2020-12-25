@@ -22,7 +22,7 @@ protocol Piece: AnyObject {
     var type: PieceType { get }
 
     /// The side that owns the piece
-    var side: Side { get set }
+    var side: Side { get }
 
     /// Description of the piece, something like N for Knight and the graphical representation
     var desc: String { get }

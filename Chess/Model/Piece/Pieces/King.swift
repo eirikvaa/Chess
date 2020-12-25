@@ -9,15 +9,15 @@
 import Foundation
 
 class King: Piece {
-    var id = UUID()
+    let id = UUID()
     var content: String {
         side == .white ? "♔" : "♚"
     }
-    var type: PieceType = .king
-    var side: Side = .white
+    let type: PieceType = .king
+    let side: Side
     var hasMoved: Bool = false
-    var canMoveOverOtherPieces = false
-    var movePatterns: [MovePattern] = [
+    let canMoveOverOtherPieces = false
+    let movePatterns: [MovePattern] = [
         .single(.north),
         .single(.northEast),
         .single(.east),
@@ -27,7 +27,6 @@ class King: Piece {
         .single(.west),
         .single(.northWest)
     ]
-
     required init(side: Side) {
         self.side = side
     }
