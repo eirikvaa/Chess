@@ -21,7 +21,7 @@ struct Clamping<Value: Comparable> {
             value
         }
         set {
-            value = min(max(value, range.lowerBound), range.upperBound)
+            value = min(max(newValue, range.lowerBound), range.upperBound)
         }
     }
 }
