@@ -6,7 +6,21 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
+let game2 = Game()
 
-try RealGameExecutor(moveFormatValidator: SANMoveFormatValidator()).play()
-//let file = try PGNGameReader.readFile("twic920")
+try game2.play()
+
+let games = try PGNGameReader.readFile("twic920")
+
+for (index, game) in games[27...].enumerated() {
+    print("STARTING GAME \(index + 27)")
+
+    let moves = PGNGameReader.read(textRepresentation: game)
+    do {
+        try Game().applyMoves(moves)
+    } catch let error as GameState.GameStateError {
+        print(error)
+        print(game)
+        break
+    }
+}

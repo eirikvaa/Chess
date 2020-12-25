@@ -6,28 +6,19 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct MovePattern {
-    let directions: [Direction]
-}
+enum MovePattern {
+    /// Pawn: Single move and capture
+    /// King
+    case single(Direction)
 
-extension MovePattern: CustomStringConvertible {
-    var description: String {
-        String(describing: directions)
-    }
-}
+    /// Pawn: Double move (possible initial move)
+    case double(Direction, Direction)
 
-extension MovePattern: ExpressibleByArrayLiteral {
-    init(arrayLiteral elements: Direction...) {
-        directions = elements
-    }
-    
-    static func + (lhs: MovePattern, rhs: MovePattern) -> MovePattern {
-        .init(directions: lhs.directions + rhs.directions)
-    }
-}
+    /// Knight
+    case shape(Direction, Direction, Direction)
 
-extension MovePattern: Equatable {
-    static func == (lhs: MovePattern, rhs: MovePattern) -> Bool {
-        lhs.directions == rhs.directions
-    }
+    /// Queen
+    /// Bishop
+    /// Rook
+    case continuous(Direction)
 }

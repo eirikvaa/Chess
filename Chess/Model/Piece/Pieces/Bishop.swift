@@ -8,41 +8,27 @@
 
 import Foundation
 
-struct Bishop: Piece, Identifiable {
-    var id = UUID()
-    var side: Side = .white
-    var type = PieceType.bishop
-    var moved = false
-    var graphicalRepresentation: String {
-        side == .white ? "♝" : "♗"
+class Bishop: Piece {
+    let id = UUID()
+    var content: String {
+        side == .white ? "♗" : "♝"
     }
-    var validPatterns: [MovePattern] {
-        [
-            .eight(.northEast),
-            .eight(.southEast),
-            .eight(.northWest),
-            .eight(.southWest)
-        ]
+    let type: PieceType = .bishop
+    let side: Side
+    var hasMoved: Bool = false
+    let canMoveOverOtherPieces = false
+    let movePatterns: [MovePattern] = [
+        .continuous(.northWest),
+        .continuous(.northEast),
+        .continuous(.southWest),
+        .continuous(.southEast)
+    ]
+
+    required init(side: Side) {
+        self.side = side
     }
 
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
-        let delta = destination - source
-        
-        guard delta.equalMagnitude else {
-            return .init(directions: [])
-        }
-
-        switch (delta.x, delta.y) {
-        case (1..., 1...):
-            return .init(directions: .init(repeating: .northEast, count: delta.magnitude(of: \.x)))
-        case ((-8)...(-1), (-8)...(-1)):
-            return .init(directions: .init(repeating: .southWest, count: delta.magnitude(of: \.x)))
-        case (1..., (-8)...(-1)):
-            return .init(directions: .init(repeating: .southEast, count: delta.magnitude(of: \.x)))
-        case ((-8)...(-1), 1...):
-            return .init(directions: .init(repeating: .northWest, count: delta.magnitude(of: \.x)))
-        default:
-            return []
-        }
+    var desc: String {
+        "B" + content
     }
 }

@@ -8,49 +8,31 @@
 
 import Foundation
 
-struct King: Piece, Identifiable {
-    var id = UUID()
-    var side: Side = .white
-    var type = PieceType.king
-    var moved = false
-    var graphicalRepresentation: String {
-        side == .white ? "♚" : "♔"
+class King: Piece {
+    let id = UUID()
+    var content: String {
+        side == .white ? "♔" : "♚"
     }
-    var validPatterns: [MovePattern] {
-        [
-            [.north],
-            [.northEast],
-            [.east],
-            [.southEast],
-            [.south],
-            [.southWest],
-            [.west],
-            [.northWest]
-        ]
+    let type: PieceType = .king
+    let side: Side
+    var hasMoved: Bool = false
+    let canMoveOverOtherPieces = false
+    let movePatterns: [MovePattern] = [
+        .single(.north),
+        .single(.northEast),
+        .single(.east),
+        .single(.southEast),
+        .single(.south),
+        .single(.southWest),
+        .single(.west),
+        .single(.northWest)
+    ]
+
+    required init(side: Side) {
+        self.side = side
     }
-    
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
-        let delta = destination - source
-        
-        switch (delta.x, delta.y) {
-        case (0, 1):
-            return [.north]
-        case (1, 1):
-            return [.northEast]
-        case (1, 0):
-            return [.east]
-        case (1, -1):
-            return [.southEast]
-        case (0, -1):
-            return [.south]
-        case (-1, -1):
-            return [.southWest]
-        case (-1, 0):
-            return [.west]
-        case (-1, 1):
-            return [.northWest]
-        default:
-            return []
-        }
+
+    var desc: String {
+        "K" + content
     }
 }

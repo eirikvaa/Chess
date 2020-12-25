@@ -8,199 +8,127 @@
 
 import XCTest
 
-@testable import Chess
-
-class GameTests: XCTestCase {
-    // MARK: Div
-
-    func testWhiteTriesToUseBlackPieces() {
-        assertThrowingMoves("a5", message: "Cannot use pieces of an opponent")
+class Game2Tests: XCTestCase {
+    func testPawnMoveToE4() throws {
+        assertMoves("e4", throws: .noThrow)
     }
 
-    func testBlackTriesToUseWhitePieces() {
-        assertThrowingMoves("a3", "a4", message: "Cannot use pieces of an opponent")
+    func testKnightToC3() throws {
+        assertMoves("Nc3", throws: .noThrow)
     }
 
-    // MARK: Pawn
-
-    func testSinglePawnNorthMoveAtStartShouldSucceed() {
-        assertNonThrowingMoves("e3", message: "Should not throw")
+    func testBishopCannotMoveToPieceOccupiedByItsOwnSide() throws {
+        assertMoves("B2d", throws: .doThrow)
     }
 
-    func testDoublePawnNorthMoveAtStartShouldSucceed() {
-        assertNonThrowingMoves("e4", message: "Should not throw")
+    func testKnightDoubleMovesAndCapturesPawn() throws {
+        assertMoves("Nc3", "d5", "Nxd5", throws: .noThrow)
     }
 
-    func testPawnMoveThreeNorthAtStartShouldThrow() {
-        assertThrowingMoves("e5", message: "Pawn can only move one or two steps north at start.")
+    func testPawnsCannotAttackForward() throws {
+        assertMoves("e4", "e5", "xe5", throws: .doThrow)
     }
 
-    func testPawnMoveTwoNorthAfterInitialMoveShouldThrow() {
-        assertThrowingMoves("e3", "a5", "e5", message: "Pawn can only move one north after initial move.")
+    func testPawnLegalAttack() throws {
+        assertMoves("e4", "d5", "xd5", throws: .noThrow)
     }
 
-    func testPawnAttackNorthWestShouldSucceed() {
-        assertNonThrowingMoves("e4", "d5", "xd5", message: "Should not throw")
+    func testWhitePawnCannotAttackBackwards() throws {
+        assertMoves("e4", "d5", "e5", "d4", "xd4", throws: .doThrow)
     }
 
-    func testPawnAttackNorthEastShouldSucceed() {
-        assertNonThrowingMoves("e4", "f5", "xf5", message: "Should not throw")
+    func testBlackQueenTakesWhiteKnight() throws {
+        assertMoves("Nc3", "d5", "Nxd5", "Qxd5", throws: .noThrow)
     }
 
-    func testPawnMoveToOccupiedPositionShouldThrow() {
-        assertThrowingMoves("e4", "e5", "e5", message: "Pawn cannot move north to an occupied position.")
+    func testRookCanMoveNorth() throws {
+        assertMoves("a4", "a5", "Ra3", throws: .noThrow)
     }
 
-    func testPawnMoveDiagonallyToUnoccupiedPositionShouldThrow() {
-        assertThrowingMoves("xf3", message: "Pawn cannot attack digonally to unoccupied position")
+    func testShouldPickCorrectRookToH3() throws {
+        assertMoves("a4", "a5", "Ra3", "Ra6", "Rh3", throws: .noThrow)
     }
 
-    // MARK: Rook
-
-    func testRookMoveToPositionOccupiedByOwnSideShouldThrow() {
-        assertThrowingMoves("Ra2", message: "Rook cannot move to a position occupied by a piece of its own side.")
+    func testRookCannotCaptureOwnPieces() throws {
+        assertMoves("Rxb1", throws: .doThrow)
     }
 
-    func testRookMoveToPositionOccupied2ByOwnSideShouldThrow() {
-        assertThrowingMoves("Rb1", message: "Rook cannot move to a position occupied by a piece of its own side.")
+    func testLegalKingMove() throws {
+        assertMoves("e4", "e5", "Ke2", throws: .noThrow)
     }
 
-    func testRookMoveNorthShouldSucceed() {
-        assertNonThrowingMoves("a4", "a5", "Ra3", message: "Rook should be able to move north")
+    func testPawnsCannotMoveDiagonallyUnlessItCapturesLegally() throws {
+        assertMoves("Nf3", "g6", throws: .noThrow)
     }
 
-    func testRookMoveEastShouldSucceed() {
-        assertNonThrowingMoves("Nc3", "a5", "Rb1", message: "Rook should be able to move east")
+    func testCanHandleKingSideCastlingCorrectly() throws {
+        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4", "Nc6", "Be3",
+                    "Nf6", "Nc3", "O-O", throws: .noThrow)
     }
 
-    func testRookCannotMoveOverOpponentPiece() {
-        assertThrowingMoves("a4", "b5", "Ra3", "a5", "Rb3", "h5", "Rb6", message: "Rook cannot move over opponent piece even though destination position is empty")
+    func testWhiteCanKingSideCastle() throws {
+        assertMoves("e4", "e5", "Nf3", "d5", "Bc4", "c5", "O-O", throws: .noThrow)
     }
 
-    // MARK: Bishop
-
-    func testBishopToAttackPosition1ShouldSucceed() {
-        assertNonThrowingMoves("e4", "a5", "Bc4", "a4", "Bf7", message: "Should not throw")
+    func testWhiteCanQueenSideCastle() throws {
+        assertMoves("e4", "e5", "d4", "d5", "Bf4", "c5", "Nc3", "b5", "O-O-O", throws: .noThrow)
     }
 
-    func testBishopToAttackPosition2ShouldSucceed() {
-        assertNonThrowingMoves("d4", "a5", "Bf4", "a4", "Bc7", message: "Should not throw")
+    func testBlackCanKingSideCastle() throws {
+        assertMoves("e4", "Nf6", "d4", "e6", "c4", "Bd6", "b4", "O-O", throws: .noThrow)
     }
 
-    func testBishopCannotMoveNorthEastToPositionOccupiedByOwnPieceShouldThrow() {
-        assertThrowingMoves("d2", message: "Bishop cannot move to position occupied by own piece.")
+    func testBlackCanQueenSideCastle() throws {
+        assertMoves("e4", "d62", "d4", "Bg4", "c4", "Nc64", "b4", "Qd7", "a4", "O-O-O", throws: .noThrow)
     }
 
-    func testBishopCannotMoveNorthWestToPositionOccupiedByOwnPieceShouldThrow() {
-        assertThrowingMoves("b2", message: "Bishop cannot move to position occupied by own piece.")
+    func testValidEnPassantByWhite() throws {
+        assertMoves("e3", "a6", "e4", "a5", "e5", "f5", "xf6", throws: .noThrow)
     }
 
-    // MARK: Knight
-
-    func testKnightValidMoveToEmptyDestinationShouldSucceed() {
-        assertNonThrowingMoves("a3", message: "Valid knight move")
+    func testValidEnPassantByBlack() throws {
+        assertMoves("a3", "e5", "a4", "e4", "d4", "exd3", throws: .noThrow)
     }
 
-    func testKnightValidAttackShouldSucceed() {
-        assertNonThrowingMoves("Nc3", "d5", "Nd5", message: "Valid knight attack")
+    func testInvalidEnPassantPawnMustMoveDoubleAtFirstMove() throws {
+        assertMoves("e3", "a6", "e4", "a5", "f6", "b3", "f5", "xf6", throws: .doThrow)
     }
 
-    func testInvalidKnightMoveShouldThrow() {
-        assertThrowingMoves("d2", message: "Invalid knight move")
+    func testTwoRooksOnSameFileWithPartialSourceCoordinateShouldNotEndWithAmbiguousMove() throws {
+        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
+                    "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
+                    "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
+                    "Rab1", throws: .noThrow)
     }
 
-    // MARK: King
-
-    func testKingCannotMoveToPositionOccupiedByOwnPieceShouldThrow() {
-        assertThrowingMoves("e2", message: "King cannot move to position occupied by own piece.")
+    func testPawnCannotCaptureForwards() throws {
+        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
+                    "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
+                    "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
+                    "Rab1", "Qb6", "Rfc1", "Rfc8", "Rc2", "h5", "Bf1", "Kh7", "g3", "Qd8",
+                    "Bh3", "e6", "Rd1", "Be5", "Nb5", "Qf8", "Qe2", "Rd8", "Bg5", "Rd7", "Nd4",
+                    "f5", "Nxc6", "bxc6", "Be3", "Qe7", "Bg2", "Bg7", "Rcd2",
+                    "Rad8", "Bxc5", "dxc5", throws: .noThrow)
     }
 
-    // MARK: Queen
-
-    func testQueenToAttackPosition1ShouldSucceed() {
-        assertNonThrowingMoves("d4", "e5", "Qd3", "e4", message: "Should not throw")
-    }
-
-    func testQueenCannotMoveToPositionOccupiedByOwnPieceShouldThrow() {
-        assertThrowingMoves("d2", message: "Queen cannot move to position occupied by own piece.")
-    }
-
-    // MARK: Ruy Lopez Opening
-
-    func testRuyLopezOpeningShouldSucceed() {
-        assertNonThrowingMoves("e4", "e5", "Nf3", "Nc6", "Bb5", message: "Should not throw")
-    }
-
-    // MARK: Algebraic notation
-
-    func testAlgebraicNotationPawnE2ToE4() {
-        assertNonThrowingMoves("e4", moveType: .algebraic, message: "Should not throw")
-    }
-
-    func testAlgebraicNotationKnightB1ToC3() {
-        assertNonThrowingMoves("Nc3", moveType: .algebraic, message: "Should not throw")
-    }
-
-    func testBlackQueenCanMoveSeveralStepsSouthEast() {
-        assertNonThrowingMoves("e4", "e5", "Ke2", "Qf6", moveType: .algebraic, message: "Should not throw")
-    }
-
-    // MARK: Real-life chess games
-    
-    func testTWIC920PGNFile() {
-        XCTAssertNoThrow(try assertNonThrowingPGNFile("twic920"))
-    }
-    
-    func testTWIC921PGNFile() {
-        XCTAssertNoThrow(try assertNonThrowingPGNFile("twic921"))
-    }
-    
-    /**
-     Fool's Mate is the fastest check mate that cen be performed.
-     */
-    func testFoolsMate() {
-        let game = assertNonThrowingMoves("f3", "e5", "g4", "Qh4", message: "Fool's mate failed.")
-        XCTAssertEqual(game.isCheckMate, true)
-        XCTAssertEqual(game.winner, .black)
+    func testThatKnightOnlyConsidersFinalCoordinateInMovePatternCoordinateSequence() throws {
+        assertMoves("e4", "e5", "Nf3", "Nc6", "Bb5", "Nf6", "d3", "Bc5", "c3", "O-O",
+                    "O-O", "d6", "Nbd2", "a6", "Bxc6", "bxc6", "Re1", "Re8", "h3", "Bb6", "Nf1", throws: .noThrow)
     }
 }
 
-extension GameTests {
-    func assertThrowingMoves(_ moves: String..., moveType _: MoveType = .algebraic, message: String, side _: Side = .white) {
-        let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
-
-        XCTAssertThrowsError(try game.play(), message)
+private extension Game2Tests {
+    enum Throw {
+        case doThrow
+        case noThrow
     }
 
-    @discardableResult
-    func assertNonThrowingMoves(_ moves: String..., moveType _: MoveType = .algebraic, message: String, side _: Side = .white) -> GameExecutor {
-        let game = TestGameExecutor(moves: moves, moveFormatValidator: SANMoveFormatValidator())
+    func assertMoves(_ moves: String..., throws: Throw) {
+        let game = Game()
 
-        XCTAssertNoThrow(try game.play(), message)
-        
-        return game
-    }
-    
-    func assertNonThrowingPGNFile(_ fileName: String) throws {
-        let games = try PGNGameReader.readFile(fileName)
-        
-        var failedGames: [(Int, String)] = []
-        for (index, gameString) in games[...10].enumerated() {
-            let movesInGame = PGNGameReader.read(textRepresentation: gameString)
-            
-            let game = TestGameExecutor(moves: movesInGame)
-
-            do {
-                try game.play()
-            } catch {
-                XCTFail()
-                print(error)
-                failedGames.append((index, gameString))
-            }
-        }
-        
-        if failedGames.isEmpty {
-            print("\(games.count) chess games were played without (apparent) failure.")
+        switch `throws` {
+        case .doThrow: XCTAssertThrowsError(try game.applyMoves(moves))
+        case .noThrow: XCTAssertNoThrow(try game.applyMoves(moves))
         }
     }
 }

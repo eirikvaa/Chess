@@ -8,16 +8,14 @@
 
 import XCTest
 
-@testable import Chess
-
 class PlayerTests: XCTestCase {
     func testOppositeOfBlackSideShouldBeWhite() {
         let black = Side.black
-        XCTAssertEqual(black.oppositeSide, .white)
+        XCTAssertEqual(black.opposite, .white)
     }
 
     func testOppositeOfWhiteSideShouldBeBlack() {
         let white = Side.white
-        XCTAssertEqual(white.oppositeSide, .black)
+        XCTAssertEqual(white.opposite, .black)
     }
 }

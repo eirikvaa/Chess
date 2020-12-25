@@ -6,24 +6,27 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+import Foundation
+
+/**
+ The type of the piece.
+ */
 enum PieceType {
-    case king
-    case queen
+    case pawn
     case bishop
     case knight
     case rook
-    case pawn
-}
+    case queen
+    case king
 
-struct PieceTypeFabric {
-    static func create(_ character: Character) -> PieceType {
-        switch character {
-        case "K": return .king
-        case "Q": return .queen
-        case "B": return .bishop
-        case "N": return .knight
-        case "R": return .rook
-        default: return .pawn
+    init(rawPiece: String) {
+        switch rawPiece {
+        case "B": self = .bishop
+        case "N": self = .knight
+        case "R": self = .rook
+        case "Q": self = .queen
+        case "K": self = .king
+        default: self = .pawn
         }
     }
 }

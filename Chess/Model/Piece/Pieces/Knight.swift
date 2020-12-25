@@ -8,49 +8,31 @@
 
 import Foundation
 
-struct Knight: Piece, Identifiable {
-    var id = UUID()
-    var side: Side = .white
-    var type = PieceType.knight
-    var moved = false
-    var graphicalRepresentation: String {
-        side == .white ? "♞" : "♘"
+class Knight: Piece {
+    let id = UUID()
+    var content: String {
+        side == .white ? "♘" : "♞"
     }
-    var validPatterns: [MovePattern] {
-        [
-            .two(.north) + .one(.west),
-            .two(.north) + .one(.east),
-            .two(.east) + .one(.north),
-            .two(.east) + .one(.south),
-            .two(.south) + .one(.east),
-            .two(.south) + .one(.west),
-            .two(.west) + .one(.south),
-            .two(.west) + .one(.north),
-        ]
+    let type: PieceType = .knight
+    let side: Side
+    var hasMoved: Bool = false
+    let canMoveOverOtherPieces = true
+    var movePatterns: [MovePattern] = [
+        .shape(.north, .north, .west),
+        .shape(.north, .north, .east),
+        .shape(.west, .west, .south),
+        .shape(.west, .west, .north),
+        .shape(.south, .south, .west),
+        .shape(.south, .south, .east),
+        .shape(.east, .east, .north),
+        .shape(.east, .east, .south)
+    ]
+
+    required init(side: Side) {
+        self.side = side
     }
-    
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
-        let delta = destination - source
-        
-        switch (delta.x, delta.y) {
-        case (-1, 2):
-            return [.north, .north, .west]
-        case (1, 2):
-            return [.north, .north, .east]
-        case (-2, 1):
-            return [.north, .west, .west]
-        case (2, 1):
-            return [.north, .east, .east]
-        case (-2, -1):
-            return [.south, .west, .west]
-        case (2, -1):
-            return [.south, .east, .east]
-        case (-1, -2):
-            return [.south, .south, .west]
-        case (1, -2):
-            return [.south, .south, .east]
-        default:
-            return []
-        }
+
+    var desc: String {
+        "N" + content
     }
 }

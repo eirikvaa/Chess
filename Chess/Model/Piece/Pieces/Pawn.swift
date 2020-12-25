@@ -8,52 +8,71 @@
 
 import Foundation
 
-extension MovePattern {
-    static func n(_ direction: Direction, count: Int) -> MovePattern {
-        .init(directions: Array(repeating: direction, count: count))
-    }
-    
-    static func one(_ direction: Direction) -> MovePattern {
-        n(direction, count: 1)
-    }
-    
-    static func two(_ direction: Direction) -> MovePattern {
-        n(direction, count: 2)
-    }
-    
-    static func eight(_ direction: Direction) -> MovePattern {
-        n(direction, count: 8)
-    }
-}
+/**
+ Pawns are the least valuable pieces on the board. Their move patterns depend on the state
+ at which they are in, specifically if they have moved or not from before. If they have not moved yet,
+ they can move ahead two cells. If not, they can only move one cell.
+ */
 
-struct Pawn: Piece, Identifiable {
-    var id = UUID()
-    var side: Side = .white
-    var type = PieceType.pawn
-    var moved = false
-    var graphicalRepresentation: String {
-        side == .white ? "♟" : "♙"
+class Pawn: Piece, Identifiable {
+    let id = UUID()
+    var content: String {
+        side == .white ? "♙" : "♟"
     }
-    var validPatterns: [MovePattern] {
-        switch (side, moved) {
-        case (.white, false): return [[.north], [.north, .north], [.northWest], [.northEast]]
-        case (.white, true): return [[.north], [.northWest], [.northEast]]
-        case (.black, false): return [[.south], [.south, .south], [.southWest], [.southEast]]
-        case (.black, true): return [[.south], [.southWest], [.southEast]]
+    let type: PieceType = .pawn
+    let side: Side
+    var hasMoved: Bool = false
+    let canMoveOverOtherPieces = false
+    var movePatterns: [MovePattern] {
+        switch (hasMoved, side) {
+        case (false, .white):
+            return [
+                .single(.north),
+                .double(.north, .north),
+                .single(.northWest),
+                .single(.northEast)
+            ]
+        case (true, .white):
+            return [
+                .single(.north),
+                .single(.northWest),
+                .single(.northEast)
+            ]
+        case (false, .black):
+            return [
+                .single(.south),
+                .double(.south, .south),
+                .single(.southWest),
+                .single(.southEast)
+            ]
+        case (true, .black):
+            return [
+                .single(.south),
+                .single(.southWest),
+                .single(.southEast)
+            ]
         }
     }
 
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
-        let delta = destination - source
-        
-        switch (delta.x, delta.y) {
-        case (0, 1...2): return MovePattern(directions: Array(repeating: Direction.north, count: delta.y))
-        case (0, (-2)...(-1)): return MovePattern(directions: Array(repeating: Direction.south, count: abs(delta.y)))
-        case (1, 1): return [.northEast]
-        case (-1, 1): return [.northWest]
-        case (1, -1): return [.southEast]
-        case (-1, -1): return [.southWest]
-        default: return []
+    var validCaptureDirections: [Direction] {
+        switch side {
+        case .white: return [.northWest, .northEast]
+        case .black: return [.southWest, .southEast]
         }
+    }
+
+    var validNonCaptureDirections: [Direction] {
+        switch side {
+        case .white: return [.north]
+        case .black: return [.south]
+        }
+    }
+
+    required init(side: Side) {
+        self.side = side
+    }
+
+    var desc: String {
+        "P" + content
     }
 }

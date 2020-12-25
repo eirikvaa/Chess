@@ -8,41 +8,27 @@
 
 import Foundation
 
-struct Rook: Piece, Identifiable {
-    var id = UUID()
-    var side: Side = .white
-    var type = PieceType.rook
-    var moved = false
-    var graphicalRepresentation: String {
-        side == .white ? "♜" : "♖"
+class Rook: Piece {
+    let id = UUID()
+    var content: String {
+        side == .white ? "♖" : "♜"
     }
-    var validPatterns: [MovePattern] {
-        [
-            .eight(.north),
-            .eight(.east),
-            .eight(.south),
-            .eight(.west)
-        ]
+    let type: PieceType = .rook
+    let side: Side
+    var hasMoved: Bool = false
+    let canMoveOverOtherPieces = false
+    let movePatterns: [MovePattern] = [
+        .continuous(.north),
+        .continuous(.east),
+        .continuous(.south),
+        .continuous(.west)
+    ]
+
+    required init(side: Side) {
+        self.side = side
     }
 
-    func validPattern(source: BoardCoordinate, destination: BoardCoordinate) -> MovePattern {
-        let delta = destination - source
-        
-        switch (delta.x, delta.y) {
-        case (1..., 0):
-            let direction = Direction.east
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
-        case ((-8)...(-1), 0):
-            let direction = Direction.west
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.x)))
-        case (0, 1...):
-            let direction = Direction.north
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.y)))
-        case (0, (-8)...(-1)):
-            let direction = Direction.south
-            return .init(directions: .init(repeating: direction, count: delta.magnitude(of: \.y)))
-        default:
-            return []
-        }
+    var desc: String {
+        "R" + content
     }
 }
