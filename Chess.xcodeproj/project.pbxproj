@@ -125,7 +125,6 @@
 		E5D0F67325863E16001DD29E /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		E5EE5DB123B53FE10066C281 /* Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		E5EE5DB523B62BCA0066C281 /* GameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTests.swift; sourceTree = "<group>"; };
-		E5F83AB123B8D930001366FE /* MoveComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveComponentTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,7 +264,6 @@
 				E5EE5DB523B62BCA0066C281 /* GameTests.swift */,
 				E5609BAC259629A800A69144 /* BoardTests.swift */,
 				E50F656723B751520042B527 /* PlayerTests.swift */,
-				E5F83AB123B8D930001366FE /* MoveComponentTests.swift */,
 				E551399C23B818E200FD1D01 /* MoveTests.swift */,
 				E599248D257ECF2C00A446E9 /* CoordinateTests.swift */,
 				E5BE32D523B509A000EE526A /* Info.plist */,
