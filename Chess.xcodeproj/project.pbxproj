@@ -1,0 +1,680 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 53;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E551399C23B818E200FD1D01 /* MoveTests.swift */; };
+		E5609BAD259629A800A69144 /* BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5609BAC259629A800A69144 /* BoardTests.swift */; };
+		E585B1BE248D6E5000CBD2B2 /* twic921.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E585B1BD248D6E4800CBD2B2 /* twic921.pgn */; };
+		E585B1BF248D6E5600CBD2B2 /* twic921.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E585B1BD248D6E4800CBD2B2 /* twic921.pgn */; };
+		E599248E257ECF2C00A446E9 /* CoordinateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E599248D257ECF2C00A446E9 /* CoordinateTests.swift */; };
+		E5B3DB97248840C60094FE74 /* twic920.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E5B3DB9424883DB70094FE74 /* twic920.pgn */; };
+		E5BE32B623B5082F00EE526A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32B523B5082F00EE526A /* main.swift */; };
+		E5D0F5E625863A3F001DD29E /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
+		E5D0F5E925863A40001DD29E /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BF23B5088200EE526A /* Board.swift */; };
+		E5D0F5EC25863A86001DD29E /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657623B7C1010042B527 /* Coordinate.swift */; };
+		E5D0F5EF25863A86001DD29E /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657623B7C1010042B527 /* Coordinate.swift */; };
+		E5D0F5F225863A8A001DD29E /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657923B7C1340042B527 /* File.swift */; };
+		E5D0F5F525863A8A001DD29E /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657923B7C1340042B527 /* File.swift */; };
+		E5D0F5F825863A8C001DD29E /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657C23B7C14C0042B527 /* Rank.swift */; };
+		E5D0F5FB25863A8D001DD29E /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657C23B7C14C0042B527 /* Rank.swift */; };
+		E5D0F61425863BF9001DD29E /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
+		E5D0F61725863BFA001DD29E /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB123B53FE10066C281 /* Move.swift */; };
+		E5D0F61A25863BFE001DD29E /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656923B7C0530042B527 /* Direction.swift */; };
+		E5D0F61D25863BFE001DD29E /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656923B7C0530042B527 /* Direction.swift */; };
+		E5D0F62025863C03001DD29E /* Rook.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659423B7C2A00042B527 /* Rook.swift */; };
+		E5D0F62125863C03001DD29E /* Pawn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659723B7C2A50042B527 /* Pawn.swift */; };
+		E5D0F62225863C03001DD29E /* Bishop.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658E23B7C2970042B527 /* Bishop.swift */; };
+		E5D0F62325863C03001DD29E /* Knight.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659123B7C29C0042B527 /* Knight.swift */; };
+		E5D0F62425863C03001DD29E /* Queen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658B23B7C2920042B527 /* Queen.swift */; };
+		E5D0F62525863C03001DD29E /* King.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658823B7C28E0042B527 /* King.swift */; };
+		E5D0F62825863C03001DD29E /* Rook.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659423B7C2A00042B527 /* Rook.swift */; };
+		E5D0F62925863C03001DD29E /* Pawn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659723B7C2A50042B527 /* Pawn.swift */; };
+		E5D0F62A25863C03001DD29E /* Bishop.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658E23B7C2970042B527 /* Bishop.swift */; };
+		E5D0F62B25863C03001DD29E /* Knight.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F659123B7C29C0042B527 /* Knight.swift */; };
+		E5D0F62C25863C03001DD29E /* Queen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658B23B7C2920042B527 /* Queen.swift */; };
+		E5D0F62D25863C03001DD29E /* King.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658823B7C28E0042B527 /* King.swift */; };
+		E5D0F63025863C07001DD29E /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
+		E5D0F63225863C07001DD29E /* PieceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656F23B7C0AA0042B527 /* PieceType.swift */; };
+		E5D0F63525863C07001DD29E /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7C23B50A4100A33411 /* Piece.swift */; };
+		E5D0F63725863C07001DD29E /* PieceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656F23B7C0AA0042B527 /* PieceType.swift */; };
+		E5D0F63A25863C1A001DD29E /* MovePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656C23B7C0700042B527 /* MovePattern.swift */; };
+		E5D0F63D25863C1B001DD29E /* MovePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656C23B7C0700042B527 /* MovePattern.swift */; };
+		E5D0F64025863C3F001DD29E /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657323B7C0EA0042B527 /* Cell.swift */; };
+		E5D0F64325863C3F001DD29E /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F657323B7C0EA0042B527 /* Cell.swift */; };
+		E5D0F64625863C73001DD29E /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAB667257C449B0054CBEE /* String+Ext.swift */; };
+		E5D0F64925863C73001DD29E /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AAB667257C449B0054CBEE /* String+Ext.swift */; };
+		E5D0F64C25863CC4001DD29E /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
+		E5D0F64F25863CC4001DD29E /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BE32BD23B5087A00EE526A /* Game.swift */; };
+		E5D0F65E25863D08001DD29E /* Side.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7A23B509D300A33411 /* Side.swift */; };
+		E5D0F66125863D08001DD29E /* Side.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C1FD7A23B509D300A33411 /* Side.swift */; };
+		E5D0F66D25863DF6001DD29E /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51CCF7923B649D600F57536 /* GameError.swift */; };
+		E5D0F67025863DF6001DD29E /* GameError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51CCF7923B649D600F57536 /* GameError.swift */; };
+		E5D0F67425863E16001DD29E /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D0F67325863E16001DD29E /* GameState.swift */; };
+		E5D0F67525863E16001DD29E /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D0F67325863E16001DD29E /* GameState.swift */; };
+		E5D0F68425863EC2001DD29E /* GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EE5DB523B62BCA0066C281 /* GameTests.swift */; };
+		E5D0F68A25863EEF001DD29E /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F656723B751520042B527 /* PlayerTests.swift */; };
+		E5D63DD625894DB700B7FA33 /* GameReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D92342486C90A0061DF92 /* GameReader.swift */; };
+		E5D63DD925894DB700B7FA33 /* GameReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51D92342486C90A0061DF92 /* GameReader.swift */; };
+		E5E171E4257D054C0026E55C /* Clamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658123B7C2450042B527 /* Clamping.swift */; };
+		E5E171E7257D054D0026E55C /* Clamping.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50F658123B7C2450042B527 /* Clamping.swift */; };
+		E5F10F98248915580073B2FF /* twic920.pgn in CopyFiles */ = {isa = PBXBuildFile; fileRef = E5B3DB9424883DB70094FE74 /* twic920.pgn */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E5B3DB99248845C80094FE74 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				E585B1BE248D6E5000CBD2B2 /* twic921.pgn in CopyFiles */,
+				E5F10F98248915580073B2FF /* twic920.pgn in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5BE32B023B5082F00EE526A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				E585B1BF248D6E5600CBD2B2 /* twic921.pgn in CopyFiles */,
+				E5B3DB97248840C60094FE74 /* twic920.pgn in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		E50F656723B751520042B527 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
+		E50F656923B7C0530042B527 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
+		E50F656C23B7C0700042B527 /* MovePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovePattern.swift; sourceTree = "<group>"; };
+		E50F656F23B7C0AA0042B527 /* PieceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceType.swift; sourceTree = "<group>"; };
+		E50F657323B7C0EA0042B527 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
+		E50F657623B7C1010042B527 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
+		E50F657923B7C1340042B527 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		E50F657C23B7C14C0042B527 /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
+		E50F658123B7C2450042B527 /* Clamping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clamping.swift; sourceTree = "<group>"; };
+		E50F658823B7C28E0042B527 /* King.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = King.swift; sourceTree = "<group>"; };
+		E50F658B23B7C2920042B527 /* Queen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queen.swift; sourceTree = "<group>"; };
+		E50F658E23B7C2970042B527 /* Bishop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bishop.swift; sourceTree = "<group>"; };
+		E50F659123B7C29C0042B527 /* Knight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Knight.swift; sourceTree = "<group>"; };
+		E50F659423B7C2A00042B527 /* Rook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rook.swift; sourceTree = "<group>"; };
+		E50F659723B7C2A50042B527 /* Pawn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pawn.swift; sourceTree = "<group>"; };
+		E51CCF7923B649D600F57536 /* GameError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameError.swift; sourceTree = "<group>"; };
+		E51D92342486C90A0061DF92 /* GameReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReader.swift; sourceTree = "<group>"; };
+		E551399C23B818E200FD1D01 /* MoveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTests.swift; sourceTree = "<group>"; };
+		E5609BAC259629A800A69144 /* BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTests.swift; sourceTree = "<group>"; };
+		E585B1BD248D6E4800CBD2B2 /* twic921.pgn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = twic921.pgn; sourceTree = "<group>"; };
+		E599248D257ECF2C00A446E9 /* CoordinateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateTests.swift; sourceTree = "<group>"; };
+		E5AAB667257C449B0054CBEE /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
+		E5B3DB9424883DB70094FE74 /* twic920.pgn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = twic920.pgn; sourceTree = "<group>"; };
+		E5BE32B223B5082F00EE526A /* Chess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chess; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5BE32B523B5082F00EE526A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		E5BE32BD23B5087A00EE526A /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		E5BE32BF23B5088200EE526A /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		E5BE32D123B5099F00EE526A /* ChessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5BE32D523B509A000EE526A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E5C1FD7A23B509D300A33411 /* Side.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Side.swift; sourceTree = "<group>"; };
+		E5C1FD7C23B50A4100A33411 /* Piece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
+		E5D0F67325863E16001DD29E /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		E5EE5DB123B53FE10066C281 /* Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
+		E5EE5DB523B62BCA0066C281 /* GameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTests.swift; sourceTree = "<group>"; };
+		E5F83AB123B8D930001366FE /* MoveComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveComponentTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E5BE32AF23B5082F00EE526A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5BE32CE23B5099F00EE526A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E50F657223B7C0D80042B527 /* Board */ = {
+			isa = PBXGroup;
+			children = (
+				E5BE32BF23B5088200EE526A /* Board.swift */,
+				E50F657323B7C0EA0042B527 /* Cell.swift */,
+				E50F657623B7C1010042B527 /* Coordinate.swift */,
+				E50F657923B7C1340042B527 /* File.swift */,
+				E50F657C23B7C14C0042B527 /* Rank.swift */,
+			);
+			path = Board;
+			sourceTree = "<group>";
+		};
+		E50F657F23B7C2320042B527 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				E5D0F66825863D39001DD29E /* Extensions */,
+				E50F658023B7C23A0042B527 /* PropertyWrappers */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		E50F658023B7C23A0042B527 /* PropertyWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				E50F658123B7C2450042B527 /* Clamping.swift */,
+			);
+			path = PropertyWrappers;
+			sourceTree = "<group>";
+		};
+		E50F658723B7C2860042B527 /* Pieces */ = {
+			isa = PBXGroup;
+			children = (
+				E50F658823B7C28E0042B527 /* King.swift */,
+				E50F658B23B7C2920042B527 /* Queen.swift */,
+				E50F658E23B7C2970042B527 /* Bishop.swift */,
+				E50F659123B7C29C0042B527 /* Knight.swift */,
+				E50F659423B7C2A00042B527 /* Rook.swift */,
+				E50F659723B7C2A50042B527 /* Pawn.swift */,
+			);
+			path = Pieces;
+			sourceTree = "<group>";
+		};
+		E51CCF7823B649C200F57536 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				E5C1FD7A23B509D300A33411 /* Side.swift */,
+				E5BE32BD23B5087A00EE526A /* Game.swift */,
+				E5D0F67325863E16001DD29E /* GameState.swift */,
+				E51CCF7923B649D600F57536 /* GameError.swift */,
+				E50F656923B7C0530042B527 /* Direction.swift */,
+				E50F656C23B7C0700042B527 /* MovePattern.swift */,
+				E5EE5DB123B53FE10066C281 /* Move.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		E51D92332486C8F10061DF92 /* GameReader */ = {
+			isa = PBXGroup;
+			children = (
+				E51D92342486C90A0061DF92 /* GameReader.swift */,
+			);
+			path = GameReader;
+			sourceTree = "<group>";
+		};
+		E5B3DB9324883BE30094FE74 /* PGNGames */ = {
+			isa = PBXGroup;
+			children = (
+				E5B3DB9424883DB70094FE74 /* twic920.pgn */,
+				E585B1BD248D6E4800CBD2B2 /* twic921.pgn */,
+			);
+			path = PGNGames;
+			sourceTree = "<group>";
+		};
+		E5BE32A923B5082F00EE526A = {
+			isa = PBXGroup;
+			children = (
+				E5BE32B423B5082F00EE526A /* Chess */,
+				E5BE32D223B5099F00EE526A /* ChessTests */,
+				E5BE32B323B5082F00EE526A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E5BE32B323B5082F00EE526A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E5BE32B223B5082F00EE526A /* Chess */,
+				E5BE32D123B5099F00EE526A /* ChessTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E5BE32B423B5082F00EE526A /* Chess */ = {
+			isa = PBXGroup;
+			children = (
+				E5B3DB9324883BE30094FE74 /* PGNGames */,
+				E51D92332486C8F10061DF92 /* GameReader */,
+				E5BE32BC23B5084D00EE526A /* Model */,
+				E5BE32B523B5082F00EE526A /* main.swift */,
+			);
+			path = Chess;
+			sourceTree = "<group>";
+		};
+		E5BE32BC23B5084D00EE526A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E50F657F23B7C2320042B527 /* Common */,
+				E50F657223B7C0D80042B527 /* Board */,
+				E51CCF7823B649C200F57536 /* Game */,
+				E5C1FD8023B50E1300A33411 /* Piece */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E5BE32D223B5099F00EE526A /* ChessTests */ = {
+			isa = PBXGroup;
+			children = (
+				E5EE5DB523B62BCA0066C281 /* GameTests.swift */,
+				E5609BAC259629A800A69144 /* BoardTests.swift */,
+				E50F656723B751520042B527 /* PlayerTests.swift */,
+				E5F83AB123B8D930001366FE /* MoveComponentTests.swift */,
+				E551399C23B818E200FD1D01 /* MoveTests.swift */,
+				E599248D257ECF2C00A446E9 /* CoordinateTests.swift */,
+				E5BE32D523B509A000EE526A /* Info.plist */,
+			);
+			path = ChessTests;
+			sourceTree = "<group>";
+		};
+		E5C1FD8023B50E1300A33411 /* Piece */ = {
+			isa = PBXGroup;
+			children = (
+				E50F658723B7C2860042B527 /* Pieces */,
+				E5C1FD7C23B50A4100A33411 /* Piece.swift */,
+				E50F656F23B7C0AA0042B527 /* PieceType.swift */,
+			);
+			path = Piece;
+			sourceTree = "<group>";
+		};
+		E5D0F66825863D39001DD29E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E5AAB667257C449B0054CBEE /* String+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E5BE32B123B5082F00EE526A /* Chess */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5BE32B923B5082F00EE526A /* Build configuration list for PBXNativeTarget "Chess" */;
+			buildPhases = (
+				E5D0F5E32586396C001DD29E /* SwiftLint */,
+				E5BE32AE23B5082F00EE526A /* Sources */,
+				E5BE32AF23B5082F00EE526A /* Frameworks */,
+				E5BE32B023B5082F00EE526A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Chess;
+			productName = Chess;
+			productReference = E5BE32B223B5082F00EE526A /* Chess */;
+			productType = "com.apple.product-type.tool";
+		};
+		E5BE32D023B5099F00EE526A /* ChessTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5BE32D623B509A000EE526A /* Build configuration list for PBXNativeTarget "ChessTests" */;
+			buildPhases = (
+				E5BE32CD23B5099F00EE526A /* Sources */,
+				E5BE32CE23B5099F00EE526A /* Frameworks */,
+				E5BE32CF23B5099F00EE526A /* Resources */,
+				E5B3DB99248845C80094FE74 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChessTests;
+			productName = ChessTests;
+			productReference = E5BE32D123B5099F00EE526A /* ChessTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E5BE32AA23B5082F00EE526A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1220;
+				ORGANIZATIONNAME = "Eirik Vale Aase";
+				TargetAttributes = {
+					E5BE32B123B5082F00EE526A = {
+						CreatedOnToolsVersion = 11.3;
+					};
+					E5BE32D023B5099F00EE526A = {
+						CreatedOnToolsVersion = 11.3;
+					};
+				};
+			};
+			buildConfigurationList = E5BE32AD23B5082F00EE526A /* Build configuration list for PBXProject "Chess" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E5BE32A923B5082F00EE526A;
+			productRefGroup = E5BE32B323B5082F00EE526A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E5BE32B123B5082F00EE526A /* Chess */,
+				E5BE32D023B5099F00EE526A /* ChessTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E5BE32CF23B5099F00EE526A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E5D0F5E32586396C001DD29E /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E5BE32AE23B5082F00EE526A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5D63DD925894DB700B7FA33 /* GameReader.swift in Sources */,
+				E5D0F65E25863D08001DD29E /* Side.swift in Sources */,
+				E5D0F61725863BFA001DD29E /* Move.swift in Sources */,
+				E5D0F5E625863A3F001DD29E /* Board.swift in Sources */,
+				E5D0F63725863C07001DD29E /* PieceType.swift in Sources */,
+				E5D0F5F225863A8A001DD29E /* File.swift in Sources */,
+				E5D0F64325863C3F001DD29E /* Cell.swift in Sources */,
+				E5BE32B623B5082F00EE526A /* main.swift in Sources */,
+				E5D0F62C25863C03001DD29E /* Queen.swift in Sources */,
+				E5D0F64625863C73001DD29E /* String+Ext.swift in Sources */,
+				E5D0F62B25863C03001DD29E /* Knight.swift in Sources */,
+				E5E171E4257D054C0026E55C /* Clamping.swift in Sources */,
+				E5D0F61D25863BFE001DD29E /* Direction.swift in Sources */,
+				E5D0F67425863E16001DD29E /* GameState.swift in Sources */,
+				E5D0F62D25863C03001DD29E /* King.swift in Sources */,
+				E5D0F62A25863C03001DD29E /* Bishop.swift in Sources */,
+				E5D0F63D25863C1B001DD29E /* MovePattern.swift in Sources */,
+				E5D0F62825863C03001DD29E /* Rook.swift in Sources */,
+				E5D0F67025863DF6001DD29E /* GameError.swift in Sources */,
+				E5D0F63525863C07001DD29E /* Piece.swift in Sources */,
+				E5D0F5EC25863A86001DD29E /* Coordinate.swift in Sources */,
+				E5D0F62925863C03001DD29E /* Pawn.swift in Sources */,
+				E5D0F5F825863A8C001DD29E /* Rank.swift in Sources */,
+				E5D0F64C25863CC4001DD29E /* Game.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5BE32CD23B5099F00EE526A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5D0F5FB25863A8D001DD29E /* Rank.swift in Sources */,
+				E5D0F62325863C03001DD29E /* Knight.swift in Sources */,
+				E5D0F67525863E16001DD29E /* GameState.swift in Sources */,
+				E5D0F62525863C03001DD29E /* King.swift in Sources */,
+				E5E171E7257D054D0026E55C /* Clamping.swift in Sources */,
+				E5D0F66125863D08001DD29E /* Side.swift in Sources */,
+				E5D0F68A25863EEF001DD29E /* PlayerTests.swift in Sources */,
+				E5D0F5F525863A8A001DD29E /* File.swift in Sources */,
+				E5D0F66D25863DF6001DD29E /* GameError.swift in Sources */,
+				E5D0F63225863C07001DD29E /* PieceType.swift in Sources */,
+				E5D0F61425863BF9001DD29E /* Move.swift in Sources */,
+				E5D0F64F25863CC4001DD29E /* Game.swift in Sources */,
+				E5D0F5EF25863A86001DD29E /* Coordinate.swift in Sources */,
+				E551399D23B818E200FD1D01 /* MoveTests.swift in Sources */,
+				E5D0F64025863C3F001DD29E /* Cell.swift in Sources */,
+				E5D0F62025863C03001DD29E /* Rook.swift in Sources */,
+				E5D0F63025863C07001DD29E /* Piece.swift in Sources */,
+				E5D0F62425863C03001DD29E /* Queen.swift in Sources */,
+				E5D0F5E925863A40001DD29E /* Board.swift in Sources */,
+				E5D0F64925863C73001DD29E /* String+Ext.swift in Sources */,
+				E5D0F68425863EC2001DD29E /* GameTests.swift in Sources */,
+				E5D63DD625894DB700B7FA33 /* GameReader.swift in Sources */,
+				E5D0F63A25863C1A001DD29E /* MovePattern.swift in Sources */,
+				E5D0F62225863C03001DD29E /* Bishop.swift in Sources */,
+				E599248E257ECF2C00A446E9 /* CoordinateTests.swift in Sources */,
+				E5D0F62125863C03001DD29E /* Pawn.swift in Sources */,
+				E5609BAD259629A800A69144 /* BoardTests.swift in Sources */,
+				E5D0F61A25863BFE001DD29E /* Direction.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E5BE32B723B5082F00EE526A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E5BE32B823B5082F00EE526A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		E5BE32BA23B5082F00EE526A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E5BE32BB23B5082F00EE526A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E5BE32D723B509A000EE526A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				INFOPLIST_FILE = ChessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = no.eirikvaleaase.ChessTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E5BE32D823B509A000EE526A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				INFOPLIST_FILE = ChessTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = no.eirikvaleaase.ChessTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E5BE32AD23B5082F00EE526A /* Build configuration list for PBXProject "Chess" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5BE32B723B5082F00EE526A /* Debug */,
+				E5BE32B823B5082F00EE526A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5BE32B923B5082F00EE526A /* Build configuration list for PBXNativeTarget "Chess" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5BE32BA23B5082F00EE526A /* Debug */,
+				E5BE32BB23B5082F00EE526A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5BE32D623B509A000EE526A /* Build configuration list for PBXNativeTarget "ChessTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5BE32D723B509A000EE526A /* Debug */,
+				E5BE32D823B509A000EE526A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E5BE32AA23B5082F00EE526A /* Project object */;
+}
