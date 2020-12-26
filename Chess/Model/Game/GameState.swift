@@ -14,9 +14,10 @@ import Foundation
  It is basically a function like board(move) -> board
  */
 struct GameState {
-    let board = Board()
-    var currentSide = Side.white
     var previousMove: Move?
+
+    private let board = Board()
+    private var currentSide = Side.white
 
     /**
      Execute a move and transition the game state to a new state.
@@ -43,6 +44,20 @@ struct GameState {
         }
 
         currentSide = currentSide.opposite
+    }
+
+    /**
+     Print the board in a nice way.
+     */
+    func printBoard() {
+        print(board)
+    }
+
+    /**
+     Print the prompt, i.e. the string before the place in which the user inputs the move.
+     */
+    func printPrompt() {
+        print("\(currentSide)>", terminator: "")
     }
 }
 
@@ -100,6 +115,10 @@ private extension GameState {
         }
     }
 
+    /**
+     Make sure that if we annotated the move with a complete or partial source coordinate, in order to disambiguate
+     a move, use that information here to filter out possible pieces.
+     */
     func pruneAmbiguity(move: Move, possibleSourcePieces: [Piece]) -> [Piece] {
         return possibleSourcePieces.filter {
             let coordinate = board.getCell(of: $0).coordinate
@@ -116,6 +135,13 @@ private extension GameState {
         }
     }
 
+    /**
+     Validate a bishop move.
+     - parameters:
+        - move: Move to be performed
+        - cell: Source cell
+     - returns: True if move is valid, false otherwise
+     */
     func validateBishopMove(move: Move, cell: Cell) -> Bool {
         guard let bishop = cell.piece as? Bishop else {
             return false
@@ -139,6 +165,13 @@ private extension GameState {
         }.count == 1
     }
 
+    /**
+     Validate a queen move.
+     - parameters:
+        - move: Move to be performed
+        - cell: Source cell
+     - returns: True if move is valid, false otherwise
+     */
     func validateQueenMove(move: Move, cell: Cell) -> Bool {
         guard let queen = cell.piece as? Queen else {
             return false
@@ -162,6 +195,13 @@ private extension GameState {
         }.count == 1
     }
 
+    /**
+     Validate a rook move.
+     - parameters:
+        - move: Move to be performed
+        - cell: Source cell
+     - returns: True if move is valid, false otherwise
+     */
     func validateRookMove(move: Move, cell: Cell) -> Bool {
         guard let rook = cell.piece as? Rook else {
             return false
@@ -185,6 +225,10 @@ private extension GameState {
         }.count == 1
     }
 
+    /**
+     Handle a castling move.
+     - parameter move: Move to be performed
+     */
     func handleCastling(move: Move) {
         let oldKingCoordinate: Coordinate
         let oldRookCoordinate: Coordinate
@@ -209,6 +253,13 @@ private extension GameState {
         board[oldRookCoordinate].piece = nil
     }
 
+    /**
+     Validate pawn move
+     - parameters:
+        - move: Move to be performed
+        - cell: Source cell
+     - returns: True if move is valid, false otherwise
+     */
     func validatePawnMove(move: Move, cell: Cell) -> Bool {
         guard let pawn = cell.piece as? Pawn else {
             return false
@@ -245,6 +296,13 @@ private extension GameState {
         }.count == 1
     }
 
+    /**
+     Validate if the move is an en passant.
+     - parameters:
+        - piece: Piece to move
+        - move: Move to be performed
+     - returns: True if the move is a valid en passant, false otherwise
+     */
     func isMoveEnPassant(piece: Piece, move: Move) -> Bool {
         // If the previous move was made by a pawn that moved double side-by-side with this pawn
         // that captures towards a cell that has
@@ -279,6 +337,13 @@ private extension GameState {
         return true
     }
 
+    /**
+     Validate a knight move.
+     - parameters:
+        - move: Move to be performed
+        - cell: Source cell
+     - returns: True if move is valid, false otherwise
+     */
     func validateKnightMove(move: Move, cell: Cell) -> Bool {
         guard let piece = cell.piece else {
             return false
@@ -308,6 +373,13 @@ private extension GameState {
         }.count == 1
     }
 
+    /**
+     Validate a king move.
+     - parameters:
+        - move: Move to be performed
+        - cell: Source cell
+     - returns: True if move is valid, false otherwise
+     */
     func validateKingMove(move: Move, cell: Cell) -> Bool {
         guard let piece = cell.piece else {
             return false

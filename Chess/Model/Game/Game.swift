@@ -19,10 +19,10 @@ class Game {
      Start a new game. Will throw if moves are invalid.
      */
     func play() throws {
-        print(gameState.board)
+        gameState.printBoard()
 
         while true {
-            print("\(gameState.currentSide)> ", terminator: "")
+            gameState.printPrompt()
 
             guard let userInput = readLine(strippingNewline: true) else {
                 continue
@@ -45,7 +45,7 @@ class Game {
                 print("The move \(userInput) was ambiguous, meaning two or more pieces can move to the same cell. Try again.")
                 continue
             } catch GameState.GameStateError.cannotMovePieceOfOppositeSide {
-                print("\(gameState.currentSide) cannot move pieces of the opposite side. Try again")
+                print("The move \(userInput) cannot move pieces of the opposite side. Try again")
             } catch GameState.GameStateError.mustMarkCaptureInMove {
                 print("Tried to capture, but did not note it in the move \(userInput)")
                 continue
@@ -54,7 +54,7 @@ class Game {
                 continue
             }
 
-            print(gameState.board)
+            gameState.printBoard()
         }
     }
 
