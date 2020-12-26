@@ -8,7 +8,7 @@
 
 import XCTest
 
-class Game2Tests: XCTestCase {
+class GameTests: XCTestCase {
     func testPawnMoveToE4() throws {
         assertMoves("e4", throws: .noThrow)
     }
@@ -117,7 +117,7 @@ class Game2Tests: XCTestCase {
     }
 }
 
-private extension Game2Tests {
+private extension GameTests {
     enum Throw {
         case doThrow
         case noThrow
