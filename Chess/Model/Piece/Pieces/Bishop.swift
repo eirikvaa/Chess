@@ -15,7 +15,7 @@ class Bishop: Piece {
     }
     let type: PieceType = .bishop
     let side: Side
-    var hasMoved: Bool = false
+    var hasMoved = false
     let canMoveOverOtherPieces = false
     let movePatterns: [MovePattern] = [
         .continuous(.northWest),

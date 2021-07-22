@@ -15,7 +15,7 @@ class King: Piece {
     }
     let type: PieceType = .king
     let side: Side
-    var hasMoved: Bool = false
+    var hasMoved = false
     let canMoveOverOtherPieces = false
     let movePatterns: [MovePattern] = [
         .single(.north),

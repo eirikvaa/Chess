@@ -15,7 +15,7 @@ class Knight: Piece {
     }
     let type: PieceType = .knight
     let side: Side
-    var hasMoved: Bool = false
+    var hasMoved = false
     let canMoveOverOtherPieces = true
     var movePatterns: [MovePattern] = [
         .shape(.north, .north, .west),

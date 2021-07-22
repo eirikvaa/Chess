@@ -21,7 +21,7 @@ class Pawn: Piece, Identifiable {
     }
     let type: PieceType = .pawn
     let side: Side
-    var hasMoved: Bool = false
+    var hasMoved = false
     let canMoveOverOtherPieces = false
     var movePatterns: [MovePattern] {
         switch (hasMoved, side) {

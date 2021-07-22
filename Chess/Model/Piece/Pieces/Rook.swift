@@ -15,7 +15,7 @@ class Rook: Piece {
     }
     let type: PieceType = .rook
     let side: Side
-    var hasMoved: Bool = false
+    var hasMoved = false
     let canMoveOverOtherPieces = false
     let movePatterns: [MovePattern] = [
         .continuous(.north),

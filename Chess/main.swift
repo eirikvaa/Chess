@@ -21,6 +21,5 @@ for (index, game) in games[27...].enumerated() {
     } catch let error as GameState.GameStateError {
         print(error)
         print(game)
-        break
     }
 }
