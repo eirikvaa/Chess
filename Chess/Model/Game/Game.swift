@@ -33,7 +33,7 @@ class Game {
                 try gameState.executeMove(move: &move)
                 gameState.previousMove = move
             } catch Move.MoveValidationError.wrongMoveFormat {
-                print("The user entered \(userInput), which is a move in the wrong format. Try agai..")
+                print("The user entered \(userInput), which is a move in the wrong format. Try again.")
                 continue
             } catch GameState.GameStateError.illegalMove(let message) {
                 print("\(userInput) is an illegal move: \(message) Try again.")
