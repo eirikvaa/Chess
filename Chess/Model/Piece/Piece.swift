@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- A piece on the board.
- */
+/// A piece on the board.
 protocol Piece: AnyObject {
     /// An ID for the piece. Only used to locate pieces on the board.
     var id: UUID { get }

@@ -6,9 +6,8 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-/**
- A coordinate that can take any of the coordinate combination in the set ["a", "b", "c", "d", "e", "f", "g", "h"] X 1...8.
- */
+/// A coordinate that can take any of the coordinate combination
+/// in the set ["a", "b", "c", "d", "e", "f", "g", "h"] X 1...8.
 struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
     enum CoordinateValidationError: Error {
         case invalidFile
@@ -55,11 +54,9 @@ struct Coordinate: Equatable, CustomStringConvertible, ExpressibleByStringLitera
         "\(file ?? "")\(rank ?? 0)"
     }
 
-    /**
-     Apply a direction to a given coordinate and produce a new coordinate.
-     - Parameters direction: The direction to apply
-     - Returns: A new coordinate
-     */
+    /// Apply a direction to a given coordinate and produce a new coordinate.
+    /// - parameters direction: The direction to apply
+    /// - returns: A new coordinate
     func applyDirection(_ direction: Direction) -> Coordinate? {
         var tmpFile: File? = self.file
         var tmpRank: Rank? = self.rank

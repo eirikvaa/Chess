@@ -8,10 +8,8 @@
 
 import Foundation
 
-/**
- A file is a (vertical) column as seen from white's perspective.
- Goes from "a" to "h" from left to right.
- */
+/// A file is a (vertical) column as seen from white's perspective.
+/// Goes from "a" to "h" from left to right.
 struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
     let value: String
     static var validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
@@ -50,7 +48,7 @@ struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
         }
 
         let newIndex = lhsIndex + deltaX
-        guard 0..<validFiles.count ~= newIndex else {
+        guard 0 ..< validFiles.count ~= newIndex else {
             return nil
         }
 

@@ -8,22 +8,18 @@
 
 import Foundation
 
-/**
- Maintains the game state for a given game.
- Is responsible for always maintaing a valid game state given a move.
- It is basically a function like board(move) -> board
- */
+/// Maintains the game state for a given game.
+/// Is responsible for always maintaing a valid game state given a move.
+/// It is basically a function like board(move) -> board
 struct GameState {
     var previousMove: Move?
 
     private let board = Board()
     private var currentSide = Side.white
 
-    /**
-     Execute a move and transition the game state to a new state.
-     This method can throw by a variety of reasons, see `GameStateError`.
-     - Parameters move: The move to execute
-     */
+    /// Execute a move and transition the game state to a new state.
+    /// This method can throw by a variety of reasons, see `GameStateError`.
+    /// - parameters move: The move to execute
     mutating func executeMove(move: inout Move) throws {
         if move.isCastling {
             handleCastling(move: move)
@@ -46,27 +42,21 @@ struct GameState {
         currentSide = currentSide.opposite
     }
 
-    /**
-     Print the board in a nice way.
-     */
+    /// Print the board in a nice way.
     func printBoard() {
         print(board)
     }
 
-    /**
-     Print the prompt, i.e. the string before the place in which the user inputs the move.
-     */
+    /// Print the prompt, i.e. the string before the place in which the user inputs the move.
     func printPrompt() {
         print("\(currentSide)>", terminator: "")
     }
 }
 
 private extension GameState {
-    /**
-     When the source coordinate of a piece is not immediately given, we must locate the source cell.
-     This method should only return a single piece. If there are none, something's wrong. If there are multiple,
-     something's wrong or the move is ambiguous.
-     */
+    /// When the source coordinate of a piece is not immediately given, we must locate the source cell.
+    /// This method should only return a single piece. If there are none, something's wrong. If there are multiple,
+    /// something's wrong or the move is ambiguous.
     func getSourcePiece(move: Move) throws -> Piece {
         let possibleSourceCells = board.getAllPieces(
             of: move.pieceType,
@@ -115,10 +105,8 @@ private extension GameState {
         }
     }
 
-    /**
-     Make sure that if we annotated the move with a complete or partial source coordinate, in order to disambiguate
-     a move, use that information here to filter out possible pieces.
-     */
+    /// Make sure that if we annotated the move with a complete or partial source coordinate, in order to disambiguate
+    /// a move, use that information here to filter out possible pieces.
     func pruneAmbiguity(move: Move, possibleSourcePieces: [Piece]) -> [Piece] {
         return possibleSourcePieces.filter {
             let coordinate = board.getCell(of: $0).coordinate
@@ -135,13 +123,11 @@ private extension GameState {
         }
     }
 
-    /**
-     Validate a bishop move.
-     - parameters:
-        - move: Move to be performed
-        - cell: Source cell
-     - returns: True if move is valid, false otherwise
-     */
+    /// Validate a bishop move.
+    /// - parameters:
+    ///  - move: Move to be performed
+    ///  - cell: Source cell
+    /// - returns: True if move is valid, false otherwise
     func validateBishopMove(move: Move, cell: Cell) -> Bool {
         guard let bishop = cell.piece as? Bishop else {
             return false
@@ -165,13 +151,11 @@ private extension GameState {
         }.count == 1
     }
 
-    /**
-     Validate a queen move.
-     - parameters:
-        - move: Move to be performed
-        - cell: Source cell
-     - returns: True if move is valid, false otherwise
-     */
+    /// Validate a queen move.
+    /// - parameters:
+    ///  - move: Move to be performed
+    ///  - cell: Source cell
+    /// - returns: True if move is valid, false otherwise
     func validateQueenMove(move: Move, cell: Cell) -> Bool {
         guard let queen = cell.piece as? Queen else {
             return false
@@ -195,13 +179,11 @@ private extension GameState {
         }.count == 1
     }
 
-    /**
-     Validate a rook move.
-     - parameters:
-        - move: Move to be performed
-        - cell: Source cell
-     - returns: True if move is valid, false otherwise
-     */
+    /// Validate a rook move.
+    /// - parameters:
+    ///  - move: Move to be performed
+    ///  - cell: Source cell
+    /// - returns: True if move is valid, false otherwise
     func validateRookMove(move: Move, cell: Cell) -> Bool {
         guard let rook = cell.piece as? Rook else {
             return false
@@ -225,10 +207,8 @@ private extension GameState {
         }.count == 1
     }
 
-    /**
-     Handle a castling move.
-     - parameter move: Move to be performed
-     */
+    /// Handle a castling move.
+    /// - parameter move: Move to be performed
     func handleCastling(move: Move) {
         let oldKingCoordinate: Coordinate
         let oldRookCoordinate: Coordinate
@@ -253,13 +233,11 @@ private extension GameState {
         board[oldRookCoordinate].piece = nil
     }
 
-    /**
-     Validate pawn move
-     - parameters:
-        - move: Move to be performed
-        - cell: Source cell
-     - returns: True if move is valid, false otherwise
-     */
+    /// Validate pawn move
+    /// - parameters:
+    ///  - move: Move to be performed
+    ///  - cell: Source cell
+    /// - returns: True if move is valid, false otherwise
     func validatePawnMove(move: Move, cell: Cell) -> Bool {
         guard let pawn = cell.piece as? Pawn else {
             return false
@@ -276,13 +254,13 @@ private extension GameState {
 
             switch $0 {
             case .single(let direction):
-                if move.isCapture && pawn.validCaptureDirections.contains(direction) {
+                if move.isCapture, pawn.validCaptureDirections.contains(direction) {
                     if destinationPiece != nil {
                         return true
                     } else {
                         return isMoveEnPassant(piece: pawn, move: move)
                     }
-                } else if !move.isCapture && allEmpty && pawn.validNonCaptureDirections.contains(direction) {
+                } else if !move.isCapture, allEmpty, pawn.validNonCaptureDirections.contains(direction) {
                     return true
                 } else {
                     return false
@@ -296,17 +274,15 @@ private extension GameState {
         }.count == 1
     }
 
-    /**
-     Validate if the move is an en passant.
-     - parameters:
-        - piece: Piece to move
-        - move: Move to be performed
-     - returns: True if the move is a valid en passant, false otherwise
-     */
+    /// Validate if the move is an en passant.
+    /// - parameters:
+    ///  - piece: Piece to move
+    ///  - move: Move to be performed
+    /// - returns: True if the move is a valid en passant, false otherwise
     func isMoveEnPassant(piece: Piece, move: Move) -> Bool {
         // If the previous move was made by a pawn that moved double side-by-side with this pawn
         // that captures towards a cell that has
-        guard let previousMove = self.previousMove, previousMove.pieceType == .pawn else {
+        guard let previousMove = previousMove, previousMove.pieceType == .pawn else {
             return false
         }
 
@@ -337,13 +313,11 @@ private extension GameState {
         return true
     }
 
-    /**
-     Validate a knight move.
-     - parameters:
-        - move: Move to be performed
-        - cell: Source cell
-     - returns: True if move is valid, false otherwise
-     */
+    /// Validate a knight move.
+    /// - parameters:
+    ///  - move: Move to be performed
+    ///  - cell: Source cell
+    /// - returns: True if move is valid, false otherwise
     func validateKnightMove(move: Move, cell: Cell) -> Bool {
         guard let piece = cell.piece else {
             return false
@@ -351,9 +325,9 @@ private extension GameState {
 
         return piece.movePatterns.filter {
             guard let lastCoordinate = board.getCoordinates(
-                    from: cell.coordinate,
-                    to: move.destination,
-                    given: $0
+                from: cell.coordinate,
+                to: move.destination,
+                given: $0
             ).last, lastCoordinate == move.destination else {
                 return false
             }
@@ -373,13 +347,11 @@ private extension GameState {
         }.count == 1
     }
 
-    /**
-     Validate a king move.
-     - parameters:
-        - move: Move to be performed
-        - cell: Source cell
-     - returns: True if move is valid, false otherwise
-     */
+    /// Validate a king move.
+    /// - parameters:
+    ///  - move: Move to be performed
+    ///  - cell: Source cell
+    /// - returns: True if move is valid, false otherwise
     func validateKingMove(move: Move, cell: Cell) -> Bool {
         guard let piece = cell.piece else {
             return false
@@ -389,9 +361,9 @@ private extension GameState {
             switch $0 {
             case .single:
                 guard let lastCoordinate = board.getCoordinates(
-                        from: cell.coordinate,
-                        to: move.destination,
-                        given: $0
+                    from: cell.coordinate,
+                    to: move.destination,
+                    given: $0
                 ).last else {
                     return false
                 }

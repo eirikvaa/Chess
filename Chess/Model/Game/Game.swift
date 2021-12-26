@@ -8,16 +8,12 @@
 
 import Foundation
 
-/**
- Represents the game flow. All validation and execution to moves are delegated to
- the appropriate classes.
- */
+/// Represents the game flow. All validation and execution to moves are delegated to
+/// the appropriate classes.
 class Game {
     private var gameState = GameState()
 
-    /**
-     Start a new game. Will throw if moves are invalid.
-     */
+    /// Start a new game. Will throw if moves are invalid.
     func play() throws {
         gameState.printBoard()
 
@@ -35,7 +31,7 @@ class Game {
             } catch Move.MoveValidationError.wrongMoveFormat {
                 print("The user entered \(userInput), which is a move in the wrong format. Try again.")
                 continue
-            } catch GameState.GameStateError.illegalMove(let message) {
+            } catch let GameState.GameStateError.illegalMove(message) {
                 print("\(userInput) is an illegal move: \(message) Try again.")
                 continue
             } catch GameState.GameStateError.noValidSourcePieces {
@@ -58,10 +54,8 @@ class Game {
         }
     }
 
-    /**
-     Apply a list of moves to advance the board to a certain state.
-     - Parameter moves: The list of moves to apply
-     */
+    /// Apply a list of moves to advance the board to a certain state.
+    /// - parameter moves: The list of moves to apply
     func applyMoves(_ moves: [String]) throws {
         let interpretedMoves = try moves.map {
             try Move(rawMove: $0)

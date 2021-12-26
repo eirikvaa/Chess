@@ -8,12 +8,9 @@
 
 import Foundation
 
-/**
- Pawns are the least valuable pieces on the board. Their move patterns depend on the state
- at which they are in, specifically if they have moved or not from before. If they have not moved yet,
- they can move ahead two cells. If not, they can only move one cell.
- */
-
+/// Pawns are the least valuable pieces on the board. Their move patterns depend on the state
+/// at which they are in, specifically if they have moved or not from before. If they have not moved yet,
+/// they can move ahead two cells. If not, they can only move one cell.
 class Pawn: Piece, Identifiable {
     let id = UUID()
     var content: String {

@@ -8,10 +8,8 @@
 
 import Foundation
 
-/**
- A move that can be applied to a piece.
- The initializer validates the move and throws if it's not legal based on the regex.
- */
+/// A move that can be applied to a piece.
+/// The initializer validates the move and throws if it's not legal based on the regex.
 class Move: CustomStringConvertible {
     enum MoveValidationError: Error {
         case wrongMoveFormat

@@ -8,10 +8,8 @@
 
 import Foundation
 
-/**
- A rank is a row as seen from white's perspective.
- Goes from 1 to 8 from nearest to farthest.
- */
+/// A rank is a row as seen from white's perspective.
+/// Goes from 1 to 8 from nearest to farthest.
 struct Rank: Equatable, CustomStringConvertible, ExpressibleByIntegerLiteral {
     let value: Int
 

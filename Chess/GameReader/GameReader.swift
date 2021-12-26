@@ -28,22 +28,20 @@ struct PGNGameReader: GameReader {
         return moves
     }
 
-    /**
-     Read in a single PGN file. For instance, the files from This Week In Chess (twic)
-     may contain over 2000 games. Read in one of these files and return a list of list of
-     strings.
-     
-     The PGN files are on the following format:
-     [ meta information ]
-     [ meta information ]
-     ...
-     [ meta information ]
-     
-     1. e4 d6 2. ...
-     
-     [ meta information ]
-     ...
-     */
+    /// Read in a single PGN file. For instance, the files from This Week In Chess (twic)
+    /// may contain over 2000 games. Read in one of these files and return a list of list of
+    /// strings.
+    ///
+    /// The PGN files are on the following format:
+    /// [ meta information ]
+    /// [ meta information ]
+    /// ...
+    /// [ meta information ]
+    ///
+    /// 1. e4 d6 2. ...
+    ///
+    /// [ meta information ]
+    /// ...
     static func readFile(_ file: String) throws -> [String] {
         // Hack to get around the resource files not being correctly
         // copied to the main bundle of the test target. We have to look inside

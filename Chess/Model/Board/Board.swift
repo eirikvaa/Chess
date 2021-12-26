@@ -8,16 +8,14 @@
 
 import Foundation
 
-/**
- Representation of the board. Has the responsibility of allowing others to query the board for cells and pieces.
- It does not modify itself in any way because that is the responsibility of whoever entity uses this class.
- */
+/// Representation of the board. Has the responsibility of allowing others to query the board for cells and pieces.
+/// It does not modify itself in any way because that is the responsibility of whoever entity uses this class.
 class Board: CustomStringConvertible {
     private let cells: [[Cell]]
 
     init() {
         let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
-        let ranks = 1...8
+        let ranks = 1 ... 8
 
         var matrix: [[Cell]] = []
         ranks.forEach { rank in
@@ -73,19 +71,15 @@ class Board: CustomStringConvertible {
         self.cells = matrix
     }
 
-    /**
-     Get the cell from a pair of file and rank.
-     */
-    // TODO: Delete
+    /// Get the cell from a pair of file and rank.
+    /// TODO: Delete
     subscript(file: File, rank: Rank) -> Cell {
         return flattenedBoard().first { cell -> Bool in
             cell.coordinate.file == file && cell.coordinate.rank == rank
         }!
     }
 
-    /**
-     Get the cell from a coordinate.
-     */
+    /// Get the cell from a coordinate.
     subscript(coordinate: Coordinate) -> Cell {
         self[coordinate.file!, coordinate.rank!]
     }
@@ -151,13 +145,11 @@ class Board: CustomStringConvertible {
         }
     }
 
-    /**
-     Get all pieces of a given piece type and from a given side.
-     - Parameters:
-        - type: The piece type
-        - side: The side, either white or black
-     - Returns: A list of cells at which the pieces where found
-     */
+    /// Get all pieces of a given piece type and from a given side.
+    /// - parameters:
+    ///    - type: The piece type
+    ///    - side: The side, either white or black
+    /// - returns: A list of cells at which the pieces where found
     func getAllPieces(of type: PieceType, side: Side, sourceCoordinate: Coordinate) -> [Cell] {
         let cells = flattenedBoard().filter {
             $0.piece?.type == type && $0.piece?.side == side
@@ -172,13 +164,11 @@ class Board: CustomStringConvertible {
         }
     }
 
-    /**
-     Get the cell of a given piece
-     Returns a non-optional because we _must_ find the cell for which a piece resides.
-     If the piece does not have a cell, it is not on the board, i.e. it must have a cell.
-     - Parameter piece: The piece for which we want to find a cell.
-     - Returns: The cell at which the piece resides.
-     */
+    /// Get the cell of a given piece
+    /// Returns a non-optional because we _must_ find the cell for which a piece resides.
+    /// If the piece does not have a cell, it is not on the board, i.e. it must have a cell.
+    /// - parameter piece: The piece for which we want to find a cell.
+    /// - returns: The cell at which the piece resides.
     func getCell(of piece: Piece) -> Cell {
         return flattenedBoard().first(where: {
             $0.piece?.id == piece.id && $0.piece?.type == piece.type

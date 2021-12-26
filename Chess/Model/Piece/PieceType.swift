@@ -8,9 +8,7 @@
 
 import Foundation
 
-/**
- The type of the piece.
- */
+/// The type of the piece.
 enum PieceType {
     case pawn
     case bishop

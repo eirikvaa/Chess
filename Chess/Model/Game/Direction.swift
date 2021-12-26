@@ -6,10 +6,8 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-/**
- Directions as seen from the perspective of the white player (towards the black player).
- Avoid adding north-west, et cetera, as those can be composed from these four.
- */
+/// Directions as seen from the perspective of the white player (towards the black player).
+/// Avoid adding north-west, et cetera, as those can be composed from these four.
 enum Direction: CustomStringConvertible {
     case north
     case northWest

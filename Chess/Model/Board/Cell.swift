@@ -6,9 +6,7 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-/**
- Represents a cell in the chess board.
- */
+/// Represents a cell in the chess board.
 class Cell: CustomStringConvertible {
     /// The coordinate of the cell. Cannot be changed, only read.
     let coordinate: Coordinate
