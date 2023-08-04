@@ -34,10 +34,18 @@ class Game {
                 print("\(userInput) is an illegal move: \(message) Try again.")
                 continue
             } catch GameState.GameStateError.noValidSourcePieces {
-                print("There are no valid source pieces that can move to the destination specified by the move \(userInput), try again.")
+                let message = """
+                    There are no valid source pieces that can move to the destination specified by
+                    the move \(userInput). Try again.
+                """
+                print(message)
                 continue
             } catch GameState.GameStateError.ambiguousMove {
-                print("The move \(userInput) was ambiguous, meaning two or more pieces can move to the same cell. Try again.")
+                let message = """
+                    The move \(userInput) was ambiguous, meaning two or more pieces can
+                    move to the same cell. Try again.
+                """
+                print(message)
                 continue
             } catch GameState.GameStateError.cannotMovePieceOfOppositeSide {
                 print("The move \(userInput) cannot move pieces of the opposite side. Try again")

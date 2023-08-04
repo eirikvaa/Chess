@@ -87,7 +87,11 @@ class Board: CustomStringConvertible {
         self[coordinate].piece == nil
     }
 
-    func getCoordinates(from sourceCoordinate: Coordinate, to destinationCoordinate: Coordinate, given pattern: MovePattern) -> [Coordinate] {
+    func getCoordinates(
+        from sourceCoordinate: Coordinate,
+        to destinationCoordinate: Coordinate,
+        given pattern: MovePattern
+    ) -> [Coordinate] {
         switch pattern {
         case let .single(direction):
             guard let firstC = sourceCoordinate.applyDirection(direction) else {
