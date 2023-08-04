@@ -3,7 +3,6 @@
 //  ChessTests
 //
 //  Created by Eirik Vale Aase on 25/12/2020.
-//  Copyright © 2020 Eirik Vale Aase. All rights reserved.
 //
 
 import XCTest

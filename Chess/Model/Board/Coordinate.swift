@@ -3,7 +3,6 @@
 //  Chess
 //
 //  Created by Eirik Vale Aase on 28/12/2019.
-//  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
 /// A coordinate that can take any of the coordinate combination
