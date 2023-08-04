@@ -19,7 +19,6 @@ class Cell: CustomStringConvertible {
     }
 
     var description: String {
-        // TODO: Print piece also
         String(describing: coordinate)
     }
 }

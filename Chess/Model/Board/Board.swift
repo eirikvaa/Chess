@@ -73,7 +73,6 @@ class Board: CustomStringConvertible {
     // swiftlint:enable cyclomatic_complexity
 
     /// Get the cell from a pair of file and rank.
-    /// TODO: Delete
     subscript(file: File, rank: Rank) -> Cell {
         return flattenedBoard().first { cell -> Bool in
             cell.coordinate.file == file && cell.coordinate.rank == rank

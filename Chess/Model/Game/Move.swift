@@ -46,8 +46,6 @@ class Move: CustomStringConvertible {
     var isEnPassant = false
 
     // swiftlint:disable cyclomatic_complexity function_body_length
-    /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
-    /// and boards converge to something meaningful.
     init(rawMove: String) throws {
         let rawMove = rawMove.trimmingCharacters(in: .whitespacesAndNewlines)
         self.rawMove = rawMove
