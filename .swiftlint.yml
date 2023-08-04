@@ -74,6 +74,9 @@ opt_in_rules:
   - xct_specific_matcher
   - yoda_condition
 
+disabled_rules:
+  - switch_case_alignment
+
 identifier_name:
   excluded:
     - id
