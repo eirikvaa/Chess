@@ -69,7 +69,7 @@ class MoveTests: XCTestCase {
 
         XCTAssertEqual(move.pieceType, .rook)
         XCTAssertEqual(move.source.rank, 1)
-        XCTAssertEqual(move.isCapture, true)
+        XCTAssertTrue(move.isCapture)
         XCTAssertEqual(move.destination, "a7")
     }
 }
