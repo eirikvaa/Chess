@@ -73,13 +73,13 @@ private extension GameState {
                 return false
             }
 
-            switch piece.type {
-            case .pawn: return validatePawnMove(move: move, cell: $0)
-            case .knight: return validateKnightMove(move: move, cell: $0)
-            case .king: return validateKingMove(move: move, cell: $0)
-            case .rook: return validateRookMove(move: move, cell: $0)
-            case .queen: return validateQueenMove(move: move, cell: $0)
-            case .bishop: return validateBishopMove(move: move, cell: $0)
+            return switch piece.type {
+            case .pawn: validatePawnMove(move: move, cell: $0)
+            case .knight: validateKnightMove(move: move, cell: $0)
+            case .king: validateKingMove(move: move, cell: $0)
+            case .rook: validateRookMove(move: move, cell: $0)
+            case .queen: validateQueenMove(move: move, cell: $0)
+            case .bishop: validateBishopMove(move: move, cell: $0)
             }
         }.compactMap { $0.piece }
 

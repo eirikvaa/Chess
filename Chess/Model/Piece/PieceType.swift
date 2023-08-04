@@ -18,13 +18,13 @@ enum PieceType {
     case king
 
     init(rawPiece: String) {
-        switch rawPiece {
-        case "B": self = .bishop
-        case "N": self = .knight
-        case "R": self = .rook
-        case "Q": self = .queen
-        case "K": self = .king
-        default: self = .pawn
+        self = switch rawPiece {
+        case "B": .bishop
+        case "N": .knight
+        case "R": .rook
+        case "Q": .queen
+        case "K": .king
+        default: .pawn
         }
     }
 }

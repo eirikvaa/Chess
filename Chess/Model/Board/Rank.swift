@@ -26,15 +26,14 @@ struct Rank: Equatable, CustomStringConvertible, ExpressibleByIntegerLiteral {
     }
 
     static func + (lhs: Rank, rhs: Direction) -> Rank? {
-        let deltaY: Int
-        switch rhs {
+        let deltaY = switch rhs {
         case .north,
              .northWest,
-             .northEast: deltaY = 1
+             .northEast: 1
         case .south,
              .southWest,
-             .southEast: deltaY = -1
-        default: deltaY = 0
+             .southEast: -1
+        default: 0
         }
 
         let newIndex = lhs.value + deltaY

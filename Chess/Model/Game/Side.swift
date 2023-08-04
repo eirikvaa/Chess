@@ -14,8 +14,8 @@ enum Side: Equatable {
     /// Get the opposite side
     var opposite: Side {
         switch self {
-        case .white: return .black
-        case .black: return .white
+        case .white: .black
+        case .black: .white
         }
     }
 
@@ -23,9 +23,9 @@ enum Side: Equatable {
         switch (lhs, rhs) {
         case (.white, .white),
              (.black, .black):
-            return true
+            true
         default:
-            return false
+            false
         }
     }
 }

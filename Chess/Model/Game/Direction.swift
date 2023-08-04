@@ -20,14 +20,14 @@ enum Direction: CustomStringConvertible {
 
     var description: String {
         switch self {
-        case .north: return "N"
-        case .northWest: return "NW"
-        case .northEast: return "NE"
-        case .east: return "E"
-        case .south: return "S"
-        case .southWest: return "SW"
-        case .southEast: return "SE"
-        case .west: return "W"
+        case .north: "N"
+        case .northWest: "NW"
+        case .northEast: "NE"
+        case .east: "E"
+        case .south: "S"
+        case .southWest: "SW"
+        case .southEast: "SE"
+        case .west: "W"
         }
     }
 }
