@@ -53,6 +53,7 @@ struct GameState {
 }
 
 private extension GameState {
+    // swiftlint:disable cyclomatic_complexity
     /// When the source coordinate of a piece is not immediately given, we must locate the source cell.
     /// This method should only return a single piece. If there are none, something's wrong. If there are multiple,
     /// something's wrong or the move is ambiguous.
@@ -103,6 +104,7 @@ private extension GameState {
         default: fatalError("We only fail because the compiler don't understand that it's actually exhaustive.")
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 
     /// Make sure that if we annotated the move with a complete or partial source coordinate, in order to disambiguate
     /// a move, use that information here to filter out possible pieces.

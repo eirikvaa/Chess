@@ -45,6 +45,7 @@ class Move: CustomStringConvertible {
     /// a double move and is side-by-side with the first pawn.
     var isEnPassant = false
 
+    // swiftlint:disable cyclomatic_complexity function_body_length
     /// TODO: This initializer only supports a subset of possible moves. Expand when API for pieces
     /// and boards converge to something meaningful.
     init(rawMove: String) throws {
@@ -123,6 +124,7 @@ class Move: CustomStringConvertible {
             self.source = Coordinate(file: nil, rank: nil)
         }
     }
+    // swiftlint:enable cyclomatic_complexity function_body_length
 
     var description: String {
         rawMove

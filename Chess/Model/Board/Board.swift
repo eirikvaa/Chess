@@ -12,6 +12,7 @@ import Foundation
 class Board: CustomStringConvertible {
     private let cells: [[Cell]]
 
+    // swiftlint:disable cyclomatic_complexity
     init() {
         let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
         let ranks = 1 ... 8
@@ -69,6 +70,7 @@ class Board: CustomStringConvertible {
 
         self.cells = matrix
     }
+    // swiftlint:enable cyclomatic_complexity
 
     /// Get the cell from a pair of file and rank.
     /// TODO: Delete
@@ -87,6 +89,7 @@ class Board: CustomStringConvertible {
         self[coordinate].piece == nil
     }
 
+    // swiftlint:disable cyclomatic_complexity
     func getCoordinates(
         from sourceCoordinate: Coordinate,
         to destinationCoordinate: Coordinate,
@@ -147,6 +150,7 @@ class Board: CustomStringConvertible {
             return coordinates
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 
     /// Get all pieces of a given piece type and from a given side.
     /// - parameters:
