@@ -44,7 +44,7 @@ struct Rank: Equatable, CustomStringConvertible, ExpressibleByIntegerLiteral {
         return Rank(value: newIndex)
     }
 
-    static var validRanks = 1...8
+    static let validRanks = 1...8
 
     var description: String {
         "\(value)"

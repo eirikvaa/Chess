@@ -11,7 +11,7 @@ import Foundation
 /// Goes from "a" to "h" from left to right.
 struct File: Equatable, CustomStringConvertible, ExpressibleByStringLiteral {
     let value: String
-    static var validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    static let validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
     var index: Int {
         let validFiles = ["a", "b", "c", "d", "e", "f", "g", "h"]
         return validFiles.firstIndex(of: value)!
