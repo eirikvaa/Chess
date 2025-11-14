@@ -5,6 +5,7 @@
 //  Created by Eirik Vale Aase on 27/12/2019.
 //
 
+@testable import Chess
 import XCTest
 
 class GameTests: XCTestCase {

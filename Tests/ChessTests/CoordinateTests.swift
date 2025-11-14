@@ -5,6 +5,7 @@
 //  Created by Eirik Vale Aase on 07/12/2020.
 //
 
+@testable import Chess
 import XCTest
 
 class CoordinateTests: XCTestCase {
