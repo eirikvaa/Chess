@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Chess}",
+            "name": "Debug Chess",
+            "target": "Chess",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Chess"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Chess}",
+            "name": "Release Chess",
+            "target": "Chess",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Chess"
+        }
+    ]
+}

@@ -73,6 +73,9 @@ DerivedData/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+### Swift PM ###
+.build/
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode,macos,vscode
 
 
