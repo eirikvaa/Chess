@@ -5,6 +5,7 @@
 //  Created by Eirik Vale Aase on 02/06/2020.
 //
 
+@testable import Chess
 import Foundation
 
 enum GameReaderError: Error {
