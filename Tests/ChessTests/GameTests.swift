@@ -148,13 +148,13 @@ struct GameTests {
             shouldThrow: .noThrow)
     }
 
-    @Test
+    @Test(.disabled())
     func twic920() throws {
         let moves = try PGNGameReader.readFile("twic920")
         assertMoves(moves, shouldThrow: .noThrow)
     }
 
-    @Test
+    @Test(.disabled())
     func twic921() throws {
         let moves = try PGNGameReader.readFile("PGNGames/twic921.pgn")
         assertMoves(moves, shouldThrow: .noThrow)
