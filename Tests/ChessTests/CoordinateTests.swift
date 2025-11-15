@@ -6,40 +6,37 @@
 //
 
 @testable import Chess
-import XCTest
+import Testing
 
-class CoordinateTests: XCTestCase {
-    func testSingleNorth() {
+@Suite("CoordinateTests")
+struct CoordinateTests {
+    @Test("Single north")
+    func singleNorth() {
         let source: Coordinate = "e2"
-
         let destination = source.applyDirection(.north)
-
-        XCTAssertEqual(destination, "e3")
+        #expect(destination == "e3")
     }
 
-    func testDoubleNorth() {
+    @Test("Double north")
+    func doubleNorth() {
         let source: Coordinate = "e2"
-
         let destination = source
             .applyDirection(.north)?
             .applyDirection(.north)
-
-        XCTAssertEqual(destination, "e4")
+        #expect(destination == "e4")
     }
 
-    func testNorthEastDiagonal() {
+    @Test("North east diagonal")
+    func northEastDiagonal() {
         let source: Coordinate = "e2"
-
         let destination = source.applyDirection(.northEast)
-
-        XCTAssertEqual(destination, "f3")
+        #expect(destination == "f3")
     }
 
-    func testSouthWestDiagonal() {
+    @Test("South west diagonal")
+    func southWestDiagonal() {
         let source: Coordinate = "e2"
-
         let destination = source.applyDirection(.southWest)
-
-        XCTAssertEqual(destination, "d1")
+        #expect(destination == "d1")
     }
 }

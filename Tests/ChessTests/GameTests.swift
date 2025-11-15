@@ -6,102 +6,126 @@
 //
 
 @testable import Chess
-import XCTest
+import Testing
 
-class GameTests: XCTestCase {
-    func testPawnMoveToE4() throws {
+@Suite("GameTests")
+struct GameTests {
+    @Test("Pawn move to e4")
+    func pawnMoveToE4() {
         assertMoves("e4", throws: .noThrow)
     }
 
-    func testKnightToC3() throws {
+    @Test("Knight to c3")
+    func knightToC3() {
         assertMoves("Nc3", throws: .noThrow)
     }
 
-    func testBishopCannotMoveToPieceOccupiedByItsOwnSide() throws {
+    @Test("Bishop cannot move to piece occupied by its own side")
+    func bishopCannotMoveToPieceOccupiedByItsOwnSide() {
         assertMoves("B2d", throws: .doThrow)
     }
 
-    func testKnightDoubleMovesAndCapturesPawn() throws {
+    @Test("Knight double moves and captures pawn")
+    func knightDoubleMovesAndCapturesPawn() {
         assertMoves("Nc3", "d5", "Nxd5", throws: .noThrow)
     }
 
-    func testPawnsCannotAttackForward() throws {
+    @Test("Pawns cannot attack forward")
+    func pawnsCannotAttackForward() {
         assertMoves("e4", "e5", "xe5", throws: .doThrow)
     }
 
-    func testPawnLegalAttack() throws {
+    @Test("Pawn legal attack")
+    func pawnLegalAttack() {
         assertMoves("e4", "d5", "xd5", throws: .noThrow)
     }
 
-    func testWhitePawnCannotAttackBackwards() throws {
+    @Test("White pawn cannot attack backwards")
+    func whitePawnCannotAttackBackwards() {
         assertMoves("e4", "d5", "e5", "d4", "xd4", throws: .doThrow)
     }
 
-    func testBlackQueenTakesWhiteKnight() throws {
+    @Test("Black queen takes white knight")
+    func blackQueenTakesWhiteKnight() {
         assertMoves("Nc3", "d5", "Nxd5", "Qxd5", throws: .noThrow)
     }
 
-    func testRookCanMoveNorth() throws {
+    @Test("Rook can move north")
+    func rookCanMoveNorth() {
         assertMoves("a4", "a5", "Ra3", throws: .noThrow)
     }
 
-    func testShouldPickCorrectRookToH3() throws {
+    @Test("Should pick correct rook to h3")
+    func shouldPickCorrectRookToH3() {
         assertMoves("a4", "a5", "Ra3", "Ra6", "Rh3", throws: .noThrow)
     }
 
-    func testRookCannotCaptureOwnPieces() throws {
+    @Test("Rook cannot capture own pieces")
+    func rookCannotCaptureOwnPieces() {
         assertMoves("Rxb1", throws: .doThrow)
     }
 
-    func testLegalKingMove() throws {
+    @Test("Legal king move")
+    func legalKingMove() {
         assertMoves("e4", "e5", "Ke2", throws: .noThrow)
     }
 
-    func testPawnsCannotMoveDiagonallyUnlessItCapturesLegally() throws {
+    @Test("Pawns cannot move diagonally unless it captures legally")
+    func pawnsCannotMoveDiagonallyUnlessItCapturesLegally() {
         assertMoves("Nf3", "g6", throws: .noThrow)
     }
 
-    func testCanHandleKingSideCastlingCorrectly() throws {
+    @Test("Can handle king side castling correctly")
+    func canHandleKingSideCastlingCorrectly() {
         assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4", "Nc6", "Be3",
                     "Nf6", "Nc3", "O-O", throws: .noThrow)
     }
 
-    func testWhiteCanKingSideCastle() throws {
+    @Test("White can king side castle")
+    func whiteCanKingSideCastle() {
         assertMoves("e4", "e5", "Nf3", "d5", "Bc4", "c5", "O-O", throws: .noThrow)
     }
 
-    func testWhiteCanQueenSideCastle() throws {
+    @Test("White can queen side castle")
+    func whiteCanQueenSideCastle() {
         assertMoves("e4", "e5", "d4", "d5", "Bf4", "c5", "Nc3", "b5", "O-O-O", throws: .noThrow)
     }
 
-    func testBlackCanKingSideCastle() throws {
+    @Test("Black can king side castle")
+    func blackCanKingSideCastle() {
         assertMoves("e4", "Nf6", "d4", "e6", "c4", "Bd6", "b4", "O-O", throws: .noThrow)
     }
 
-    func testBlackCanQueenSideCastle() throws {
+    @Test("Black can queen side castle")
+    func blackCanQueenSideCastle() {
         assertMoves("e4", "d62", "d4", "Bg4", "c4", "Nc64", "b4", "Qd7", "a4", "O-O-O", throws: .noThrow)
     }
 
-    func testValidEnPassantByWhite() throws {
+    @Test("Valid en passant by white")
+    func validEnPassantByWhite() {
         assertMoves("e3", "a6", "e4", "a5", "e5", "f5", "xf6", throws: .noThrow)
     }
 
-    func testValidEnPassantByBlack() throws {
+    @Test("Valid en passant by black")
+    func validEnPassantByBlack() {
         assertMoves("a3", "e5", "a4", "e4", "d4", "exd3", throws: .noThrow)
     }
 
-    func testInvalidEnPassantPawnMustMoveDoubleAtFirstMove() throws {
+    @Test("Invalid en passant pawn must move double at first move")
+    func invalidEnPassantPawnMustMoveDoubleAtFirstMove() {
         assertMoves("e3", "a6", "e4", "a5", "f6", "b3", "f5", "xf6", throws: .doThrow)
     }
 
-    func testTwoRooksOnSameFileWithPartialSourceCoordinateShouldNotEndWithAmbiguousMove() throws {
+    @Test("Two rooks on same file with partial source coordinate should not end with ambiguous move")
+    func twoRooksOnSameFileWithPartialSourceCoordinateShouldNotEndWithAmbiguousMove() {
         assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
                     "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
                     "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
                     "Rab1", throws: .noThrow)
     }
 
-    func testPawnCannotCaptureForwards() throws {
+    @Test("Pawn cannot capture forwards")
+    func pawnCannotCaptureForwards() {
         assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
                     "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
                     "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
@@ -111,24 +135,28 @@ class GameTests: XCTestCase {
                     "Rad8", "Bxc5", "dxc5", throws: .noThrow)
     }
 
-    func testThatKnightOnlyConsidersFinalCoordinateInMovePatternCoordinateSequence() throws {
+    @Test("That knight only considers final coordinate in move pattern coordinate sequence")
+    func thatKnightOnlyConsidersFinalCoordinateInMovePatternCoordinateSequence() {
         assertMoves("e4", "e5", "Nf3", "Nc6", "Bb5", "Nf6", "d3", "Bc5", "c3", "O-O",
                     "O-O", "d6", "Nbd2", "a6", "Bxc6", "bxc6", "Re1", "Re8", "h3", "Bb6", "Nf1", throws: .noThrow)
     }
-}
 
-private extension GameTests {
-    enum Throw {
+    private enum Throw {
         case doThrow
         case noThrow
     }
 
-    func assertMoves(_ moves: String..., throws: Throw) {
+    private func assertMoves(_ moves: String..., throws: Throw) {
         let game = Game()
-
         switch `throws` {
-        case .doThrow: XCTAssertThrowsError(try game.applyMoves(moves))
-        case .noThrow: XCTAssertNoThrow(try game.applyMoves(moves))
+        case .doThrow:
+            #expect(throws: (any Error).self) {
+                try game.applyMoves(moves)
+            }
+        case .noThrow:
+            #expect(throws: Never.self) {
+                try game.applyMoves(moves)
+            }
         }
     }
 }

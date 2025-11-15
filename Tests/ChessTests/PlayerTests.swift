@@ -6,16 +6,19 @@
 //
 
 @testable import Chess
-import XCTest
+import Testing
 
-class PlayerTests: XCTestCase {
-    func testOppositeOfBlackSideShouldBeWhite() {
+@Suite("PlayerTests")
+struct PlayerTests {
+    @Test("Opposite of black side should be white")
+    func oppositeOfBlackSideShouldBeWhite() {
         let black = Side.black
-        XCTAssertEqual(black.opposite, .white)
+        #expect(black.opposite == .white)
     }
 
-    func testOppositeOfWhiteSideShouldBeBlack() {
+    @Test("Opposite of white side should be black")
+    func oppositeOfWhiteSideShouldBeBlack() {
         let white = Side.white
-        XCTAssertEqual(white.opposite, .black)
+        #expect(white.opposite == .black)
     }
 }
