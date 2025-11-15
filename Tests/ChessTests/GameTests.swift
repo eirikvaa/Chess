@@ -148,6 +148,18 @@ struct GameTests {
             shouldThrow: .noThrow)
     }
 
+    @Test
+    func twic920() {
+        let moves = PGNGameReader.read(textRepresentation: "PGNGames/twic920.pgn")
+        assertMoves(moves, shouldThrow: .noThrow)
+    }
+
+    @Test
+    func twic921() {
+        let moves = PGNGameReader.read(textRepresentation: "PGNGames/twic921.pgn")
+        assertMoves(moves, shouldThrow: .noThrow)
+    }
+
     private enum Throw {
         case doThrow
         case noThrow
