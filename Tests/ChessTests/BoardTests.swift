@@ -10,30 +10,30 @@ import XCTest
 
 @testable import Chess
 
-@Suite("BoardTests")
+@Suite
 struct BoardTests {
-    @Test("Double pawn move")
+    @Test
     func doublePawnMove() throws {
         let board = Board()
         let coordinates = board.getCoordinates(from: "e2", to: "e4", given: .double(.north, .north))
         #expect(coordinates == ["e3", "e4"])
     }
 
-    @Test("Single pawn move cannot reach")
+    @Test
     func singlePawnMoveCannotReach() throws {
         let board = Board()
         let coordinates = board.getCoordinates(from: "e2", to: "e4", given: .single(.north))
         #expect(coordinates == [])
     }
 
-    @Test("Bishop diagonal can reach")
+    @Test
     func bishopDiagonalCanReach() throws {
         let board = Board()
         let coordinates = board.getCoordinates(from: "c1", to: "f4", given: .continuous(.northEast))
         #expect(coordinates == ["d2", "e3", "f4"])
     }
 
-    @Test("Knight move can reach")
+    @Test
     func knightMoveCanReach() throws {
         let board = Board()
         let coordinates = board.getCoordinates(

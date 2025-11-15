@@ -9,16 +9,16 @@ import Testing
 
 @testable import Chess
 
-@Suite("CoordinateTests")
+@Suite
 struct CoordinateTests {
-    @Test("Single north")
+    @Test
     func singleNorth() {
         let source: Coordinate = "e2"
         let destination = source.applyDirection(.north)
         #expect(destination == "e3")
     }
 
-    @Test("Double north")
+    @Test
     func doubleNorth() {
         let source: Coordinate = "e2"
         let destination =
@@ -28,14 +28,14 @@ struct CoordinateTests {
         #expect(destination == "e4")
     }
 
-    @Test("North east diagonal")
+    @Test
     func northEastDiagonal() {
         let source: Coordinate = "e2"
         let destination = source.applyDirection(.northEast)
         #expect(destination == "f3")
     }
 
-    @Test("South west diagonal")
+    @Test
     func southWestDiagonal() {
         let source: Coordinate = "e2"
         let destination = source.applyDirection(.southWest)

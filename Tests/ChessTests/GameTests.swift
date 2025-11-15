@@ -9,44 +9,44 @@ import Testing
 
 @testable import Chess
 
-@Suite("GameTests")
+@Suite
 struct GameTests {
-    @Test("Pawn move to e4")
+    @Test
     func pawnMoveToE4() {
         assertMoves("e4", throws: .noThrow)
     }
 
-    @Test("Knight to c3")
+    @Test
     func knightToC3() {
         assertMoves("Nc3", throws: .noThrow)
     }
 
-    @Test("Bishop cannot move to piece occupied by its own side")
+    @Test
     func bishopCannotMoveToPieceOccupiedByItsOwnSide() {
         assertMoves("B2d", throws: .doThrow)
     }
 
-    @Test("Knight double moves and captures pawn")
+    @Test
     func knightDoubleMovesAndCapturesPawn() {
         assertMoves("Nc3", "d5", "Nxd5", throws: .noThrow)
     }
 
-    @Test("Pawns cannot attack forward")
+    @Test
     func pawnsCannotAttackForward() {
         assertMoves("e4", "e5", "xe5", throws: .doThrow)
     }
 
-    @Test("Pawn legal attack")
+    @Test
     func pawnLegalAttack() {
         assertMoves("e4", "d5", "xd5", throws: .noThrow)
     }
 
-    @Test("White pawn cannot attack backwards")
+    @Test
     func whitePawnCannotAttackBackwards() {
         assertMoves("e4", "d5", "e5", "d4", "xd4", throws: .doThrow)
     }
 
-    @Test("Black queen takes white knight")
+    @Test
     func blackQueenTakesWhiteKnight() {
         assertMoves("Nc3", "d5", "Nxd5", "Qxd5", throws: .noThrow)
     }
@@ -66,61 +66,60 @@ struct GameTests {
         assertMoves("Rxb1", throws: .doThrow)
     }
 
-    @Test("Legal king move")
+    @Test
     func legalKingMove() {
         assertMoves("e4", "e5", "Ke2", throws: .noThrow)
     }
 
-    @Test("Pawns cannot move diagonally unless it captures legally")
+    @Test
     func pawnsCannotMoveDiagonallyUnlessItCapturesLegally() {
         assertMoves("Nf3", "g6", throws: .noThrow)
     }
 
-    @Test("Can handle king side castling correctly")
+    @Test
     func canHandleKingSideCastlingCorrectly() {
         assertMoves(
             "Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4", "Nc6", "Be3",
             "Nf6", "Nc3", "O-O", throws: .noThrow)
     }
 
-    @Test("White can king side castle")
+    @Test
     func whiteCanKingSideCastle() {
         assertMoves("e4", "e5", "Nf3", "d5", "Bc4", "c5", "O-O", throws: .noThrow)
     }
 
-    @Test("White can queen side castle")
+    @Test
     func whiteCanQueenSideCastle() {
         assertMoves("e4", "e5", "d4", "d5", "Bf4", "c5", "Nc3", "b5", "O-O-O", throws: .noThrow)
     }
 
-    @Test("Black can king side castle")
+    @Test
     func blackCanKingSideCastle() {
         assertMoves("e4", "Nf6", "d4", "e6", "c4", "Bd6", "b4", "O-O", throws: .noThrow)
     }
 
-    @Test("Black can queen side castle")
+    @Test
     func blackCanQueenSideCastle() {
         assertMoves(
             "e4", "d62", "d4", "Bg4", "c4", "Nc64", "b4", "Qd7", "a4", "O-O-O", throws: .noThrow)
     }
 
-    @Test("Valid en passant by white")
+    @Test
     func validEnPassantByWhite() {
         assertMoves("e3", "a6", "e4", "a5", "e5", "f5", "xf6", throws: .noThrow)
     }
 
-    @Test("Valid en passant by black")
+    @Test
     func validEnPassantByBlack() {
         assertMoves("a3", "e5", "a4", "e4", "d4", "exd3", throws: .noThrow)
     }
 
-    @Test("Invalid en passant pawn must move double at first move")
+    @Test
     func invalidEnPassantPawnMustMoveDoubleAtFirstMove() {
         assertMoves("e3", "a6", "e4", "a5", "f6", "b3", "f5", "xf6", throws: .doThrow)
     }
 
-    @Test(
-        "Two rooks on same file with partial source coordinate should not end with ambiguous move")
+    @Test
     func twoRooksOnSameFileWithPartialSourceCoordinateShouldNotEndWithAmbiguousMove() {
         assertMoves(
             "Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
@@ -129,7 +128,7 @@ struct GameTests {
             "Rab1", throws: .noThrow)
     }
 
-    @Test("Pawn cannot capture forwards")
+    @Test
     func pawnCannotCaptureForwards() {
         assertMoves(
             "Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
@@ -141,7 +140,7 @@ struct GameTests {
             "Rad8", "Bxc5", "dxc5", throws: .noThrow)
     }
 
-    @Test("That knight only considers final coordinate in move pattern coordinate sequence")
+    @Test
     func thatKnightOnlyConsidersFinalCoordinateInMovePatternCoordinateSequence() {
         assertMoves(
             "e4", "e5", "Nf3", "Nc6", "Bb5", "Nf6", "d3", "Bc5", "c3", "O-O",

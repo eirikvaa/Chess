@@ -9,15 +9,15 @@ import Testing
 
 @testable import Chess
 
-@Suite("PlayerTests")
+@Suite
 struct PlayerTests {
-    @Test("Opposite of black side should be white")
+    @Test
     func oppositeOfBlackSideShouldBeWhite() {
         let black = Side.black
         #expect(black.opposite == .white)
     }
 
-    @Test("Opposite of white side should be black")
+    @Test
     func oppositeOfWhiteSideShouldBeBlack() {
         let white = Side.white
         #expect(white.opposite == .black)

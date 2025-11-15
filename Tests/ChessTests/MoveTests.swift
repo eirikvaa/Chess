@@ -9,9 +9,9 @@ import Testing
 
 @testable import Chess
 
-@Suite("MoveTests")
+@Suite
 struct MoveTests {
-    @Test("Pawn move")
+    @Test
     func pawnMove() throws {
         let move = try Move(rawMove: "e4")
         #expect(move.destination == "e4")
@@ -19,7 +19,7 @@ struct MoveTests {
         #expect(!move.isCapture)
     }
 
-    @Test("Rook move")
+    @Test
     func rookMove() throws {
         let move = try Move(rawMove: "Ra8")
         #expect(move.destination == "a8")
@@ -27,7 +27,7 @@ struct MoveTests {
         #expect(!move.isCapture)
     }
 
-    @Test("Queen capture")
+    @Test
     func queenCapture() throws {
         let move = try Move(rawMove: "Qxe3")
         #expect(move.destination == "e3")
@@ -35,7 +35,7 @@ struct MoveTests {
         #expect(move.isCapture)
     }
 
-    @Test("Source coordinate in move")
+    @Test
     func sourceCoordinateInMove() throws {
         let move = try Move(rawMove: "Ra1c1")
         #expect(move.destination == "c1")
@@ -44,7 +44,7 @@ struct MoveTests {
         #expect(!move.isCapture)
     }
 
-    @Test("King side castling")
+    @Test
     func kingSideCastling() throws {
         let move = try Move(rawMove: "O-O")
         #expect(move.isKingSideCastling)
@@ -52,14 +52,14 @@ struct MoveTests {
         #expect(!move.isCapture)
     }
 
-    @Test("Rook move partial source coordinate")
+    @Test
     func rookMovePartialSourceCoordinate() throws {
         let move = try Move(rawMove: "Rab1")
         #expect(!(move.isKingSideCastling || move.isQueenSideCastling))
         #expect(move.pieceType == .rook)
     }
 
-    @Test("Correct parsing of pawn move with partial source disambiguation")
+    @Test
     func correctParsingOfPawnMoveWithPartialSourceDisambiguation() throws {
         let move = try Move(rawMove: "dxc5")
         #expect(move.pieceType == .pawn)
@@ -67,7 +67,7 @@ struct MoveTests {
         #expect(move.source.rank == nil)
     }
 
-    @Test("Rook move with partial source coordinate that captures")
+    @Test
     func rookMoveWithPartialSourceCoordinateThatCaptures() throws {
         let move = try Move(rawMove: "R1xa7")
         #expect(move.pieceType == .rook)
