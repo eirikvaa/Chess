@@ -5,8 +5,9 @@
 //  Created by Eirik Vale Aase on 27/12/2019.
 //
 
-@testable import Chess
 import Testing
+
+@testable import Chess
 
 @Suite("GameTests")
 struct GameTests {
@@ -77,8 +78,9 @@ struct GameTests {
 
     @Test("Can handle king side castling correctly")
     func canHandleKingSideCastlingCorrectly() {
-        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4", "Nc6", "Be3",
-                    "Nf6", "Nc3", "O-O", throws: .noThrow)
+        assertMoves(
+            "Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4", "Nc6", "Be3",
+            "Nf6", "Nc3", "O-O", throws: .noThrow)
     }
 
     @Test("White can king side castle")
@@ -98,7 +100,8 @@ struct GameTests {
 
     @Test("Black can queen side castle")
     func blackCanQueenSideCastle() {
-        assertMoves("e4", "d62", "d4", "Bg4", "c4", "Nc64", "b4", "Qd7", "a4", "O-O-O", throws: .noThrow)
+        assertMoves(
+            "e4", "d62", "d4", "Bg4", "c4", "Nc64", "b4", "Qd7", "a4", "O-O-O", throws: .noThrow)
     }
 
     @Test("Valid en passant by white")
@@ -116,29 +119,34 @@ struct GameTests {
         assertMoves("e3", "a6", "e4", "a5", "f6", "b3", "f5", "xf6", throws: .doThrow)
     }
 
-    @Test("Two rooks on same file with partial source coordinate should not end with ambiguous move")
+    @Test(
+        "Two rooks on same file with partial source coordinate should not end with ambiguous move")
     func twoRooksOnSameFileWithPartialSourceCoordinateShouldNotEndWithAmbiguousMove() {
-        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
-                    "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
-                    "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
-                    "Rab1", throws: .noThrow)
+        assertMoves(
+            "Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
+            "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
+            "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
+            "Rab1", throws: .noThrow)
     }
 
     @Test("Pawn cannot capture forwards")
     func pawnCannotCaptureForwards() {
-        assertMoves("Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
-                    "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
-                    "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
-                    "Rab1", "Qb6", "Rfc1", "Rfc8", "Rc2", "h5", "Bf1", "Kh7", "g3", "Qd8",
-                    "Bh3", "e6", "Rd1", "Be5", "Nb5", "Qf8", "Qe2", "Rd8", "Bg5", "Rd7", "Nd4",
-                    "f5", "Nxc6", "bxc6", "Be3", "Qe7", "Bg2", "Bg7", "Rcd2",
-                    "Rad8", "Bxc5", "dxc5", throws: .noThrow)
+        assertMoves(
+            "Nf3", "g6", "e4", "c5", "c4", "Bg7", "d4", "cxd4", "Nxd4",
+            "Nc6", "Be3", "Nf6", "Nc3", "O-O", "Be2", "d6", "O-O", "Nxd4",
+            "Bxd4", "Bd7", "Qd2", "Bc6", "f3", "a5", "b3", "Nd7", "Be3", "Nc5",
+            "Rab1", "Qb6", "Rfc1", "Rfc8", "Rc2", "h5", "Bf1", "Kh7", "g3", "Qd8",
+            "Bh3", "e6", "Rd1", "Be5", "Nb5", "Qf8", "Qe2", "Rd8", "Bg5", "Rd7", "Nd4",
+            "f5", "Nxc6", "bxc6", "Be3", "Qe7", "Bg2", "Bg7", "Rcd2",
+            "Rad8", "Bxc5", "dxc5", throws: .noThrow)
     }
 
     @Test("That knight only considers final coordinate in move pattern coordinate sequence")
     func thatKnightOnlyConsidersFinalCoordinateInMovePatternCoordinateSequence() {
-        assertMoves("e4", "e5", "Nf3", "Nc6", "Bb5", "Nf6", "d3", "Bc5", "c3", "O-O",
-                    "O-O", "d6", "Nbd2", "a6", "Bxc6", "bxc6", "Re1", "Re8", "h3", "Bb6", "Nf1", throws: .noThrow)
+        assertMoves(
+            "e4", "e5", "Nf3", "Nc6", "Bb5", "Nf6", "d3", "Bc5", "c3", "O-O",
+            "O-O", "d6", "Nbd2", "a6", "Bxc6", "bxc6", "Re1", "Re8", "h3", "Bb6", "Nf1",
+            throws: .noThrow)
     }
 
     private enum Throw {

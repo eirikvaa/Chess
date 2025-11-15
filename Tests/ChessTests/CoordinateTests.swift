@@ -5,8 +5,9 @@
 //  Created by Eirik Vale Aase on 07/12/2020.
 //
 
-@testable import Chess
 import Testing
+
+@testable import Chess
 
 @Suite("CoordinateTests")
 struct CoordinateTests {
@@ -20,7 +21,8 @@ struct CoordinateTests {
     @Test("Double north")
     func doubleNorth() {
         let source: Coordinate = "e2"
-        let destination = source
+        let destination =
+            source
             .applyDirection(.north)?
             .applyDirection(.north)
         #expect(destination == "e4")

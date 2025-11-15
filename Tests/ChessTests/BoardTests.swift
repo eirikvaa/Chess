@@ -5,10 +5,10 @@
 //  Created by Eirik Vale Aase on 25/12/2020.
 //
 
-@testable import Chess
+import Testing
 import XCTest
 
-import Testing
+@testable import Chess
 
 @Suite("BoardTests")
 struct BoardTests {
@@ -36,7 +36,8 @@ struct BoardTests {
     @Test("Knight move can reach")
     func knightMoveCanReach() throws {
         let board = Board()
-        let coordinates = board.getCoordinates(from: "g1", to: "f3", given: .shape(.north, .north, .west))
+        let coordinates = board.getCoordinates(
+            from: "g1", to: "f3", given: .shape(.north, .north, .west))
         #expect(coordinates == ["g2", "g3", "f3"])
     }
 }

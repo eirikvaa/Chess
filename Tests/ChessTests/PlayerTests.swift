@@ -5,8 +5,9 @@
 //  Created by Eirik Vale Aase on 28/12/2019.
 //
 
-@testable import Chess
 import Testing
+
+@testable import Chess
 
 @Suite("PlayerTests")
 struct PlayerTests {
