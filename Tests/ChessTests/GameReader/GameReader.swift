@@ -42,14 +42,9 @@ struct PGNGameReader: GameReader {
     /// [ meta information ]
     /// ...
     static func readFile(_ file: String) throws -> [String] {
-        // Hack to get around the resource files not being correctly
-        // copied to the main bundle of the test target. We have to look inside
-        // all bundles for the existence of the file.
-        let possibleFiles = Bundle.allBundles.compactMap {
-            $0.url(forResource: file, withExtension: "pgn")
-        }
+        let pgnFile = Bundle.module.url(forResource: file, withExtension: "pgn")
 
-        guard let pgnFile = possibleFiles.first else {
+        guard let pgnFile else {
             throw GameReaderError.missingGameFile
         }
 
