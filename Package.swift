@@ -15,7 +15,7 @@ let package = Package(
             name: "ChessTests",
             dependencies: ["Chess"],
             resources: [
-                .copy("PGNGames")
+                .process("PGNGames")
             ]
         ),
     ]
